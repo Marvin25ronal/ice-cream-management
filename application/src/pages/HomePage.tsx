@@ -6,6 +6,8 @@ import { useNavigation } from '@react-navigation/native'
 import { Utils } from '../constants/utils'
 import { themeInterface } from '../interface/themeInterface'
 import { COMMANDS, IUSBPrinter, USBPrinter } from 'react-native-ect-thermal-receipt-printer';
+import { CreateBackup, connectToDatabase } from '../store/db/Database'
+import { Category } from '../entity/Category.entity'
 const HomePage = () => {
   const dispatch = useDispatch()
   const navigation = useNavigation();
@@ -24,32 +26,79 @@ const HomePage = () => {
     <View style={styles.page}>
       <Text style={{ color: 'red' }}>Home Screen</Text>
       <View>
-        <Button
-          onPress={() => {
-            USBPrinter.init().then(async () => {
-              console.log("Iniciamos")
-              USBPrinter.getDeviceList().then(async (items) => {
-                setprinters(items)
-                _connectPrinter(items[0])
-              }).catch(() => {
-                Alert.alert("Errorr")
-                console.log("Error")
-              })
-            })
+        {/* <Button
+          onPress={() => { 
+            // USBPrinter.init().then(async () => {
+            //   console.log("Iniciamos")
+            //   USBPrinter.getDeviceList().then(async (items) => {
+            //     setprinters(items)
+            //     _connectPrinter(items[0])
+            //   }).catch(() => {
+            //     Alert.alert("Errorr")
+            //     console.log("Error")
+            //   })
+            // })
 
           }}
           title="Learn More"
           color="#841584"
           accessibilityLabel="Learn more about this purple button"
         />
-        <Button
+        {/* <Button
         onPress={()=>{
           USBPrinter.printText("<C>sample text</C>\n");
           USBPrinter.closeConn()
         }}
         color="red"
-        title="Print"/>
+        title="Print"/> */}
+        <Button
+          onPress={() => {
+            console.log("Entramos")
+            // let db = connectToDatabase().then((db) => {
+            //   console.log("Eea")
+            //   db.transaction(tx => {
+            //     tx.executeSql(
+            //       'SELECT * from Category',
+            //       [],
+            //       (_, resultSet) => {
+            //         const rows = resultSet.rows;
+            //         const tables = [];
 
+            //         for (let i = 0; i < rows.length; i++) {
+            //           tables.push(rows.item(i));
+            //         }
+
+            //         console.log('Tablas:', tables);
+            //       },
+            //       (_, error) => {
+            //         console.error('Error al obtener las tablas:', error);
+            //       }
+            //     );
+            //   })
+            // })
+            connectToDatabase().then((db) => {
+              db.manager.find(Category).then((categories) => {
+                console.log(categories)
+              })
+              db.getRepository(Category).save({
+                name: "Ejemplo",
+                description: "Ejemplo",
+                image: "Ejemplo",
+                order: 1
+              })
+              db.manager.find(Category).then((categories) => {
+                console.log(categories)
+              })
+            })
+          }}
+          title="ejemplo"
+        />
+        <Button
+          onPress={() => {
+            CreateBackup()
+          }}
+          title="Menu"
+        />
       </View>
 
     </View>

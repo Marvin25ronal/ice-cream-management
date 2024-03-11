@@ -7,6 +7,8 @@ import { darkTheme } from './src/styles/Theme';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { store } from './src/store/redux/store';
 import StackScreensNavigator from './src/routes/StackNavigator';
+import { PERMISSIONS, request } from 'react-native-permissions';
+import { CreateDatabase } from './src/store/db/Database';
 
 
 
@@ -19,6 +21,9 @@ const App = () => {
   //     dispatch(setTheme(darkTheme))
   //   }
   // }, [])
+  useEffect(() => {
+    CreateDatabase()
+  }, [])
 
   return (
     <Provider store={store}>
