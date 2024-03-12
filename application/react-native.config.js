@@ -1,6 +1,7 @@
 module.exports={
     assets:[
         
-        './assets/db'
+        './assets/db',
+        './assets/fonts',
     ],
 }

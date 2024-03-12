@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setTheme } from '../store/redux/themeReducer';
 import { darkTheme } from '../styles/Theme';
 import MenuPage from '../pages/MenuPage';
+import { Fonts, FontsSize } from '../constants/Fonts';
 const Stack = createStackNavigator();
 
 const StackNavigator = () => {
@@ -27,10 +28,11 @@ const StackNavigator = () => {
 
         },
         headerTitleStyle: {
-            color: theme.HEADER_TEXT_COLOR
+            color: theme.HEADER_TEXT_COLOR,
+            fontFamily: Fonts.LatoBold,
+            fontSize: FontsSize.large
         },
         headerTintColor: theme.HEADER_TEXT_COLOR,
-
     }
     return (
         <Stack.Navigator>

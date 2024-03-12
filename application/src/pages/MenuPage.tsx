@@ -4,7 +4,7 @@ import React from 'react'
 const MenuPage = () => {
   return (
     <View>
-      <Text>MenuPage</Text>
+      <Text style={{fontFamily:'Lato-Regular'}}>MenuPage</Text>
     </View>
   )
 }
