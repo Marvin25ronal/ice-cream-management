@@ -6,12 +6,15 @@ import { useNavigation } from '@react-navigation/native'
 import { Utils } from '../constants/utils'
 import { themeInterface } from '../interface/themeInterface'
 import { COMMANDS, IUSBPrinter, USBPrinter } from 'react-native-ect-thermal-receipt-printer';
-import { CreateBackup, connectToDatabase } from '../store/db/Database'
+import { CreateBackup, CreateDatabase, connectToDatabase } from '../store/db/Database'
 import { Category } from '../entity/Category.entity'
 import { HomeServices } from '../services/HomeServices'
 import { TreeNode } from '../interface/TreeInterface'
 import { useLoading } from '../shared/LoaderHook'
 import MenuCardComponent from '../components/Home/MenuCardComponent'
+import { Fonts } from '../constants/Fonts'
+import IconSelector, { type_class_icon } from '../components/UI/IconSelector'
+import AntDesign from 'react-native-vector-icons/AntDesign'
 const HomePage = () => {
   const [homeService] = useState(new HomeServices())
   const [actualNode, setActualNode] = useState<TreeNode>()
@@ -30,6 +33,8 @@ const HomePage = () => {
       console.log(tree)
       setdata(tree)
       setActualNode(tree)
+    }).catch((error) => {
+      console.log(error)
     })
   }
   const styles = StyleSheet.create({
@@ -40,7 +45,39 @@ const HomePage = () => {
       flexWrap: 'wrap',
       flexDirection: 'row',
       padding: 10
-    }
+    },
+    buttonsContainer: {
+      width: '100%',
+      flexDirection: 'row',
+      justifyContent: 'center',
+      height: '10%',
+    },
+    button: {
+      backgroundColor: 'blue',
+      height: '100%',
+      paddingHorizontal: 20,
+      marginHorizontal: 40,
+      justifyContent: 'center',
+      borderRadius: 10,
+      flexDirection: 'row',
+      alignItems: 'center',
+      borderWidth: 5,
+      borderColor: theme.HEADER_TEXT_COLOR,
+      shadowColor: "#000",
+      shadowOffset: {
+        width: 0,
+        height: 2,
+      },
+      shadowOpacity: 0.25,
+      shadowRadius: 3.84,
+      elevation: 5,
+    },
+    buttonText: {
+      color: 'white',
+      fontFamily: Fonts.LatoBold,
+      fontSize: 18,
+      marginLeft: 10,
+    },
   })
   const _connectPrinter = (printer: IUSBPrinter) => USBPrinter.connectPrinter(printer.vendor_id, printer.product_id).then(() => setCurrentPrinter(printer))
 
@@ -73,31 +110,36 @@ const HomePage = () => {
     //     }}
     //     color="red"
     //     title="Print"/> */}
-    //     <Button
+    //     {/* <Button
     //       onPress={() => {
     //         console.log("Entramos")
-    //         // let db = connectToDatabase().then((db) => {
-    //         //   console.log("Eea")
-    //         //   db.transaction(tx => {
-    //         //     tx.executeSql(
-    //         //       'SELECT * from Category',
-    //         //       [],
-    //         //       (_, resultSet) => {
-    //         //         const rows = resultSet.rows;
-    //         //         const tables = [];
+    //         CreateDatabase().then((db) => {
+    //           console.log(db)
+    //         }).catch((error) => {
+    //           console.log(error)
+    //         })
+    //         let db = connectToDatabase().then((db) => {
+    //           console.log("Eea")
+    //           db.transaction(tx => {
+    //             tx.executeSql(
+    //               'SELECT * from Category',
+    //               [],
+    //               (_, resultSet) => {
+    //                 const rows = resultSet.rows;
+    //                 const tables = [];
 
-    //         //         for (let i = 0; i < rows.length; i++) {
-    //         //           tables.push(rows.item(i));
-    //         //         }
+    //                 for (let i = 0; i < rows.length; i++) {
+    //                   tables.push(rows.item(i));
+    //                 }
 
-    //         //         console.log('Tablas:', tables);
-    //         //       },
-    //         //       (_, error) => {
-    //         //         console.error('Error al obtener las tablas:', error);
-    //         //       }
-    //         //     );
-    //         //   })
-    //         // })
+    //                 console.log('Tablas:', tables);
+    //               },
+    //               (_, error) => {
+    //                 console.error('Error al obtener las tablas:', error);
+    //               }
+    //             );
+    //           })
+    //         })
     //         connectToDatabase().then((db) => {
     //           db.manager.find(Category).then((categories) => {
     //             console.log(categories)
@@ -120,17 +162,45 @@ const HomePage = () => {
     //         CreateBackup()
     //       }}
     //       title="Menu"
-    //     />
+    //     /> */}
     //   </View>
 
     // </View>
+
     <View style={styles.page}>
+      <View style={styles.buttonsContainer}>
+        <TouchableOpacity style={{ ...styles.button, backgroundColor: theme.HOME_BUTTON_COLOR }} onPress={() => {
+          setActualNode(data)
+        }} >
+          <IconSelector icon_class={type_class_icon.Feather} color="white" icon="menu" size={20} />
+          <Text style={styles.buttonText}>Menú</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={{ ...styles.button, backgroundColor: theme.BACK_BUTTON_COLOR }} >
+          <IconSelector icon_class={type_class_icon.Ionicons} color="white" icon="arrow-back" size={20} />
+          <Text style={styles.buttonText}>Atrás</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={{ ...styles.button, backgroundColor: theme.CLEAN_BUTTON_COLOR }} >
+          <IconSelector icon_class={type_class_icon.Feather} color="white" icon="trash" size={20} />
+          <Text style={styles.buttonText}>Limpiar</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={{ ...styles.button, backgroundColor: theme.EDIT_BUTTON_COLOR }} >
+          <IconSelector icon_class={type_class_icon.Feather} color="white" icon="edit" size={20} />
+          <Text style={styles.buttonText}>Editar</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={{ ...styles.button, backgroundColor: theme.PAY_BUTTON_COLOR }} >
+          <IconSelector icon_class={type_class_icon.Ionicons} color="white" icon="document" size={20} />
+          <Text style={styles.buttonText}>Facturar</Text>
+        </TouchableOpacity>
+      </View>
       {
         !loadingState && actualNode && actualNode.children && actualNode.children.map((node: TreeNode, index: number) => (
-          <MenuCardComponent key={index} {...node} image={node.image} />
+          <MenuCardComponent key={index} {...node} image={node.image} onPress={() => {
+            setActualNode(node)
+          }} />
         ))
       }
-    </View>
+
+    </View >
   )
 }
 

@@ -7,3 +7,6 @@ npm start -- --reset-cache
 
 
 /storage/emulated/0/Download
+
+# Comando para importar la base de datos
+react-native-asset

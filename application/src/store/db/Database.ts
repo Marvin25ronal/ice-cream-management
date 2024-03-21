@@ -40,10 +40,32 @@ export const CreateDatabase = async () => {
     return openDatabase(
         {
             name: "IceCreamDatabase.db",
-            createFromLocation: '~/IceCreamDatabase.db',
+            createFromLocation: '~/custom/IceCreamDatabase.db',
             location: 'default'
         }, ((db) => {
             console.log("Base de datos conectada")
+            //obtenemos el listado de tablas
+            db.transaction(tx => {
+                //listado de tablas
+                tx.executeSql(
+                    'SELECT name FROM sqlite_master WHERE type="table"',
+                    [],
+                    (_, resultSet) => {
+                        const rows = resultSet.rows;
+                        const tables = [];
+
+                        for (let i = 0; i < rows.length; i++) {
+                            tables.push(rows.item(i));
+                        }
+
+                        console.log('Tablas:', tables);
+                    },
+                    (_, error) => {
+                        console.error('Error al obtener las tablas:', error);
+                    }
+                );
+            }
+            )
         }),
         ((e) => {
             console.log("Error al conectar la base de datos ")

@@ -14,7 +14,6 @@
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		7699B88040F8A987B510C191 /* libPods-application-applicationTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 19F6CBCC0A4E27FBF8BF4A61 /* libPods-application-applicationTests.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
-		033C2A3FD5234F59885FBC6D /* IceCreamDatabase.db in Resources */ = {isa = PBXBuildFile; fileRef = C57B5F6FC47C4B1B9CFB9F51 /* IceCreamDatabase.db */; };
 		E9FEFBF55E8A41E99843E3C1 /* Lato-Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B4973DA369DB41F4A1624F12 /* Lato-Black.ttf */; };
 		CB87AD20F34147918E4465B8 /* Lato-BlackItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E1FE3F6E8A7445BBA1DC98A6 /* Lato-BlackItalic.ttf */; };
 		81BA9A1B76074187A6046EB0 /* Lato-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 67A012B18D72435886BB4A00 /* Lato-Bold.ttf */; };
@@ -25,6 +24,7 @@
 		356D0D444151412298D98295 /* Lato-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FDBDF3899F1E47DCA69D9FC5 /* Lato-Regular.ttf */; };
 		018C33C6BCF24B7B952E82C4 /* Lato-Thin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 681AB7E46BB14300B616CB6A /* Lato-Thin.ttf */; };
 		B58F4485E323459C8BF51941 /* Lato-ThinItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 475242FAFC9D4FFC958ECF4E /* Lato-ThinItalic.ttf */; };
+		FA3F022C733F43D8AB0D1CE4 /* IceCreamDatabase.db in Resources */ = {isa = PBXBuildFile; fileRef = 25C5B783A0E4432B90C2D0F9 /* IceCreamDatabase.db */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -55,7 +55,6 @@
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = application/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		89C6BE57DB24E9ADA2F236DE /* Pods-application-applicationTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-application-applicationTests.release.xcconfig"; path = "Target Support Files/Pods-application-applicationTests/Pods-application-applicationTests.release.xcconfig"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
-		C57B5F6FC47C4B1B9CFB9F51 /* IceCreamDatabase.db */ = {isa = PBXFileReference; name = "IceCreamDatabase.db"; path = "../assets/db/IceCreamDatabase.db"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 		B4973DA369DB41F4A1624F12 /* Lato-Black.ttf */ = {isa = PBXFileReference; name = "Lato-Black.ttf"; path = "../assets/fonts/Lato-Black.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 		E1FE3F6E8A7445BBA1DC98A6 /* Lato-BlackItalic.ttf */ = {isa = PBXFileReference; name = "Lato-BlackItalic.ttf"; path = "../assets/fonts/Lato-BlackItalic.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 		67A012B18D72435886BB4A00 /* Lato-Bold.ttf */ = {isa = PBXFileReference; name = "Lato-Bold.ttf"; path = "../assets/fonts/Lato-Bold.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
@@ -66,6 +65,7 @@
 		FDBDF3899F1E47DCA69D9FC5 /* Lato-Regular.ttf */ = {isa = PBXFileReference; name = "Lato-Regular.ttf"; path = "../assets/fonts/Lato-Regular.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 		681AB7E46BB14300B616CB6A /* Lato-Thin.ttf */ = {isa = PBXFileReference; name = "Lato-Thin.ttf"; path = "../assets/fonts/Lato-Thin.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 		475242FAFC9D4FFC958ECF4E /* Lato-ThinItalic.ttf */ = {isa = PBXFileReference; name = "Lato-ThinItalic.ttf"; path = "../assets/fonts/Lato-ThinItalic.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		25C5B783A0E4432B90C2D0F9 /* IceCreamDatabase.db */ = {isa = PBXFileReference; name = "IceCreamDatabase.db"; path = "../assets/db/IceCreamDatabase.db"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -174,7 +174,6 @@
 		5320758330F84D6B9A5576B4 /* Resources */ = {
 			isa = "PBXGroup";
 			children = (
-				C57B5F6FC47C4B1B9CFB9F51 /* IceCreamDatabase.db */,
 				B4973DA369DB41F4A1624F12 /* Lato-Black.ttf */,
 				E1FE3F6E8A7445BBA1DC98A6 /* Lato-BlackItalic.ttf */,
 				67A012B18D72435886BB4A00 /* Lato-Bold.ttf */,
@@ -185,6 +184,7 @@
 				FDBDF3899F1E47DCA69D9FC5 /* Lato-Regular.ttf */,
 				681AB7E46BB14300B616CB6A /* Lato-Thin.ttf */,
 				475242FAFC9D4FFC958ECF4E /* Lato-ThinItalic.ttf */,
+				25C5B783A0E4432B90C2D0F9 /* IceCreamDatabase.db */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -285,7 +285,6 @@
 			files = (
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
-				033C2A3FD5234F59885FBC6D /* IceCreamDatabase.db in Resources */,
 				E9FEFBF55E8A41E99843E3C1 /* Lato-Black.ttf in Resources */,
 				CB87AD20F34147918E4465B8 /* Lato-BlackItalic.ttf in Resources */,
 				81BA9A1B76074187A6046EB0 /* Lato-Bold.ttf in Resources */,
@@ -296,6 +295,7 @@
 				356D0D444151412298D98295 /* Lato-Regular.ttf in Resources */,
 				018C33C6BCF24B7B952E82C4 /* Lato-Thin.ttf in Resources */,
 				B58F4485E323459C8BF51941 /* Lato-ThinItalic.ttf in Resources */,
+				FA3F022C733F43D8AB0D1CE4 /* IceCreamDatabase.db in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

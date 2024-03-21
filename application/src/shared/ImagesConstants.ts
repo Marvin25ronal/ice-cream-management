@@ -30,5 +30,29 @@ export const ImagesDefinition = [
     {
         name:'/categories/soda.jpg',
         image: require('../../assets/images/categories/soda.jpg')
+    },
+    {
+        name:'/categories/conos-chocolate.jpg',
+        image: require('../../assets/images/categories/conos-chocolate.jpg')
+    },
+    {
+        name:'/categories/conos-normales.jpg',
+        image: require('../../assets/images/categories/conos-normales.jpg')
+    },
+    {
+        name:'/categories/promociones.jpg',
+        image: require('../../assets/images/categories/promociones.jpg')
+    },
+    {
+        name:'/categories/utensilios.jpg',
+        image: require('../../assets/images/categories/utensilios.jpg')
+    },
+    {
+        name:'/categories/preparados.jpg',
+        image: require('../../assets/images/categories/preparados.jpg')
+    },
+    {
+        name:'/categories/batidos.jpg',
+        image: require('../../assets/images/categories/batidos.jpg')
     }
 ]
