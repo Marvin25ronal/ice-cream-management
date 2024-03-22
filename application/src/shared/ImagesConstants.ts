@@ -54,5 +54,77 @@ export const ImagesDefinition = [
     {
         name:'/categories/batidos.jpg',
         image: require('../../assets/images/categories/batidos.jpg')
+    },
+    {
+        name:'/categories/canasta.png',
+        image: require('../../assets/images/categories/canasta.png')
+    },
+    {
+        name:'/categories/bebidasy.png',
+        image: require('../../assets/images/categories/bebidasy.png')
+    },
+    {
+        name:'/categories/pastelgrande.jpg',
+        image: require('../../assets/images/categories/pastelgrande.jpg')
+    },
+    {
+        name:'/categories/medianos.jpg',
+        image: require('../../assets/images/categories/medianos.jpg')
+    },
+    {
+        name:'/categories/pastelpequeno.jpg',
+        image: require('../../assets/images/categories/pastelpequeno.jpg')
+    },
+    {
+        name:'/categories/pastelporcion.jpg',
+        image: require('../../assets/images/categories/pastelporcion.jpg')
+    },
+    {
+        name:'/categories/mediogalon.png',
+        image: require('../../assets/images/categories/mediogalon.png')
+    },
+    {
+        name:'/categories/litro.png',
+        image: require('../../assets/images/categories/litro.png')
+    },
+    {
+        name:'/categories/mediolitro.png',
+        image: require('../../assets/images/categories/mediolitro.png')
+    },
+    {
+        name:'/categories/mediacubeta.jpg',
+        image: require('../../assets/images/categories/mediacubeta.jpg')
+    },
+    {
+        name:'/categories/cubeta.jpg',
+        image: require('../../assets/images/categories/cubeta.jpg')
+    },
+    {
+        name:'/categories/cremosos.jpg',
+        image: require('../../assets/images/categories/cremosos.jpg')
+    },
+    {
+        name:'/categories/hielo.jpg',
+        image: require('../../assets/images/categories/hielo.jpg')
+    },
+    {
+        name:'/categories/caseros.jpg',
+        image: require('../../assets/images/categories/caseros.jpg')
+    },
+    {
+        name:'/categories/cintasygiga.jpg',
+        image: require('../../assets/images/categories/cintasygiga.jpg')
+    },
+    {
+        name:'/categories/copa.png',
+        image: require('../../assets/images/categories/copa.png')
+    },
+    {
+        name:'/categories/cremosa.png',
+        image: require('../../assets/images/categories/cremosa.png')
+    },
+    {
+        name:'/categories/sandwich.png',
+        image: require('../../assets/images/categories/sandwich.png')
     }
 ]
