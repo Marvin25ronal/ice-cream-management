@@ -1,7 +1,7 @@
-import { Alert, Button, StyleSheet, Text, View } from 'react-native'
+import { Alert, Button, StyleSheet, Text, View, TouchableOpacity } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler'
+import { ScrollView } from 'react-native-gesture-handler'
 import { useNavigation } from '@react-navigation/native'
 import { Utils } from '../constants/utils'
 import { themeInterface } from '../interface/themeInterface'
@@ -15,6 +15,7 @@ import MenuCardComponent from '../components/Home/MenuCardComponent'
 import { Fonts } from '../constants/Fonts'
 import IconSelector, { type_class_icon } from '../components/UI/IconSelector'
 import AntDesign from 'react-native-vector-icons/AntDesign'
+import Animated from 'react-native-reanimated'
 const HomePage = () => {
   const [homeService] = useState(new HomeServices())
   const [actualNode, setActualNode] = useState<TreeNode>()
@@ -41,22 +42,20 @@ const HomePage = () => {
     page: {
       backgroundColor: theme.PAGE_BACKGROUND_COLOR,
       flex: 1,
-      alignItems: 'flex-start',
-      flexWrap: 'wrap',
-      flexDirection: 'row',
-      padding: 10
+      //alignItems: 'flex-start',
+      //flexWrap: 'wrap',
     },
     buttonsContainer: {
-      width: '100%',
+      width: 'auto',
       flexDirection: 'row',
-      justifyContent: 'center',
-      height: '10%',
+      justifyContent: 'space-around',
+      height: 'auto',
+      marginBottom: 10
     },
     button: {
       backgroundColor: 'blue',
       height: '100%',
       paddingHorizontal: 20,
-      marginHorizontal: 40,
       justifyContent: 'center',
       borderRadius: 10,
       flexDirection: 'row',
@@ -71,6 +70,8 @@ const HomePage = () => {
       shadowOpacity: 0.25,
       shadowRadius: 3.84,
       elevation: 5,
+      paddingVertical: 10,
+      marginTop: 10
     },
     buttonText: {
       color: 'white',
@@ -167,7 +168,15 @@ const HomePage = () => {
 
     // </View>
 
-    <View style={styles.page}>
+
+    <Animated.ScrollView
+      style={styles.page}
+      contentContainerStyle={{ paddingBottom: 10 }}
+      scrollEnabled={true}
+      showsVerticalScrollIndicator={true}
+      showsHorizontalScrollIndicator={true}
+      horizontal={false}
+    >
       <View style={styles.buttonsContainer}>
         <TouchableOpacity style={{ ...styles.button, backgroundColor: theme.HOME_BUTTON_COLOR }} onPress={() => {
           setActualNode(data)
@@ -175,7 +184,12 @@ const HomePage = () => {
           <IconSelector icon_class={type_class_icon.Feather} color="white" icon="menu" size={20} />
           <Text style={styles.buttonText}>Menú</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={{ ...styles.button, backgroundColor: theme.BACK_BUTTON_COLOR }} >
+        <TouchableOpacity style={{ ...styles.button, backgroundColor: theme.BACK_BUTTON_COLOR }} onPress={() => {
+          if (actualNode && actualNode.parent) {
+            setActualNode(actualNode.parent)
+          }
+
+        }} >
           <IconSelector icon_class={type_class_icon.Ionicons} color="white" icon="arrow-back" size={20} />
           <Text style={styles.buttonText}>Atrás</Text>
         </TouchableOpacity>
@@ -192,15 +206,17 @@ const HomePage = () => {
           <Text style={styles.buttonText}>Facturar</Text>
         </TouchableOpacity>
       </View>
-      {
-        !loadingState && actualNode && actualNode.children && actualNode.children.map((node: TreeNode, index: number) => (
-          <MenuCardComponent key={index} {...node} image={node.image} onPress={() => {
-            setActualNode(node)
-          }} />
-        ))
-      }
+      <View style={{ flex: 1, flexDirection: 'row', flexWrap: 'wrap', height: 'auto' }}>
+        {
+          !loadingState && actualNode && actualNode.children && actualNode.children.map((node: TreeNode, index: number) => (
+            <MenuCardComponent key={index} {...node} image={node.image} onPress={() => {
+              setActualNode(node)
+            }} />
+          ))
+        }
+      </View>
+    </Animated.ScrollView>
 
-    </View >
   )
 }
 

@@ -1,18 +1,18 @@
-import { ImageBackground, StyleSheet, Text, View } from 'react-native'
+import { ImageBackground, StyleSheet, Text, View, TouchableOpacity, Dimensions } from 'react-native'
 import React from 'react'
 import { themeInterface } from '../../interface/themeInterface'
 import { useSelector } from 'react-redux'
-import { Image } from 'react-native'
 import { ImagesDefinition } from '../../shared/ImagesConstants'
-import { TouchableOpacity } from 'react-native-gesture-handler'
+
 import { Fonts, FontsSize } from '../../constants/Fonts'
 
 const MenuCardComponent = ({ name, description, image, onPress }: { name: String, description: String, image: String, onPress: any }) => {
     const theme: themeInterface = useSelector((state: any) => state.theme.value)
+    const dimensions = Dimensions.get('window')
     const styles = StyleSheet.create({
         container: {
             width: '20%',
-            height: '45%',
+            height: dimensions.height * 0.4,
             padding: 10
         },
         card: {

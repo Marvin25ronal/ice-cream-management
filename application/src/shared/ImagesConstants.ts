@@ -126,5 +126,17 @@ export const ImagesDefinition = [
     {
         name:'/categories/sandwich.png',
         image: require('../../assets/images/categories/sandwich.png')
+    },
+    {
+        name:'/categories/milkshake.jpg',
+        image: require('../../assets/images/categories/milkshake.jpg')
+    },
+    {
+        name:'/categories/toppingshake.jpg',
+        image: require('../../assets/images/categories/toppingshake.jpg')
+    },
+    {
+        name:'/categories/nevada.jpg',
+        image: require('../../assets/images/categories/nevada.jpg')
     }
 ]

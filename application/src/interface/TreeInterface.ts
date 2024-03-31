@@ -5,4 +5,5 @@ export interface TreeNode {
     category_id: number;
     parent_id: number | null;
     children: TreeNode[] | null;
+    parent?: TreeNode | null;
 }

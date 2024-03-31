@@ -33,24 +33,25 @@ export class HomeServices {
         }
         let childs = categories.filter((category) => category.parent_id == null);
         for (let i = 0; i < childs.length; i++) {
-            root.children?.push(this.addChilds(categories, childs[i]))
+            root.children?.push(this.addChilds(categories, childs[i], root))
         }
         return root;
     }
-    private addChilds(categories: Category[], actual: Category): TreeNode {
+    private addChilds(categories: Category[], actual: Category, parent: TreeNode): TreeNode {
         let node: TreeNode = {
             name: actual.name,
             category_id: actual.category_id,
             parent_id: actual.parent_id,
             description: actual.description,
             image: actual.image,
-            children: []
+            children: [],
+            parent: parent
         }
         let childs = categories.filter((category) => category.parent_id == actual.category_id);
         if (childs.length == 0)
             return node;
         for (let i = 0; i < childs.length; i++) {
-            node.children?.push(this.addChilds(categories, childs[i]))
+            node.children?.push(this.addChilds(categories, childs[i], node))
         }
         return node;
     }
