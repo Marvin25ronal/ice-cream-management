@@ -6,13 +6,13 @@ import { ImagesDefinition } from '../../shared/ImagesConstants'
 
 import { Fonts, FontsSize } from '../../constants/Fonts'
 
-const MenuCardComponent = ({ name, description, image, onPress }: { name: String, description: String, image: String, onPress: any }) => {
+const MenuCardComponent = ({ name, description, image, onPress, onLongPress, isProduct = false }: { name: String, description: String, image: String, onPress: any, onLongPress?: any, isProduct?: boolean }) => {
     const theme: themeInterface = useSelector((state: any) => state.theme.value)
     const dimensions = Dimensions.get('window')
     const styles = StyleSheet.create({
         container: {
             width: '20%',
-            height: dimensions.height * 0.4,
+            height: dimensions.height * 0.38,
             padding: 10
         },
         card: {
@@ -22,7 +22,7 @@ const MenuCardComponent = ({ name, description, image, onPress }: { name: String
             borderRadius: 25,
             overflow: 'hidden',
             borderWidth: 5,
-            borderColor: 'white',
+            borderColor: isProduct ? theme.CARD_BORDER_COLOR_PRODUCT : 'white',
             shadowColor: "#000",
             shadowOffset: {
                 width: 0,
@@ -41,27 +41,34 @@ const MenuCardComponent = ({ name, description, image, onPress }: { name: String
 
         },
         textContainer: {
-            backgroundColor: '#001d3d',
+            backgroundColor: isProduct ? theme.CARD_TEXT_BACKGROUND_COLOR_PRODUCT : theme.CARD_TEXT_BACKGROUND_COLOR,
             width: '100%',
-            height: '15%',
+            height: 'auto',
             position: 'absolute',
             top: '75%',
             opacity: 0.8,
             justifyContent: 'center',
-            alignItems: 'center'
+            alignItems: 'center',
+            paddingBottom: 10
         },
         text: {
             color: 'white',
             fontFamily: Fonts.LatoBold,
-            fontSize: FontsSize.extraLarge
+            fontSize: FontsSize.extraLarge,
+            textAlign: 'center'
         }
     })
-    const backgroundImage = ImagesDefinition.find((img) => img.name === image)?.image
+    let backgroundImage = ImagesDefinition.find((img) => img.name === image)?.image
+
+    if (!backgroundImage) {
+        backgroundImage = require('../../../assets/images/products/default.png')
+    }
 
 
     return (
         <View style={styles.container}>
-            <TouchableOpacity style={styles.card} onPress={onPress}  >
+            <TouchableOpacity style={styles.card} onPress={onPress} onLongPress={onLongPress}
+            >
                 <ImageBackground
                     source={backgroundImage} // Ruta relativa a la imagen en tus assets
                     style={styles.imageBackground}

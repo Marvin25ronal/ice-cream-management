@@ -13,7 +13,13 @@ export class HomeServices {
         return new Promise(async (resolve, reject) => {
             let db = await this.getDatabase();
             let tree: TreeNode;
-            db?.manager.find(Category).then((categories) => {
+            db?.manager.find(Category, {
+                relations: {
+                    products: true
+                }
+            }).then((categories) => {
+                console.log("Categorias")
+                console.log(categories)
                 tree = this.constructTree(categories, null);
                 resolve(tree)
             }).catch((error: any) => {
@@ -29,7 +35,8 @@ export class HomeServices {
             parent_id: null,
             description: '',
             image: '',
-            children: []
+            children: [],
+
         }
         let childs = categories.filter((category) => category.parent_id == null);
         for (let i = 0; i < childs.length; i++) {
@@ -45,7 +52,12 @@ export class HomeServices {
             description: actual.description,
             image: actual.image,
             children: [],
-            parent: parent
+            parent: parent,
+            products: actual.products.sort((a, b) => a.order - b.order)
+        }
+        if (actual.products && actual.products.length > 0) {
+            console.log("Productos")
+            console.log(actual.products)
         }
         let childs = categories.filter((category) => category.parent_id == actual.category_id);
         if (childs.length == 0)

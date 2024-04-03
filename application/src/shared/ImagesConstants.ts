@@ -138,5 +138,251 @@ export const ImagesDefinition = [
     {
         name:'/categories/nevada.jpg',
         image: require('../../assets/images/categories/nevada.jpg')
+    },
+    {
+        name:'/products/bomba.png',
+        image: require('../../assets/images/products/bomba.png')
+    },
+    {
+        name:'/products/banana-split.png',
+        image: require('../../assets/images/products/banana-split.png')
+    },
+    {
+        name:'/products/canasta-sundae.png',
+        image: require('../../assets/images/products/canasta-sundae.png')
+    },
+    {
+        name:'/products/sundae-especial.png',
+        image: require('../../assets/images/products/sundae-especial.png')
+    },
+    {
+        name:'/products/sundae-galleta.png',
+        image: require('../../assets/images/products/sundae-galleta.png')
+    },
+    {
+        name:'/products/topping-sundae.png',
+        image: require('../../assets/images/products/topping-sundae.png')
+    },
+    {
+        name:'/products/milkshake.png',
+        image: require('../../assets/images/products/milkshake.png')
+    },
+    {
+        name:'/products/nevada.png',
+        image: require('../../assets/images/products/nevada.png')
+    },
+    {
+        name:'/products/topping-shake.png',
+        image: require('../../assets/images/products/topping-shake.png')
+    },
+    {
+        name:'/products/milkshake1.png',
+        image: require('../../assets/images/products/milkshake1.png')
+    },
+    {
+        name:'/products/milkshake2.png',
+        image: require('../../assets/images/products/milkshake2.png')
+    },
+    {
+        name:'/products/topping-shake2.png',
+        image: require('../../assets/images/products/topping-shake2.png')
+    },
+    {
+        name:'/products/topping-shake3.png',
+        image: require('../../assets/images/products/topping-shake3.png')
+    },
+    {
+        name:'/products/nevada-naranja.png',
+        image: require('../../assets/images/products/nevada-naranja.png')
+    },
+    {
+        name:'/products/nevada-uva.png',
+        image: require('../../assets/images/products/nevada-uva.png')
+    },
+    {
+        name:'/products/cono-sensillo-sin-cobertura.png',
+        image: require('../../assets/images/products/cono-sensillo-sin-cobertura.png')
+    },
+    {
+        name:'/products/cono-doble-sin-cobertura.png',
+        image: require('../../assets/images/products/cono-doble-sin-cobertura.png')
+    },
+    {
+        name:'/products/cono-topping-sin-cobertura.png',
+        image: require('../../assets/images/products/cono-topping-sin-cobertura.png')
+    },
+    {
+        name:'/products/cono-sensillo-sin-cobertura.png',
+        image: require('../../assets/images/products/cono-sensillo-sin-cobertura.png')
+    },
+    {
+        name:'/products/cono-sensillo-con-cobertura.png',
+        image: require('../../assets/images/products/cono-sensillo-con-cobertura.png')
+    },
+    {
+        name:'/products/cono-doble-con-cobertura.png',
+        image: require('../../assets/images/products/cono-doble-con-cobertura.png')
+    },
+    
+    {
+        name:'/products/cono-chocowaffle-con-cobertura.png',
+        image: require('../../assets/images/products/cono-chocowaffle-con-cobertura.png')
+    },
+    {
+        name:'/products/vaso.png',
+        image: require('../../assets/images/products/vaso.png')
+    },
+    {
+        name:'/products/variado.png',
+        image: require('../../assets/images/products/variado.png')
+    },
+    {
+        name:'/products/casero-caramelo.png',
+        image: require('../../assets/images/products/casero-caramelo.png')
+    },
+    {
+        name:'/products/casero-fresa.png',
+        image: require('../../assets/images/products/casero-fresa.png')
+    },
+    {
+        name:'/products/casero-galleta.png',
+        image: require('../../assets/images/products/casero-galleta.png')
+    },
+    {
+        name:'/products/casero-ron.png',
+        image: require('../../assets/images/products/casero-ron.png')
+    },
+    {
+        name:'/products/cinta-crispy.png',
+        image: require('../../assets/images/products/cinta-crispy.png')
+    },
+    {
+        name:'/products/cinta-negra.png',
+        image: require('../../assets/images/products/cinta-negra.png')
+    },
+    {
+        name:'/products/giga-almendra.png',
+        image: require('../../assets/images/products/giga-almendra.png')
+    },
+    {
+        name:'/products/giga-blanco.png',
+        image: require('../../assets/images/products/giga-blanco.png')
+    },
+    {
+        name:'/products/giga-clasico.png',
+        image: require('../../assets/images/products/giga-clasico.png')
+    },
+    {
+        name:'/products/giga-dulce.jpg',
+        image: require('../../assets/images/products/giga-dulce.jpg')
+    },
+    {
+        name:'/products/copa-caramelo.png',
+        image: require('../../assets/images/products/copa-caramelo.png')
+    },
+    {
+        name:'/products/copa-chocolate.png',
+        image: require('../../assets/images/products/copa-chocolate.png')
+    },
+    {
+        name:'/products/copa-fresa.png',
+        image: require('../../assets/images/products/copa-fresa.png')
+    },
+    {
+        name:'/products/block.png',
+        image: require('../../assets/images/products/block.png')
+    },
+    {
+        name:'/products/sandwich-chocolate.png',
+        image: require('../../assets/images/products/sandwich-chocolate.png')
+    },
+    {
+        name:'/products/sandwich-queso.png',
+        image: require('../../assets/images/products/sandwich-queso.png')
+    },
+    {
+        name:'/products/sanguchito.png',
+        image: require('../../assets/images/products/sanguchito.png')
+    },
+    {
+        name:'/products/cremosa-fresa.png',
+        image: require('../../assets/images/products/cremosa-fresa.png')
+    },
+    {
+        name:'/products/cremosa-naranja.png',
+        image: require('../../assets/images/products/cremosa-naranja.png')
+    },
+    {
+        name:'/products/gud-fresa.jpg',
+        image: require('../../assets/images/products/gud-fresa.jpg')
+    },
+    {
+        name:'/products/mango.jpg',
+        image: require('../../assets/images/products/mango.jpg')
+    },
+    {
+        name:'/products/fruta-mango-chamoy.png',
+        image: require('../../assets/images/products/fruta-mango-chamoy.png')
+    },
+    {
+        name:'/products/fruta-mango-verde.png',
+        image: require('../../assets/images/products/fruta-mango-verde.png')
+    },
+    {
+        name:'/products/fruta-fresa.png',
+        image: require('../../assets/images/products/fruta-fresa.png')
+    },
+    {
+        name:'/products/fruta-nance.png',
+        image: require('../../assets/images/products/fruta-nance.png')
+    },
+    {
+        name:'/products/nevada-guanaba.png',
+        image: require('../../assets/images/products/nevada-guanaba.png')
+    },
+    {
+        name:'/products/fruta-coco.png',
+        image: require('../../assets/images/products/fruta-coco.png')
+    },
+    {
+        name:'/products/sandia.png',
+        image: require('../../assets/images/products/sandia.png')
+    },
+    {
+        name:'/products/banana-twist.png',
+        image: require('../../assets/images/products/banana-twist.png')
+    },
+    {
+        name:'/products/canasta-y.png',
+        image: require('../../assets/images/products/canasta-y.png')
+    },
+    {
+        name:'/products/cono-twist.png',
+        image: require('../../assets/images/products/cono-twist.png')
+    },
+    {
+        name:'/products/secretos.png',
+        image: require('../../assets/images/products/secretos.png')
+    },
+    {
+        name:'/products/sundae-mix.png',
+        image: require('../../assets/images/products/sundae-mix.png')
+    },
+    {
+        name:'/products/vaso-twist.png',
+        image: require('../../assets/images/products/vaso-twist.png')
+    },
+    {
+        name:'/products/yogufit.png',
+        image: require('../../assets/images/products/yogufit.png')
+    },
+    {
+        name:'/category/bebidasy.png',
+        image: require('../../assets/images/categories/bebidasy.png')
+    },
+    {
+        name:'/products/sorby-twist.jpg',
+        image: require('../../assets/images/products/sorby-twist.jpg')
     }
+
 ]

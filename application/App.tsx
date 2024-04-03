@@ -9,6 +9,8 @@ import { store } from './src/store/redux/store';
 import StackScreensNavigator from './src/routes/StackNavigator';
 import { PERMISSIONS, request } from 'react-native-permissions';
 import { CreateDatabase } from './src/store/db/Database';
+import { useLoading } from './src/shared/LoaderHook';
+import DrawerNavigator from './src/routes/DrawerNavigator';
 
 
 
@@ -26,12 +28,18 @@ const App = () => {
   }, [])
 
   return (
-    <Provider store={store}>
-      <NavigationContainer >
-        <StackScreensNavigator />
-      </NavigationContainer>
-    </Provider>
+    <>
+      <SafeAreaProvider>
+        <Provider store={store}>
+          <NavigationContainer  >
+            <DrawerNavigator />
+          </NavigationContainer>
+        </Provider>
+      </SafeAreaProvider>
+    </>
+
   )
+
 }
 
 export default App
