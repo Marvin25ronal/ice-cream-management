@@ -383,6 +383,138 @@ export const ImagesDefinition = [
     {
         name:'/products/sorby-twist.jpg',
         image: require('../../assets/images/products/sorby-twist.jpg')
+    },
+    {
+        name:'/products/galleta.png',
+        image: require('../../assets/images/products/galleta.png')
+    },
+    {
+        name:'/products/chocotoffe.png',
+        image: require('../../assets/images/products/chocotoffe.png')
+    },
+    {
+        name:'/products/frutosrojos.png',
+        image: require('../../assets/images/products/frutosrojos.png')
+    },
+    {
+        name:'/products/napolitano.png',
+        image: require('../../assets/images/products/napolitano.png')
+    },
+    {
+        name:'/products/algodon.png',
+        image: require('../../assets/images/products/algtodon.png')
+    },
+    {
+        name:'/products/mg-azucar.png',
+        image: require('../../assets/images/products/mg-azucar.png')
+    },
+    {
+        name:'/products/mg-chocolate.png',
+        image: require('../../assets/images/products/mg-chocolate.png')
+    },
+    {
+        name:'/products/mg-chococ.png',
+        image: require('../../assets/images/products/mg-chococ.png')
+    },
+    {
+        name:'/products/mg-chocochip.png',
+        image: require('../../assets/images/products/mg-chocochip.png')
+    },
+    {
+        name:'/products/mg-dhigo.png',
+        image: require('../../assets/images/products/mg-dhigo.png')
+    },
+    {
+        name:'/products/mg-dulce.png',
+        image: require('../../assets/images/products/mg-dulce.png')
+    },
+    {
+        name:'/products/mg-fresa.png',
+        image: require('../../assets/images/products/mg-fresa.png')
+    },
+    {
+        name:'/products/mg-galleta.png',
+        image: require('../../assets/images/products/mg-galleta.png')
+    },
+    {
+        name:'/products/mg-napolitano.png',
+        image: require('../../assets/images/products/mg-napolitano.png')
+    },
+    {
+        name:'/products/mg-pistacho.png',
+        image: require('../../assets/images/products/mg-pistacho.png')
+    },
+    {
+        name:'/products/mg-vainilla.png',
+        image: require('../../assets/images/products/mg-vainilla.png')
+    },
+    {
+        name:'/products/mg-quesof.png',
+        image: require('../../assets/images/products/mg-quesof.png')
+    },
+    {
+        name:'/products/mg-ron.png',
+        image: require('../../assets/images/products/mg-ron.png')
+    },
+    {
+        name:'/products/mg-yfresa.png',
+        image: require('../../assets/images/products/mg-yfresa.png')
+    },
+    {
+        name:'/products/mg-ymelocoton.png',
+        image: require('../../assets/images/products/mg-ymelocoton.png')
+    },
+    {
+        name:'/products/guanaba.png',
+        image: require('../../assets/images/products/guanaba.png')
+    },
+    {
+        name:'/products/jamaica.png',
+        image: require('../../assets/images/products/jamaica.png')
+    },
+    {
+        name:'/products/mango.png',
+        image: require('../../assets/images/products/mango.png')
+    },
+    {
+        name:'/products/lemon.png',
+        image: require('../../assets/images/products/lemon.png')
+    },
+    {
+        name:'/products/mandarina.png',
+        image: require('../../assets/images/products/mandarina.png')
+    },
+    {
+        name:'/products/uva.png',
+        image: require('../../assets/images/products/uva.png')
+    },
+    {
+        name:'/products/cafe.png',
+        image: require('../../assets/images/products/cafe.png')
+    },
+    {
+        name:'/products/coco.png',
+        image: require('../../assets/images/products/coco.png')
+    },
+    {
+        name:'/products/chocomenta.png',
+        image: require('../../assets/images/products/chocomenta.png')
+    },
+    {
+        name:'/products/expresso.png',
+        image: require('../../assets/images/products/expresso.png')
+    },
+    {
+        name:'/products/pistacho.png',
+        image: require('../../assets/images/products/pistacho.png')
+    },
+    {
+        name:'/products/pinacolada.png',
+        image: require('../../assets/images/products/pinacolada.png')
+    },
+    {
+        name:'/products/ronconpasas.png',
+        image: require('../../assets/images/products/ronconpasas.png')
     }
 
 ]
