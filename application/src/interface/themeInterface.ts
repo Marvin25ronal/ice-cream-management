@@ -3,9 +3,13 @@ export interface themeInterface {
     HEADER_TEXT_COLOR: string
     PAGE_BACKGROUND_COLOR: string
     CARD_BACKGROUND_COLOR: string
+    CARD_TEXT_BACKGROUND_COLOR: string
     CLEAN_BUTTON_COLOR: string
     EDIT_BUTTON_COLOR: string
     PAY_BUTTON_COLOR: string
     HOME_BUTTON_COLOR: string
     BACK_BUTTON_COLOR: string
+    CARD_TEXT_BACKGROUND_COLOR_PRODUCT: string
+    CARD_BORDER_COLOR_PRODUCT: string
+    SPLASH_SCREEN_BACKGROUND_COLOR: string
 }

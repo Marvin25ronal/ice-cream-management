@@ -13,7 +13,13 @@ export class HomeServices {
         return new Promise(async (resolve, reject) => {
             let db = await this.getDatabase();
             let tree: TreeNode;
-            db?.manager.find(Category).then((categories) => {
+            db?.manager.find(Category, {
+                relations: {
+                    products: true
+                }
+            }).then((categories) => {
+                console.log("Categorias")
+                console.log(categories)
                 tree = this.constructTree(categories, null);
                 resolve(tree)
             }).catch((error: any) => {
@@ -29,28 +35,35 @@ export class HomeServices {
             parent_id: null,
             description: '',
             image: '',
-            children: []
+            children: [],
+
         }
         let childs = categories.filter((category) => category.parent_id == null);
         for (let i = 0; i < childs.length; i++) {
-            root.children?.push(this.addChilds(categories, childs[i]))
+            root.children?.push(this.addChilds(categories, childs[i], root))
         }
         return root;
     }
-    private addChilds(categories: Category[], actual: Category): TreeNode {
+    private addChilds(categories: Category[], actual: Category, parent: TreeNode): TreeNode {
         let node: TreeNode = {
             name: actual.name,
             category_id: actual.category_id,
             parent_id: actual.parent_id,
             description: actual.description,
             image: actual.image,
-            children: []
+            children: [],
+            parent: parent,
+            products: actual.products.sort((a, b) => a.order - b.order)
+        }
+        if (actual.products && actual.products.length > 0) {
+            console.log("Productos")
+            console.log(actual.products)
         }
         let childs = categories.filter((category) => category.parent_id == actual.category_id);
         if (childs.length == 0)
             return node;
         for (let i = 0; i < childs.length; i++) {
-            node.children?.push(this.addChilds(categories, childs[i]))
+            node.children?.push(this.addChilds(categories, childs[i], node))
         }
         return node;
     }

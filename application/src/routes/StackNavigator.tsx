@@ -9,18 +9,10 @@ import { setTheme } from '../store/redux/themeReducer';
 import { darkTheme } from '../styles/Theme';
 import MenuPage from '../pages/MenuPage';
 import { Fonts, FontsSize } from '../constants/Fonts';
+import SplashScreen from '../components/UI/SplashScreen';
 const Stack = createStackNavigator();
 
 const StackNavigator = () => {
-    const isDarkMode = useColorScheme() === 'dark';
-    const dispatch = useDispatch();
-    useEffect(() => {
-        if (isDarkMode) {
-            dispatch(setTheme(darkTheme))
-        } else {
-            dispatch(setTheme(darkTheme))
-        }
-    }, [])
     const theme: themeInterface = useSelector((state: any) => state.theme.value);
     const options: StackNavigationOptions = {
         headerStyle: {
@@ -28,17 +20,23 @@ const StackNavigator = () => {
 
         },
         headerTitleStyle: {
-            color: theme.HEADER_TEXT_COLOR,
+            color: theme.HEADER_TEXT_COLOR, 
             fontFamily: Fonts.LatoBold,
             fontSize: FontsSize.large
         },
         headerTintColor: theme.HEADER_TEXT_COLOR,
+        headerShown: false
+
     }
     return (
-        <Stack.Navigator>
-            <Stack.Screen name={Utils.screens.HOME} component={HomePage} options={options} />
-            <Stack.Screen name={Utils.screens.MENU} component={MenuPage} options={options} />
-        </Stack.Navigator>
+        <>
+            <Stack.Navigator>
+                <Stack.Screen name={Utils.screens.HOME} component={HomePage} options={options} />
+                <Stack.Screen name={Utils.screens.MENU} component={MenuPage} options={options} />
+            </Stack.Navigator>
+        </>
+
+
     )
 }
 
