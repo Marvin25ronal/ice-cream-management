@@ -61,7 +61,7 @@ const MenuCardComponent = ({ name, description, image, onPress, onLongPress, isP
     let backgroundImage = ImagesDefinition.find((img) => img.name === image)?.image
 
     if (!backgroundImage) {
-        backgroundImage = require('../../../assets/images/products/default.png')
+        backgroundImage = require('../../../assets/images/products/defaultb.png')
     }
 
 

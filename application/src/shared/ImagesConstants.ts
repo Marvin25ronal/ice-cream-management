@@ -1,9 +1,5 @@
 export const ImagesDefinition = [
     {
-        name: '/categories/banana.jpg',
-        image: require('../../assets/images/categories/banana.jpg')
-    },
-    {
         name:'/categories/cone.jpg',
         image: require('../../assets/images/categories/cone.jpg')
     },
@@ -33,11 +29,11 @@ export const ImagesDefinition = [
     },
     {
         name:'/categories/conos-chocolate.jpg',
-        image: require('../../assets/images/categories/conos-chocolate.jpg')
+        image: require('../../assets/images/categories/conos_chocolate.jpg')
     },
     {
         name:'/categories/conos-normales.jpg',
-        image: require('../../assets/images/categories/conos-normales.jpg')
+        image: require('../../assets/images/categories/conos_normales.jpg')
     },
     {
         name:'/categories/promociones.jpg',
@@ -145,23 +141,23 @@ export const ImagesDefinition = [
     },
     {
         name:'/products/banana-split.png',
-        image: require('../../assets/images/products/banana-split.png')
+        image: require('../../assets/images/products/banana_split.png')
     },
     {
         name:'/products/canasta-sundae.png',
-        image: require('../../assets/images/products/canasta-sundae.png')
+        image: require('../../assets/images/products/canasta_sundae.png')
     },
     {
         name:'/products/sundae-especial.png',
-        image: require('../../assets/images/products/sundae-especial.png')
+        image: require('../../assets/images/products/sundae_especial.png')
     },
     {
         name:'/products/sundae-galleta.png',
-        image: require('../../assets/images/products/sundae-galleta.png')
+        image: require('../../assets/images/products/sundae_galleta.png')
     },
     {
         name:'/products/topping-sundae.png',
-        image: require('../../assets/images/products/topping-sundae.png')
+        image: require('../../assets/images/products/topping_sundae.png')
     },
     {
         name:'/products/milkshake.png',
@@ -173,7 +169,7 @@ export const ImagesDefinition = [
     },
     {
         name:'/products/topping-shake.png',
-        image: require('../../assets/images/products/topping-shake.png')
+        image: require('../../assets/images/products/topping_shake.png')
     },
     {
         name:'/products/milkshake1.png',
@@ -185,108 +181,108 @@ export const ImagesDefinition = [
     },
     {
         name:'/products/topping-shake2.png',
-        image: require('../../assets/images/products/topping-shake2.png')
+        image: require('../../assets/images/products/topping_shake2.png')
     },
     {
         name:'/products/topping-shake3.png',
-        image: require('../../assets/images/products/topping-shake3.png')
+        image: require('../../assets/images/products/topping_shake3.png')
     },
     {
         name:'/products/nevada-naranja.png',
-        image: require('../../assets/images/products/nevada-naranja.png')
+        image: require('../../assets/images/products/nevada_naranja.png')
     },
     {
         name:'/products/nevada-uva.png',
-        image: require('../../assets/images/products/nevada-uva.png')
+        image: require('../../assets/images/products/nevada_uva.png')
     },
     {
         name:'/products/cono-sensillo-sin-cobertura.png',
-        image: require('../../assets/images/products/cono-sensillo-sin-cobertura.png')
+        image: require('../../assets/images/products/conosensillosincobertura.png')
     },
     {
         name:'/products/cono-doble-sin-cobertura.png',
-        image: require('../../assets/images/products/cono-doble-sin-cobertura.png')
+        image: require('../../assets/images/products/conodoblesincobertura.png')
     },
     {
         name:'/products/cono-topping-sin-cobertura.png',
-        image: require('../../assets/images/products/cono-topping-sin-cobertura.png')
+        image: require('../../assets/images/products/conotoppingsincobertura.png')
     },
     {
         name:'/products/cono-sensillo-sin-cobertura.png',
-        image: require('../../assets/images/products/cono-sensillo-sin-cobertura.png')
+        image: require('../../assets/images/products/conosensillosincobertura.png')
     },
     {
         name:'/products/cono-sensillo-con-cobertura.png',
-        image: require('../../assets/images/products/cono-sensillo-con-cobertura.png')
+        image: require('../../assets/images/products/conosensilloconcobertura.png')
     },
     {
         name:'/products/cono-doble-con-cobertura.png',
-        image: require('../../assets/images/products/cono-doble-con-cobertura.png')
+        image: require('../../assets/images/products/conodobleconcobertura.png')
     },
     
     {
         name:'/products/cono-chocowaffle-con-cobertura.png',
-        image: require('../../assets/images/products/cono-chocowaffle-con-cobertura.png')
+        image: require('../../assets/images/products/conochocowaffleconcobertura.png')
     },
     {
         name:'/products/vaso.png',
-        image: require('../../assets/images/products/vaso.png')
+        image: require('../../assets/images/products/vaso.jpg')
     },
     {
         name:'/products/variado.png',
-        image: require('../../assets/images/products/variado.png')
+        image: require('../../assets/images/products/variado.jpg')
     },
     {
         name:'/products/casero-caramelo.png',
-        image: require('../../assets/images/products/casero-caramelo.png')
+        image: require('../../assets/images/products/casero_caramelo.png')
     },
     {
         name:'/products/casero-fresa.png',
-        image: require('../../assets/images/products/casero-fresa.png')
-    },
+        image: require('../../assets/images/products/casero_fresa.png')
+    }, 
     {
         name:'/products/casero-galleta.png',
-        image: require('../../assets/images/products/casero-galleta.png')
+        image: require('../../assets/images/products/casero_galleta.png')
     },
     {
         name:'/products/casero-ron.png',
-        image: require('../../assets/images/products/casero-ron.png')
+        image: require('../../assets/images/products/casero_ron.png')
     },
     {
         name:'/products/cinta-crispy.png',
-        image: require('../../assets/images/products/cinta-crispy.png')
+        image: require('../../assets/images/products/cinta_crispy.png')
     },
     {
         name:'/products/cinta-negra.png',
-        image: require('../../assets/images/products/cinta-negra.png')
+        image: require('../../assets/images/products/cinta_negra.png')
     },
     {
         name:'/products/giga-almendra.png',
-        image: require('../../assets/images/products/giga-almendra.png')
+        image: require('../../assets/images/products/giga_almendra.png')
     },
     {
         name:'/products/giga-blanco.png',
-        image: require('../../assets/images/products/giga-blanco.png')
+        image: require('../../assets/images/products/giga_blanco.png')
     },
     {
         name:'/products/giga-clasico.png',
-        image: require('../../assets/images/products/giga-clasico.png')
+        image: require('../../assets/images/products/giga_clasico.png')
     },
     {
         name:'/products/giga-dulce.jpg',
-        image: require('../../assets/images/products/giga-dulce.jpg')
+        image: require('../../assets/images/products/giga_dulce.jpg')
     },
     {
         name:'/products/copa-caramelo.png',
-        image: require('../../assets/images/products/copa-caramelo.png')
+        image: require('../../assets/images/products/copa_caramelo.png')
     },
     {
         name:'/products/copa-chocolate.png',
-        image: require('../../assets/images/products/copa-chocolate.png')
+        image: require('../../assets/images/products/copa_chocolate.png')
     },
     {
         name:'/products/copa-fresa.png',
-        image: require('../../assets/images/products/copa-fresa.png')
+        image: require('../../assets/images/products/copa_fresa.png')
     },
     {
         name:'/products/block.png',
@@ -294,11 +290,11 @@ export const ImagesDefinition = [
     },
     {
         name:'/products/sandwich-chocolate.png',
-        image: require('../../assets/images/products/sandwich-chocolate.png')
+        image: require('../../assets/images/products/sandwich_chocolate.png')
     },
     {
         name:'/products/sandwich-queso.png',
-        image: require('../../assets/images/products/sandwich-queso.png')
+        image: require('../../assets/images/products/sandwich_queso.png')
     },
     {
         name:'/products/sanguchito.png',
@@ -306,15 +302,15 @@ export const ImagesDefinition = [
     },
     {
         name:'/products/cremosa-fresa.png',
-        image: require('../../assets/images/products/cremosa-fresa.png')
+        image: require('../../assets/images/products/cremosa_fresa.png')
     },
     {
         name:'/products/cremosa-naranja.png',
-        image: require('../../assets/images/products/cremosa-naranja.png')
+        image: require('../../assets/images/products/cremosa_naranja.png')
     },
     {
         name:'/products/gud-fresa.jpg',
-        image: require('../../assets/images/products/gud-fresa.jpg')
+        image: require('../../assets/images/products/gud_fresa.jpg')
     },
     {
         name:'/products/mango.jpg',
@@ -322,27 +318,27 @@ export const ImagesDefinition = [
     },
     {
         name:'/products/fruta-mango-chamoy.png',
-        image: require('../../assets/images/products/fruta-mango-chamoy.png')
+        image: require('../../assets/images/products/frutamangochamoy.jpg')
     },
     {
         name:'/products/fruta-mango-verde.png',
-        image: require('../../assets/images/products/fruta-mango-verde.png')
+        image: require('../../assets/images/products/fruta_mango_verde.png')
     },
     {
         name:'/products/fruta-fresa.png',
-        image: require('../../assets/images/products/fruta-fresa.png')
+        image: require('../../assets/images/products/fruta_fresa.png')
     },
     {
         name:'/products/fruta-nance.png',
-        image: require('../../assets/images/products/fruta-nance.png')
+        image: require('../../assets/images/products/fruta_nance.png')
     },
     {
         name:'/products/nevada-guanaba.png',
-        image: require('../../assets/images/products/nevada-guanaba.png')
+        image: require('../../assets/images/products/nevada_guanaba.png')
     },
     {
         name:'/products/fruta-coco.png',
-        image: require('../../assets/images/products/fruta-coco.png')
+        image: require('../../assets/images/products/fruta_coco.png')
     },
     {
         name:'/products/sandia.png',
@@ -350,15 +346,15 @@ export const ImagesDefinition = [
     },
     {
         name:'/products/banana-twist.png',
-        image: require('../../assets/images/products/banana-twist.png')
+        image: require('../../assets/images/products/banana_twist.png')
     },
     {
         name:'/products/canasta-y.png',
-        image: require('../../assets/images/products/canasta-y.png')
+        image: require('../../assets/images/products/canasta_y.png')
     },
     {
         name:'/products/cono-twist.png',
-        image: require('../../assets/images/products/cono-twist.png')
+        image: require('../../assets/images/products/conotwist.png')
     },
     {
         name:'/products/secretos.png',
@@ -366,11 +362,11 @@ export const ImagesDefinition = [
     },
     {
         name:'/products/sundae-mix.png',
-        image: require('../../assets/images/products/sundae-mix.png')
+        image: require('../../assets/images/products/sundae_mix.png')
     },
     {
         name:'/products/vaso-twist.png',
-        image: require('../../assets/images/products/vaso-twist.png')
+        image: require('../../assets/images/products/vaso_twist.png')
     },
     {
         name:'/products/yogufit.png',
@@ -382,11 +378,11 @@ export const ImagesDefinition = [
     },
     {
         name:'/products/sorby-twist.jpg',
-        image: require('../../assets/images/products/sorby-twist.jpg')
+        image: require('../../assets/images/products/sorby_twist.jpg')
     },
     {
         name:'/products/galleta.png',
-        image: require('../../assets/images/products/galleta.png')
+        image: require('../../assets/images/products/galleta.jpg')
     },
     {
         name:'/products/chocotoffe.png',
@@ -394,11 +390,11 @@ export const ImagesDefinition = [
     },
     {
         name:'/products/frutosrojos.png',
-        image: require('../../assets/images/products/frutosrojos.png')
+        image: require('../../assets/images/products/frutosrojos.jpg')
     },
     {
         name:'/products/napolitano.png',
-        image: require('../../assets/images/products/napolitano.png')
+        image: require('../../assets/images/products/napolitano.jpg')
     },
     {
         name:'/products/algodon.png',
@@ -406,63 +402,63 @@ export const ImagesDefinition = [
     },
     {
         name:'/products/mg-azucar.png',
-        image: require('../../assets/images/products/mg-azucar.png')
+        image: require('../../assets/images/products/mg_azucar.png')
     },
     {
         name:'/products/mg-chocolate.png',
-        image: require('../../assets/images/products/mg-chocolate.png')
+        image: require('../../assets/images/products/mg_chocolate.png')
     },
     {
         name:'/products/mg-chococ.png',
-        image: require('../../assets/images/products/mg-chococ.png')
+        image: require('../../assets/images/products/mg_chococ.png')
     },
     {
         name:'/products/mg-chocochip.png',
-        image: require('../../assets/images/products/mg-chocochip.png')
+        image: require('../../assets/images/products/mg_chocochip.png')
     },
     {
         name:'/products/mg-dhigo.png',
-        image: require('../../assets/images/products/mg-dhigo.png')
+        image: require('../../assets/images/products/mg_dhigo.png')
     },
     {
         name:'/products/mg-dulce.png',
-        image: require('../../assets/images/products/mg-dulce.png')
+        image: require('../../assets/images/products/mg_dulce.png')
     },
     {
         name:'/products/mg-fresa.png',
-        image: require('../../assets/images/products/mg-fresa.png')
+        image: require('../../assets/images/products/mg_fresa.png')
     },
     {
         name:'/products/mg-galleta.png',
-        image: require('../../assets/images/products/mg-galleta.png')
+        image: require('../../assets/images/products/mg_galleta.png')
     },
     {
         name:'/products/mg-napolitano.png',
-        image: require('../../assets/images/products/mg-napolitano.png')
+        image: require('../../assets/images/products/mg_napolitano.png')
     },
     {
         name:'/products/mg-pistacho.png',
-        image: require('../../assets/images/products/mg-pistacho.png')
+        image: require('../../assets/images/products/mg_pistacho.png')
     },
     {
         name:'/products/mg-vainilla.png',
-        image: require('../../assets/images/products/mg-vainilla.png')
+        image: require('../../assets/images/products/mg_vainilla.png')
     },
     {
         name:'/products/mg-quesof.png',
-        image: require('../../assets/images/products/mg-quesof.png')
+        image: require('../../assets/images/products/mg_quesof.png')
     },
     {
         name:'/products/mg-ron.png',
-        image: require('../../assets/images/products/mg-ron.png')
+        image: require('../../assets/images/products/mg_ron.png')
     },
     {
         name:'/products/mg-yfresa.png',
-        image: require('../../assets/images/products/mg-yfresa.png')
+        image: require('../../assets/images/products/mg_yfresa.png')
     },
     {
         name:'/products/mg-ymelocoton.png',
-        image: require('../../assets/images/products/mg-ymelocoton.png')
+        image: require('../../assets/images/products/mg_ymelocoton.png')
     },
     {
         name:'/products/guanaba.png',
@@ -470,19 +466,19 @@ export const ImagesDefinition = [
     },
     {
         name:'/products/jamaica.png',
-        image: require('../../assets/images/products/jamaica.png')
+        image: require('../../assets/images/products/jamaica.jpg')
     },
     {
         name:'/products/mango.png',
-        image: require('../../assets/images/products/mango.png')
+        image: require('../../assets/images/products/mango2.jpg')
     },
     {
         name:'/products/lemon.png',
-        image: require('../../assets/images/products/lemon.png')
+        image: require('../../assets/images/products/lemon.jpg')
     },
     {
         name:'/products/mandarina.png',
-        image: require('../../assets/images/products/mandarina.png')
+        image: require('../../assets/images/products/mandarina.jpg')
     },
     {
         name:'/products/uva.png',
@@ -498,7 +494,7 @@ export const ImagesDefinition = [
     },
     {
         name:'/products/chocomenta.png',
-        image: require('../../assets/images/products/chocomenta.png')
+        image: require('../../assets/images/products/chocomenta.jpg')
     },
     {
         name:'/products/expresso.png',
@@ -506,15 +502,15 @@ export const ImagesDefinition = [
     },
     {
         name:'/products/pistacho.png',
-        image: require('../../assets/images/products/pistacho.png')
+        image: require('../../assets/images/products/pistacho.jpg')
     },
     {
         name:'/products/pinacolada.png',
-        image: require('../../assets/images/products/pinacolada.png')
+        image: require('../../assets/images/products/pinacolada.jpg')
     },
     {
         name:'/products/ronconpasas.png',
-        image: require('../../assets/images/products/ronconpasas.png')
+        image: require('../../assets/images/products/ronconpasas.jpg')
     }
 
 ]
