@@ -13,8 +13,11 @@ import { TreeNode } from '../interface/TreeInterface'
 import { useLoading } from '../shared/LoaderHook'
 import MenuCardComponent from '../components/Home/MenuCardComponent'
 import { Fonts } from '../constants/Fonts'
-import Animated from 'react-native-reanimated'
+import Animated, { useSharedValue, withSpring } from 'react-native-reanimated'
 import ButtonsOptions from '../components/Home/ButtonsOptions'
+import { Product } from '../entity/Product.entity'
+import ModalComponent from '../components/UI/ModalComponent'
+import ClearSelectedItemsModal from '../components/Home/ClearSelectedItemsModal'
 const HomePage = () => {
   const [homeService] = useState(new HomeServices())
   const [actualNode, setActualNode] = useState<TreeNode>()
@@ -23,8 +26,11 @@ const HomePage = () => {
   const dispatch = useDispatch()
   const navigation = useNavigation();
   const theme: themeInterface = useSelector((state: any) => state.theme.value);
+  const [selectedItems, setSelectedItems] = useState<Product[]>([])
   const [printers, setprinters] = useState<IUSBPrinter[]>()
   const [currentPrinter, setCurrentPrinter] = useState<IUSBPrinter>()
+  const [visible, setVisible] = useState(false)
+  const progress = useSharedValue(0)
   useEffect(() => {
     setTimeout(() => {
       getTree();
@@ -49,8 +55,14 @@ const HomePage = () => {
       backgroundColor: theme.PAGE_BACKGROUND_COLOR,
       flex: 1,
     },
-
   })
+  const addProduct = (product: Product) => {
+    setSelectedItems([...selectedItems, product])
+  }
+  const clearSelectedItems = () => {
+    setVisible(true)
+    progress.value = withSpring(1)
+  }
   const _connectPrinter = (printer: IUSBPrinter) => USBPrinter.connectPrinter(printer.vendor_id, printer.product_id).then(() => setCurrentPrinter(printer))
 
   return (
@@ -138,31 +150,51 @@ const HomePage = () => {
     //   </View>
 
     // </View>
-    <Animated.ScrollView
-      style={styles.page}
-      contentContainerStyle={{ paddingBottom: 10 }}
-      scrollEnabled={true}
-      showsVerticalScrollIndicator={true}
-      showsHorizontalScrollIndicator={true}
-      horizontal={false}
-    >
-      <ButtonsOptions loadTree={loadTree} actualNode={actualNode} setActualNode={setActualNode} />
-      <View style={{ flex: 1, flexDirection: 'row', flexWrap: 'wrap', height: 'auto' }}>
-        {
-          !loadingState && actualNode && actualNode.children && actualNode.children.map((node: TreeNode, index: number) => (
-            <MenuCardComponent key={index} {...node} image={node.image} onPress={() => {
-              setActualNode(node)
-            }} />
-          ))
-        }
-        {
-          !loadingState && actualNode && actualNode.products && actualNode.products.map((product: any, index: number) => (
-            <MenuCardComponent key={index} {...product} image={product.image} onPress={() => { }} isProduct />
-          ))
-        }
+    <>
+      <Animated.ScrollView
+        style={styles.page}
+        contentContainerStyle={{ paddingBottom: 10 }}
+        scrollEnabled={true}
+        showsVerticalScrollIndicator={true}
+        showsHorizontalScrollIndicator={true}
+        horizontal={false}
+      >
 
-      </View>
-    </Animated.ScrollView>
+        <ButtonsOptions loadTree={loadTree} actualNode={actualNode} setActualNode={setActualNode} clearSelectedItems={clearSelectedItems} />
+        <View style={{ flex: 1, flexDirection: 'row', flexWrap: 'wrap', height: 'auto' }}>
+          {
+            !loadingState && actualNode && actualNode.children && actualNode.children.map((node: TreeNode, index: number) => (
+              <MenuCardComponent id={index} key={index} {...node} image={node.image} onPress={() => {
+                setActualNode(node)
+              }} />
+            ))
+          }
+          {
+            !loadingState && actualNode && actualNode.products && actualNode.products.map((product: any, index: number) => (
+              <MenuCardComponent id={product.product_id} key={index} {...product} image={product.image} onPress={() => {
+                addProduct(product)
+              }} isProduct selectedItems={selectedItems} />
+            ))
+          }
+          <ModalComponent visible={visible} setVisible={setVisible} height={"50%"} width={"50%"} progress={progress}>
+            <ClearSelectedItemsModal confirm={() => {
+              setSelectedItems([])
+              setVisible(false)
+              progress.value = withSpring(0)
+            }}
+              cancel={
+                () => {
+                  setVisible(false)
+                  progress.value = withSpring(0)
+                }
+              }
+            />
+          </ModalComponent>
+        </View>
+
+      </Animated.ScrollView>
+    </>
+
 
   )
 }

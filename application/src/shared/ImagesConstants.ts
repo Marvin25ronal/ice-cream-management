@@ -511,6 +511,10 @@ export const ImagesDefinition = [
     {
         name:'/products/ronconpasas.png',
         image: require('../../assets/images/products/ronconpasas.jpg')
+    },
+    {
+        name:'/products/quesof.png',
+        image: require('../../assets/images/products/quesof.png')
     }
 
 ]

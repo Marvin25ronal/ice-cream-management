@@ -5,8 +5,10 @@ import { useSelector } from 'react-redux'
 import { ImagesDefinition } from '../../shared/ImagesConstants'
 
 import { Fonts, FontsSize } from '../../constants/Fonts'
+import { Product } from '../../entity/Product.entity'
+import NumberIndicator from './NumberIndicator'
 
-const MenuCardComponent = ({ name, description, image, onPress, onLongPress, isProduct = false }: { name: String, description: String, image: String, onPress: any, onLongPress?: any, isProduct?: boolean }) => {
+const MenuCardComponent = ({ name, description, image, onPress, onLongPress, isProduct = false, selectedItems = [], id }: { name: String, description: String, image: String, onPress: any, onLongPress?: any, isProduct?: boolean, selectedItems?: Product[], id: number }) => {
     const theme: themeInterface = useSelector((state: any) => state.theme.value)
     const dimensions = Dimensions.get('window')
     const styles = StyleSheet.create({
@@ -56,7 +58,8 @@ const MenuCardComponent = ({ name, description, image, onPress, onLongPress, isP
             fontFamily: Fonts.LatoBold,
             fontSize: FontsSize.extraLarge,
             textAlign: 'center'
-        }
+        },
+
     })
     let backgroundImage = ImagesDefinition.find((img) => img.name === image)?.image
 
@@ -67,6 +70,10 @@ const MenuCardComponent = ({ name, description, image, onPress, onLongPress, isP
 
     return (
         <View style={styles.container}>
+            {
+                selectedItems.length > 0 && selectedItems.find((item) => item.product_id == id) &&
+                <NumberIndicator elements={selectedItems.filter(item => item.product_id == id).length} />
+            }
             <TouchableOpacity style={styles.card} onPress={onPress} onLongPress={onLongPress}
             >
                 <ImageBackground

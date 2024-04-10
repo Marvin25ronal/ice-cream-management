@@ -7,7 +7,7 @@ import { useSelector } from 'react-redux'
 import { themeInterface } from '../../interface/themeInterface'
 import { Fonts } from '../../constants/Fonts'
 
-const ButtonsOptions = ({ actualNode, setActualNode, loadTree }: { actualNode: TreeNode | undefined, setActualNode: any, loadTree: any }) => {
+const ButtonsOptions = ({ actualNode, setActualNode, loadTree, clearSelectedItems }: { actualNode: TreeNode | undefined, setActualNode: any, loadTree: any, clearSelectedItems: any }) => {
     const theme: themeInterface = useSelector((state: any) => state.theme.value);
     const styles = StyleSheet.create({
         buttonsContainer: {
@@ -61,7 +61,7 @@ const ButtonsOptions = ({ actualNode, setActualNode, loadTree }: { actualNode: T
                 <IconSelector icon_class={type_class_icon.Ionicons} color="white" icon="arrow-back" size={20} />
                 <Text style={styles.buttonText}>Atrás</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={{ ...styles.button, backgroundColor: theme.CLEAN_BUTTON_COLOR }} >
+            <TouchableOpacity style={{ ...styles.button, backgroundColor: theme.CLEAN_BUTTON_COLOR }}  onPress={clearSelectedItems} >
                 <IconSelector icon_class={type_class_icon.Feather} color="white" icon="trash" size={20} />
                 <Text style={styles.buttonText}>Limpiar</Text>
             </TouchableOpacity>
