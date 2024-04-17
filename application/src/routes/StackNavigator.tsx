@@ -10,7 +10,17 @@ import { darkTheme } from '../styles/Theme';
 import MenuPage from '../pages/MenuPage';
 import { Fonts, FontsSize } from '../constants/Fonts';
 import SplashScreen from '../components/UI/SplashScreen';
-const Stack = createStackNavigator();
+import PayPage from '../pages/PayPage';
+import { Product } from '../entity/Product.entity';
+import { getHeaderTitle } from '@react-navigation/elements'
+import CustomHeader from '../components/UI/CustomHeader';
+export type RootStackParamList = {
+    [Utils.screens.HOME]: undefined,
+    [Utils.screens.MENU]: undefined,
+    [Utils.screens.PAYMENT]: { products: Product[] }
+}
+
+const Stack = createStackNavigator<RootStackParamList>();
 
 const StackNavigator = () => {
     const theme: themeInterface = useSelector((state: any) => state.theme.value);
@@ -20,19 +30,23 @@ const StackNavigator = () => {
 
         },
         headerTitleStyle: {
-            color: theme.HEADER_TEXT_COLOR, 
+            color: theme.HEADER_TEXT_COLOR,
             fontFamily: Fonts.LatoBold,
             fontSize: FontsSize.large
         },
         headerTintColor: theme.HEADER_TEXT_COLOR,
-        headerShown: false
-
+        headerShown: true,
+        header: ({ navigation, route, options, back }) => {
+            const title = getHeaderTitle(options, route.name)
+            return <CustomHeader title={title} backOption={back} navigation={navigation} />
+        }
     }
     return (
         <>
             <Stack.Navigator>
                 <Stack.Screen name={Utils.screens.HOME} component={HomePage} options={options} />
                 <Stack.Screen name={Utils.screens.MENU} component={MenuPage} options={options} />
+                <Stack.Screen name={Utils.screens.PAYMENT} component={PayPage} options={options} />
             </Stack.Navigator>
         </>
 

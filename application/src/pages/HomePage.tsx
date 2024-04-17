@@ -2,7 +2,7 @@ import { Alert, Button, StyleSheet, Text, View, TouchableOpacity } from 'react-n
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { ScrollView } from 'react-native-gesture-handler'
-import { useNavigation } from '@react-navigation/native'
+import { DrawerActions, useNavigation } from '@react-navigation/native'
 import { Utils } from '../constants/utils'
 import { themeInterface } from '../interface/themeInterface'
 import { COMMANDS, IUSBPrinter, USBPrinter } from 'react-native-ect-thermal-receipt-printer';
@@ -18,14 +18,20 @@ import ButtonsOptions from '../components/Home/ButtonsOptions'
 import { Product } from '../entity/Product.entity'
 import ModalComponent from '../components/UI/ModalComponent'
 import ClearSelectedItemsModal from '../components/Home/ClearSelectedItemsModal'
+import { SCREENS } from '../constants/navigation/screeens'
+import { StackNavigationProp } from '@react-navigation/stack'
+import { RootStackParamList } from '../routes/StackNavigator'
+import { addToCart, clearCart } from '../store/redux/carReducer'
+
 const HomePage = () => {
   const [homeService] = useState(new HomeServices())
   const [actualNode, setActualNode] = useState<TreeNode>()
   const { loadingState, setTrueLoading } = useLoading()
   const [data, setdata] = useState<TreeNode>()
   const dispatch = useDispatch()
-  const navigation = useNavigation();
+  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
   const theme: themeInterface = useSelector((state: any) => state.theme.value);
+
   const [selectedItems, setSelectedItems] = useState<Product[]>([])
   const [printers, setprinters] = useState<IUSBPrinter[]>()
   const [currentPrinter, setCurrentPrinter] = useState<IUSBPrinter>()
@@ -34,6 +40,7 @@ const HomePage = () => {
   useEffect(() => {
     setTimeout(() => {
       getTree();
+      dispatch(clearCart())
     }, 500)
   }, [])
 
@@ -57,11 +64,17 @@ const HomePage = () => {
     },
   })
   const addProduct = (product: Product) => {
-    setSelectedItems([...selectedItems, product])
+    dispatch(addToCart(product.product_id));
+    //setSelectedItems([...selectedItems, product])
   }
   const clearSelectedItems = () => {
     setVisible(true)
     progress.value = withSpring(1)
+  }
+
+  const goToPayment = () => {
+    navigation.navigate(SCREENS.PAYMENT, { products: selectedItems })
+    //navigation.dispatch(DrawerActions.toggleDrawer())
   }
   const _connectPrinter = (printer: IUSBPrinter) => USBPrinter.connectPrinter(printer.vendor_id, printer.product_id).then(() => setCurrentPrinter(printer))
 
@@ -160,7 +173,7 @@ const HomePage = () => {
         horizontal={false}
       >
 
-        <ButtonsOptions loadTree={loadTree} actualNode={actualNode} setActualNode={setActualNode} clearSelectedItems={clearSelectedItems} />
+        <ButtonsOptions loadTree={loadTree} actualNode={actualNode} setActualNode={setActualNode} clearSelectedItems={clearSelectedItems} goToPayment={goToPayment} />
         <View style={{ flex: 1, flexDirection: 'row', flexWrap: 'wrap', height: 'auto' }}>
           {
             !loadingState && actualNode && actualNode.children && actualNode.children.map((node: TreeNode, index: number) => (
@@ -173,12 +186,12 @@ const HomePage = () => {
             !loadingState && actualNode && actualNode.products && actualNode.products.map((product: any, index: number) => (
               <MenuCardComponent id={product.product_id} key={index} {...product} image={product.image} onPress={() => {
                 addProduct(product)
-              }} isProduct selectedItems={selectedItems} />
+              }} isProduct />
             ))
           }
           <ModalComponent visible={visible} setVisible={setVisible} height={"50%"} width={"50%"} progress={progress}>
             <ClearSelectedItemsModal confirm={() => {
-              setSelectedItems([])
+              dispatch(clearCart())
               setVisible(false)
               progress.value = withSpring(0)
             }}

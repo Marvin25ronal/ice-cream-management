@@ -6,8 +6,10 @@ import { TreeNode } from '../../interface/TreeInterface'
 import { useSelector } from 'react-redux'
 import { themeInterface } from '../../interface/themeInterface'
 import { Fonts } from '../../constants/Fonts'
+import { Product } from '../../entity/Product.entity'
+import NumberIndicator from './NumberIndicator'
 
-const ButtonsOptions = ({ actualNode, setActualNode, loadTree, clearSelectedItems }: { actualNode: TreeNode | undefined, setActualNode: any, loadTree: any, clearSelectedItems: any }) => {
+const ButtonsOptions = ({ actualNode, setActualNode, loadTree, clearSelectedItems, goToPayment }: { actualNode: TreeNode | undefined, setActualNode: any, loadTree: any, clearSelectedItems: any, goToPayment: any }) => {
     const theme: themeInterface = useSelector((state: any) => state.theme.value);
     const styles = StyleSheet.create({
         buttonsContainer: {
@@ -61,7 +63,7 @@ const ButtonsOptions = ({ actualNode, setActualNode, loadTree, clearSelectedItem
                 <IconSelector icon_class={type_class_icon.Ionicons} color="white" icon="arrow-back" size={20} />
                 <Text style={styles.buttonText}>Atrás</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={{ ...styles.button, backgroundColor: theme.CLEAN_BUTTON_COLOR }}  onPress={clearSelectedItems} >
+            <TouchableOpacity style={{ ...styles.button, backgroundColor: theme.CLEAN_BUTTON_COLOR }} onPress={clearSelectedItems} >
                 <IconSelector icon_class={type_class_icon.Feather} color="white" icon="trash" size={20} />
                 <Text style={styles.buttonText}>Limpiar</Text>
             </TouchableOpacity>
@@ -69,7 +71,7 @@ const ButtonsOptions = ({ actualNode, setActualNode, loadTree, clearSelectedItem
                 <IconSelector icon_class={type_class_icon.Feather} color="white" icon="edit" size={20} />
                 <Text style={styles.buttonText}>Editar</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={{ ...styles.button, backgroundColor: theme.PAY_BUTTON_COLOR }} >
+            <TouchableOpacity style={{ ...styles.button, backgroundColor: theme.PAY_BUTTON_COLOR }} onPress={goToPayment} >
                 <IconSelector icon_class={type_class_icon.Ionicons} color="white" icon="document" size={20} />
                 <Text style={styles.buttonText}>Facturar</Text>
             </TouchableOpacity>
