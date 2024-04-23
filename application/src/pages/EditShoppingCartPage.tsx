@@ -6,6 +6,7 @@ import { Product } from '../entity/Product.entity';
 import Animated from 'react-native-reanimated';
 import { themeInterface } from '../interface/themeInterface';
 import ShoppingCartListItem from '../components/ShoppingCart/ShoppingCartListItem';
+import ResumeShopping from '../components/ShoppingCart/ResumeShopping';
 export interface AgrupatedProducts {
     id: number
     products: Product[]
@@ -57,12 +58,13 @@ const EditShoppingCartPage = () => {
 
         },
         priceContainer: {
-            backgroundColor: 'red',
+            // backgroundColor: 'red',
             width: '30%',
             height: '100%',
+            paddingBottom: 20
         }
     })
-    
+
     return (
         <View style={styles.container}>
             <Animated.ScrollView style={styles.tableContainer}>
@@ -73,7 +75,7 @@ const EditShoppingCartPage = () => {
                 }
             </Animated.ScrollView>
             <View style={styles.priceContainer}>
-
+                <ResumeShopping elements={elements} />
             </View>
         </View>
     )
