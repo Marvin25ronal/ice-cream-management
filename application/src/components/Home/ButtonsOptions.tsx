@@ -9,7 +9,7 @@ import { Fonts } from '../../constants/Fonts'
 import { Product } from '../../entity/Product.entity'
 import NumberIndicator from './NumberIndicator'
 
-const ButtonsOptions = ({ actualNode, setActualNode, loadTree, clearSelectedItems, goToPayment }: { actualNode: TreeNode | undefined, setActualNode: any, loadTree: any, clearSelectedItems: any, goToPayment: any }) => {
+const ButtonsOptions = ({ actualNode, setActualNode, loadTree, clearSelectedItems, goToPayment, goToEditShoppingCart }: { actualNode: TreeNode | undefined, setActualNode: any, loadTree: any, clearSelectedItems: any, goToPayment: any, goToEditShoppingCart: any }) => {
     const theme: themeInterface = useSelector((state: any) => state.theme.value);
     const styles = StyleSheet.create({
         buttonsContainer: {
@@ -67,7 +67,7 @@ const ButtonsOptions = ({ actualNode, setActualNode, loadTree, clearSelectedItem
                 <IconSelector icon_class={type_class_icon.Feather} color="white" icon="trash" size={20} />
                 <Text style={styles.buttonText}>Limpiar</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={{ ...styles.button, backgroundColor: theme.EDIT_BUTTON_COLOR }} >
+            <TouchableOpacity style={{ ...styles.button, backgroundColor: theme.EDIT_BUTTON_COLOR }} onPress={goToEditShoppingCart} >
                 <IconSelector icon_class={type_class_icon.Feather} color="white" icon="edit" size={20} />
                 <Text style={styles.buttonText}>Editar</Text>
             </TouchableOpacity>

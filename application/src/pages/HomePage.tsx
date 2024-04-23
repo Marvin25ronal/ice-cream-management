@@ -31,8 +31,7 @@ const HomePage = () => {
   const dispatch = useDispatch()
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
   const theme: themeInterface = useSelector((state: any) => state.theme.value);
-
-  const [selectedItems, setSelectedItems] = useState<Product[]>([])
+  const shoppingCart: number[] = useSelector((state: any) => state.shoppingCart.value);
   const [printers, setprinters] = useState<IUSBPrinter[]>()
   const [currentPrinter, setCurrentPrinter] = useState<IUSBPrinter>()
   const [visible, setVisible] = useState(false)
@@ -73,8 +72,13 @@ const HomePage = () => {
   }
 
   const goToPayment = () => {
-    navigation.navigate(SCREENS.PAYMENT, { products: selectedItems })
+    if (shoppingCart.length > 0)
+      navigation.navigate(SCREENS.PAYMENT)
+    //TODO: Mostrar mensaje de error faltan productos
     //navigation.dispatch(DrawerActions.toggleDrawer())
+  }
+  const goToEditShoppingCart = () => {
+    navigation.navigate(SCREENS.EDIT_SHOPPING_CART)
   }
   const _connectPrinter = (printer: IUSBPrinter) => USBPrinter.connectPrinter(printer.vendor_id, printer.product_id).then(() => setCurrentPrinter(printer))
 
@@ -173,7 +177,7 @@ const HomePage = () => {
         horizontal={false}
       >
 
-        <ButtonsOptions loadTree={loadTree} actualNode={actualNode} setActualNode={setActualNode} clearSelectedItems={clearSelectedItems} goToPayment={goToPayment} />
+        <ButtonsOptions loadTree={loadTree} actualNode={actualNode} setActualNode={setActualNode} clearSelectedItems={clearSelectedItems} goToPayment={goToPayment} goToEditShoppingCart={goToEditShoppingCart} />
         <View style={{ flex: 1, flexDirection: 'row', flexWrap: 'wrap', height: 'auto' }}>
           {
             !loadingState && actualNode && actualNode.children && actualNode.children.map((node: TreeNode, index: number) => (

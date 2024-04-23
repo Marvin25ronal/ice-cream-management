@@ -8,7 +8,7 @@ import { Fonts, FontsSize } from '../../constants/Fonts'
 import { Product } from '../../entity/Product.entity'
 import NumberIndicator from './NumberIndicator'
 
-const MenuCardComponent = ({ name, description, image, onPress, onLongPress, isProduct = false, id }: { name: String, description: String, image: String, onPress: any, onLongPress?: any, isProduct?: boolean,  id: number }) => {
+const MenuCardComponent = ({ name, description, image, onPress, onLongPress, isProduct = false, id }: { name: String, description: String, image: String, onPress: any, onLongPress?: any, isProduct?: boolean, id: number }) => {
     const theme: themeInterface = useSelector((state: any) => state.theme.value)
     const shoppingCart: number[] = useSelector((state: any) => state.shoppingCart.value);
     const dimensions = Dimensions.get('window')
@@ -72,7 +72,7 @@ const MenuCardComponent = ({ name, description, image, onPress, onLongPress, isP
     return (
         <View style={styles.container}>
             {
-                shoppingCart.length > 0 && shoppingCart.find((item) => item == id) &&
+                isProduct === true && shoppingCart.length > 0 && shoppingCart.find((item) => item == id) &&
                 <NumberIndicator elements={shoppingCart.filter(item => item == id).length} />
             }
             <TouchableOpacity style={styles.card} onPress={onPress} onLongPress={onLongPress}
