@@ -15,6 +15,13 @@ export const carSlice = createSlice({
             state.value.push(action.payload)
         },
         removeFromCart: (state, action) => {
+            const indexToRemove = state.value.slice().reverse().findIndex(item => item === action.payload);
+            if (indexToRemove !== -1) {
+                const originalIndex = state.value.length - 1 - indexToRemove;
+                state.value.splice(originalIndex, 1);
+            }
+        },
+        removeAllProductsId: (state, action) => {
             state.value = state.value.filter((item) => item !== action.payload)
         },
         clearCart: (state) => {
@@ -23,4 +30,4 @@ export const carSlice = createSlice({
     }
 })
 export default carSlice.reducer
-export const { addToCart, removeFromCart, clearCart } = carSlice.actions
+export const { addToCart, removeFromCart, clearCart,removeAllProductsId } = carSlice.actions
