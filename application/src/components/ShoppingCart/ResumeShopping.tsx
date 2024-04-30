@@ -96,13 +96,13 @@ const ResumeShopping = ({ elements }: { elements: AgrupatedProducts[] }) => {
                 </Text>
             </View>
             <View style={styles.actionsContainer}>
-                <TouchableOpacity style={{ ...styles.button, backgroundColor: theme.CANCEL_BUTTON_COLOR }}
+                {/* <TouchableOpacity style={{ ...styles.button, backgroundColor: theme.CANCEL_BUTTON_COLOR }}
                     onPress={() => {
                         navigation.goBack();
                     }}
                 >
                     <IconSelector icon_class={type_class_icon.FontAwesome5} icon='backspace' size={30} color={'white'} />
-                </TouchableOpacity>
+                </TouchableOpacity> */}
                 <TouchableOpacity style={{ ...styles.button, backgroundColor: theme.CONFIRM_BUTTON_COLOR }}>
                     <IconSelector icon_class={type_class_icon.Feather} icon='shopping-cart' size={30} color={'white'} />
                 </TouchableOpacity>

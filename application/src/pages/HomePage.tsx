@@ -73,12 +73,12 @@ const HomePage = () => {
 
   const goToPayment = () => {
     if (shoppingCart.length > 0)
-      navigation.navigate(SCREENS.PAYMENT)
+      navigation.navigate(SCREENS.EDIT_SHOPPING_CART, { edit: false })
     //TODO: Mostrar mensaje de error faltan productos
     //navigation.dispatch(DrawerActions.toggleDrawer())
   }
   const goToEditShoppingCart = () => {
-    navigation.navigate(SCREENS.EDIT_SHOPPING_CART)
+    navigation.navigate(SCREENS.EDIT_SHOPPING_CART, { edit: true })
   }
   const _connectPrinter = (printer: IUSBPrinter) => USBPrinter.connectPrinter(printer.vendor_id, printer.product_id).then(() => setCurrentPrinter(printer))
 

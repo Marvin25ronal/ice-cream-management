@@ -11,11 +11,13 @@ export interface AgrupatedProducts {
     id: number
     products: Product[]
 }
-const EditShoppingCartPage = () => {
+const EditShoppingCartPage = ({ route }: { route: any }) => {
     const shoppingCart: number[] = useSelector((state: any) => state.shoppingCart.value);
     const [homeService] = useState(new HomeServices());
     const [elements, setElements] = useState<{ products: Product[], id: number }[]>([])
     const theme: themeInterface = useSelector((state: any) => state.theme.value);
+    //get from router edit var
+    const { edit } = route.params
     useEffect(() => {
         //get data
         homeService.getProductByProductID(shoppingCart).then((products) => {
@@ -70,7 +72,7 @@ const EditShoppingCartPage = () => {
             <Animated.ScrollView style={styles.tableContainer}>
                 {
                     elements.map((item, index) => (
-                        <ShoppingCartListItem key={index} item={item} />
+                        <ShoppingCartListItem key={index} item={item} edit={edit} />
                     ))
                 }
             </Animated.ScrollView>

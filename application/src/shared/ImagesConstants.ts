@@ -514,7 +514,7 @@ export const ImagesDefinition = [
     },
     {
         name:'/products/quesof.png',
-        image: require('../../assets/images/products/quesof.png')
+        image: require('../../assets/images/products/quesof.jpg')
     }
 
 ]

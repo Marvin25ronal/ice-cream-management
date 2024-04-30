@@ -12,7 +12,7 @@ import ModalComponent from '../UI/ModalComponent';
 import { useSharedValue, withSpring } from 'react-native-reanimated';
 import ClearSelectedItemsModal from '../Home/ClearSelectedItemsModal';
 
-const ShoppingCartListItem = ({ item }: { item: AgrupatedProducts }) => {
+const ShoppingCartListItem = ({ item, edit }: { item: AgrupatedProducts, edit: boolean }) => {
     const theme: themeInterface = useSelector((state: any) => state.theme.value);
     const dispatch = useDispatch()
     const [visible, setVisible] = useState(false)
@@ -123,41 +123,46 @@ const ShoppingCartListItem = ({ item }: { item: AgrupatedProducts }) => {
                         {item.products[0].name}
                     </Text>
                     <Text style={styles.priceText}>
-                        {CURRENCY_SYMBOL} {item.products[0].price}
+                        {CURRENCY_SYMBOL} {item.products[0].price * item.products.length}
                     </Text>
                 </View>
-                <View style={styles.actionsContainer}>
-                    <TouchableOpacity style={{ ...styles.button, backgroundColor: theme.CANCEL_BUTTON_COLOR }}
-                        onPress={() => {
-                            setSelectedItems(item)
-                            setVisible(true)
-                            progress.value = withSpring(1)
-                        }}
-                    >
-                        <IconSelector icon_class={type_class_icon.Feather} color='white' icon='trash' size={25} />
-                    </TouchableOpacity>
-                    <TouchableOpacity style={{ ...styles.button, backgroundColor: theme.EDIT_BUTTON_COLOR }}
-                        onPress={() => {
-                            if (item.products.length == 1) {
-                                setSelectedItems(item)
-                                setVisible(true)
-                                progress.value = withSpring(1)
-                            }
+                {
+                    edit && (
+                        <View style={styles.actionsContainer}>
+                            <TouchableOpacity style={{ ...styles.button, backgroundColor: theme.CANCEL_BUTTON_COLOR }}
+                                onPress={() => {
+                                    setSelectedItems(item)
+                                    setVisible(true)
+                                    progress.value = withSpring(1)
+                                }}
+                            >
+                                <IconSelector icon_class={type_class_icon.Feather} color='white' icon='trash' size={25} />
+                            </TouchableOpacity>
+                            <TouchableOpacity style={{ ...styles.button, backgroundColor: theme.EDIT_BUTTON_COLOR }}
+                                onPress={() => {
+                                    if (item.products.length == 1) {
+                                        setSelectedItems(item)
+                                        setVisible(true)
+                                        progress.value = withSpring(1)
+                                    }
 
-                            else
-                                removeProduct(item.id)
-                        }}
-                    >
-                        <IconSelector icon_class={type_class_icon.AntDesign} color='white' icon='minus' size={25} />
-                    </TouchableOpacity>
-                    <TouchableOpacity style={{ ...styles.button, backgroundColor: theme.PAY_BUTTON_COLOR }}
-                        onPress={() => {
-                            addProduct(item.id)
-                        }}
-                    >
-                        <IconSelector icon_class={type_class_icon.AntDesign} color='white' icon='plus' size={25} />
-                    </TouchableOpacity>
-                </View>
+                                    else
+                                        removeProduct(item.id)
+                                }}
+                            >
+                                <IconSelector icon_class={type_class_icon.AntDesign} color='white' icon='minus' size={25} />
+                            </TouchableOpacity>
+                            <TouchableOpacity style={{ ...styles.button, backgroundColor: theme.PAY_BUTTON_COLOR }}
+                                onPress={() => {
+                                    addProduct(item.id)
+                                }}
+                            >
+                                <IconSelector icon_class={type_class_icon.AntDesign} color='white' icon='plus' size={25} />
+                            </TouchableOpacity>
+                        </View>
+                    )
+                }
+
             </View>
             <ModalComponent visible={visible} setVisible={setVisible} height={"50%"} width={"50%"} progress={progress}>
                 <ClearSelectedItemsModal confirm={() => {

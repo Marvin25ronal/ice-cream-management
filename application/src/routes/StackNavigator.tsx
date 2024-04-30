@@ -20,7 +20,7 @@ export type RootStackParamList = {
     [Utils.screens.MENU]: undefined,
     // [Utils.screens.PAYMENT]: { products: Product[] }
     [Utils.screens.PAYMENT]: undefined,
-    [Utils.screens.EDIT_SHOPPING_CART]: undefined
+    [Utils.screens.EDIT_SHOPPING_CART]: { edit: boolean }
 }
 
 const Stack = createStackNavigator<RootStackParamList>();
