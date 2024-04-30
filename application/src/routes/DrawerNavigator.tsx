@@ -36,6 +36,7 @@ const DrawerNavigator = () => {
             fontSize: FontsSize.large
         },
         headerTintColor: theme.HEADER_TEXT_COLOR,
+        headerShown: false
     }
     return (
         <>

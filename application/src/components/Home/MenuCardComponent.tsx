@@ -5,9 +5,12 @@ import { useSelector } from 'react-redux'
 import { ImagesDefinition } from '../../shared/ImagesConstants'
 
 import { Fonts, FontsSize } from '../../constants/Fonts'
+import { Product } from '../../entity/Product.entity'
+import NumberIndicator from './NumberIndicator'
 
-const MenuCardComponent = ({ name, description, image, onPress, onLongPress, isProduct = false }: { name: String, description: String, image: String, onPress: any, onLongPress?: any, isProduct?: boolean }) => {
+const MenuCardComponent = ({ name, description, image, onPress, onLongPress, isProduct = false, id }: { name: String, description: String, image: String, onPress: any, onLongPress?: any, isProduct?: boolean, id: number }) => {
     const theme: themeInterface = useSelector((state: any) => state.theme.value)
+    const shoppingCart: number[] = useSelector((state: any) => state.shoppingCart.value);
     const dimensions = Dimensions.get('window')
     const styles = StyleSheet.create({
         container: {
@@ -56,17 +59,22 @@ const MenuCardComponent = ({ name, description, image, onPress, onLongPress, isP
             fontFamily: Fonts.LatoBold,
             fontSize: FontsSize.extraLarge,
             textAlign: 'center'
-        }
+        },
+
     })
     let backgroundImage = ImagesDefinition.find((img) => img.name === image)?.image
 
     if (!backgroundImage) {
-        backgroundImage = require('../../../assets/images/products/default.png')
+        backgroundImage = require('../../../assets/images/products/defaultb.png')
     }
 
 
     return (
         <View style={styles.container}>
+            {
+                isProduct === true && shoppingCart.length > 0 && shoppingCart.find((item) => item == id) &&
+                <NumberIndicator elements={shoppingCart.filter(item => item == id).length} />
+            }
             <TouchableOpacity style={styles.card} onPress={onPress} onLongPress={onLongPress}
             >
                 <ImageBackground

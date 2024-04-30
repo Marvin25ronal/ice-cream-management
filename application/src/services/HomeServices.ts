@@ -1,7 +1,8 @@
-import { DataSource, PrimaryColumnCannotBeNullableError } from "typeorm";
+import { DataSource, In, PrimaryColumnCannotBeNullableError } from "typeorm";
 import { connectToDatabase } from "../store/db/Database";
 import { TreeNode } from "../interface/TreeInterface";
 import { Category } from "../entity/Category.entity";
+import { Product } from "../entity/Product.entity";
 
 export class HomeServices {
 
@@ -66,6 +67,19 @@ export class HomeServices {
             node.children?.push(this.addChilds(categories, childs[i], node))
         }
         return node;
+    }
+
+    getProductByProductID(product_id: number[]): Promise<Product[]> {
+        return new Promise(async (resolve, reject) => {
+            let db = await this.getDatabase();
+            db?.manager.findBy(Product, {
+                product_id: In(product_id)
+            }).then((products) => {
+                resolve(products)
+            }).catch((error: any) => {
+                reject(error)
+            })
+        })
     }
 
 }
