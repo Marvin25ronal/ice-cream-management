@@ -22,6 +22,8 @@ import { SCREENS } from '../constants/navigation/screeens'
 import { StackNavigationProp } from '@react-navigation/stack'
 import { RootStackParamList } from '../routes/StackNavigator'
 import { addToCart, clearCart } from '../store/redux/carReducer'
+import { PrintService } from '../services/PrintService'
+import { clearOrder } from '../store/redux/orderReducer'
 
 const HomePage = () => {
   const [homeService] = useState(new HomeServices())
@@ -35,6 +37,7 @@ const HomePage = () => {
   const [printers, setprinters] = useState<IUSBPrinter[]>()
   const [currentPrinter, setCurrentPrinter] = useState<IUSBPrinter>()
   const [visible, setVisible] = useState(false)
+
   const progress = useSharedValue(0)
   useEffect(() => {
     setTimeout(() => {
@@ -46,7 +49,7 @@ const HomePage = () => {
 
   const getTree = async () => {
     homeService.getCategoriesMenu().then((tree: TreeNode) => {
-      console.log(tree)
+      // console.log(tree)
       setdata(tree)
       setActualNode(tree)
     }).catch((error) => {
@@ -68,6 +71,7 @@ const HomePage = () => {
   }
   const clearSelectedItems = () => {
     setVisible(true)
+    dispatch(clearOrder())
     progress.value = withSpring(1)
   }
 
@@ -193,6 +197,11 @@ const HomePage = () => {
               }} isProduct />
             ))
           }
+          {/* <Button title='Print' onPress={async () => {
+            await printerService.initPrinter().then(async () => {
+              await printerService.connectPrinter();
+            })
+          }} /> */}
           <ModalComponent visible={visible} setVisible={setVisible} height={"50%"} width={"50%"} progress={progress}>
             <ClearSelectedItemsModal confirm={() => {
               dispatch(clearCart())

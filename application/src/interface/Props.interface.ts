@@ -4,6 +4,8 @@ import { SharedValue } from "react-native-reanimated"
 import { RootStackParamList } from "../routes/StackNavigator"
 import { Utils } from "../constants/utils"
 import { SCREENS } from "../constants/navigation/screeens"
+import { Control, FieldValues, RegisterOptions, ValidationRule } from "react-hook-form"
+import { type_class_icon } from "../components/UI/IconSelector"
 
 export interface ModalProps {
     children?: JSX.Element | JSX.Element[]
@@ -22,4 +24,14 @@ export interface BackDropProps {
     notclose?: boolean,
     opacity?: number
     zindex?: number
+}
+
+export interface CustomInputProps {
+    control: Control
+    name: string
+    place_holder: string
+    icon_name: string
+    icon_class: type_class_icon
+    rules: RegisterOptions
+    keyboardType?: 'default' | 'number-pad' | 'decimal-pad' | 'numeric' | 'email-address' | 'phone-pad'
 }

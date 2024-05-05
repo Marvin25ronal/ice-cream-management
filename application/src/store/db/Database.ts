@@ -4,6 +4,8 @@ import RNFS from 'react-native-fs'
 import { DataSource } from 'typeorm';
 import { Category } from '../../entity/Category.entity';
 import { Product } from '../../entity/Product.entity';
+import { Order } from '../../entity/Order.entity';
+import { OrderDetail } from '../../entity/OrderDetail.entity';
 enablePromise(true)
 
 export const connectToDatabase = async () => {
@@ -13,7 +15,7 @@ export const connectToDatabase = async () => {
         database: 'IceCreamDatabase.db',
         location: 'default',
         logging: ['query', 'error', 'schema'],
-        entities: [Category,Product],
+        entities: [Category, Product, Order, OrderDetail],
         synchronize: false,
     })
     // ;(await AppDataSource.initialize()).manager.find(Category).then((categories) => {

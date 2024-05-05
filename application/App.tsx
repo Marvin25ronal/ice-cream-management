@@ -13,7 +13,6 @@ import { useLoading } from './src/shared/LoaderHook';
 import DrawerNavigator from './src/routes/DrawerNavigator';
 
 
-
 const App = () => {
 
   // useEffect(() => {

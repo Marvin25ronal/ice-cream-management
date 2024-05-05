@@ -15,6 +15,8 @@ import { Product } from '../entity/Product.entity';
 import { getHeaderTitle } from '@react-navigation/elements'
 import CustomHeader from '../components/UI/CustomHeader';
 import EditShoppingCartPage from '../pages/EditShoppingCartPage';
+import ToastComponent from '../components/UI/ToastComponent';
+import { Order } from '../entity/Order.entity';
 export type RootStackParamList = {
     [Utils.screens.HOME]: undefined,
     [Utils.screens.MENU]: undefined,
@@ -49,9 +51,10 @@ const StackNavigator = () => {
             <Stack.Navigator>
                 <Stack.Screen name={Utils.screens.HOME} component={HomePage} options={options} />
                 <Stack.Screen name={Utils.screens.MENU} component={MenuPage} options={options} />
-                <Stack.Screen name={Utils.screens.PAYMENT} component={PayPage} options={options} />
                 <Stack.Screen name={Utils.screens.EDIT_SHOPPING_CART} component={EditShoppingCartPage} options={options} />
+                <Stack.Screen name={Utils.screens.PAYMENT} component={PayPage} options={options} />
             </Stack.Navigator>
+            <ToastComponent />
         </>
 
 
