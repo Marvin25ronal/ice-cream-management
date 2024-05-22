@@ -1,11 +1,13 @@
 import { configureStore } from "@reduxjs/toolkit";
 import themeReducer from "./themeReducer";
 import shoppingCartReducer from "./carReducer";
+import orderReducer from "./orderReducer";
 
 export const store = configureStore({
     reducer: {
         theme: themeReducer,
-        shoppingCart: shoppingCartReducer
+        shoppingCart: shoppingCartReducer,
+        order: orderReducer
     }
 })
 

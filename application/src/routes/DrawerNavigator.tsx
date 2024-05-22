@@ -10,6 +10,9 @@ import { themeInterface } from '../interface/themeInterface';
 import { Fonts, FontsSize } from '../constants/Fonts';
 import SplashScreen from '../components/UI/SplashScreen';
 import { useLoading } from '../shared/LoaderHook';
+import ToastComponent from '../components/UI/ToastComponent';
+import OrderStackNavigator from './OrderStackNavigator';
+
 
 const Drawer = createDrawerNavigator();
 const DrawerNavigator = () => {
@@ -42,7 +45,9 @@ const DrawerNavigator = () => {
         <>
             <SplashScreen callback={setFalseLoading} />
             <Drawer.Navigator>
+
                 <Drawer.Screen name={Utils.screens.HOME_STACK} component={StackNavigator} options={options} />
+                <Drawer.Screen name={Utils.screens.ORDER_STACK} component={OrderStackNavigator} options={options} />
             </Drawer.Navigator>
         </>
 

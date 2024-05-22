@@ -24,7 +24,7 @@ const SplashScreen = ({ callback }: { callback: any }) => {
         setTimeout(() => {
             startAnimation.value = withTiming(-HEIGHT_SCREEN , { duration: 500 })
             scaleLogo.value = withTiming(0.35, { duration: 500 })
-            console.log('ya')
+            // console.log('ya')
             callback(true)
         }, 500)
     }, [])

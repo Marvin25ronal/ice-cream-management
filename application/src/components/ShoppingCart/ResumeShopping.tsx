@@ -1,15 +1,29 @@
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { AgrupatedProducts } from '../../pages/EditShoppingCartPage'
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { themeInterface } from '../../interface/themeInterface';
 import { Fonts, FontsSize } from '../../constants/Fonts';
-import { CURRENCY_SYMBOL } from '../../constants/utils';
+import { CURRENCY_SYMBOL, Utils } from '../../constants/utils';
 import IconSelector, { type_class_icon } from '../UI/IconSelector';
 import { useNavigation } from '@react-navigation/native';
+import { Order } from '../../entity/Order.entity';
+import { PaymentServices } from '../../services/PaymentServices';
+import { AlertFunctions } from '../../shared/AlertsFunctions';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { RootStackParamList } from '../../routes/StackNavigator';
+import { OrderDetail } from '../../entity/OrderDetail.entity';
+import { setOrder } from '../../store/redux/orderReducer';
+import { PrintService } from '../../services/PrintService';
+import moment from 'moment-timezone';
 
 
 const ResumeShopping = ({ elements }: { elements: AgrupatedProducts[] }) => {
+    const theme: themeInterface = useSelector((state: any) => state.theme.value);
+    let existOrder = useSelector((state: any) => state.order.value)
+    const dispatch = useDispatch()
+    const [paymentService] = useState(new PaymentServices())
+    const [printerService] = useState(new PrintService())
     const [total, setTotal] = useState(0)
     useEffect(() => {
         const totalPrices = elements.reduce((total, item) => {
@@ -18,8 +32,55 @@ const ResumeShopping = ({ elements }: { elements: AgrupatedProducts[] }) => {
         }, 0);
         setTotal(totalPrices)
     }, [elements])
-    const navigation = useNavigation()
-    const theme: themeInterface = useSelector((state: any) => state.theme.value);
+    useEffect(() => {
+        printerService.initPrinter().then(() => {
+            printerService.connectPrinter().then(() => {
+                console.log('printer connected')
+            })
+        })
+    }, [])
+    const navigation = useNavigation<StackNavigationProp<RootStackParamList>>()
+    const saveOrder = async () => {
+        console.log('Exist order', existOrder)
+        if (existOrder == - 1) {
+            const neworder = new Order();
+            neworder.total = total;
+            neworder.status = 0;
+            const now = new Date();
+            const offset = now.getTimezoneOffset();
+            neworder.creation_date = new Date(now.getTime() - (offset * 60 * 1000));
+            neworder.print_number = 0;
+            let orderDetails = []
+            for (const element of elements) {
+                const product = element.products[0]
+                const orderDetail = new OrderDetail();
+                orderDetail.product_id = product.product_id;
+                orderDetail.quantity = element.products.length;
+                orderDetail.price = product.price;
+                orderDetail.product_name = product.name;
+                orderDetail.order = neworder;
+                orderDetails.push(orderDetail)
+            }
+            neworder.orderDetails = [...orderDetails]
+
+            await paymentService.saveOrder(neworder).then(async (order) => {
+
+                dispatch(setOrder(order.order_id))
+                console.log('Order saved', order)
+                AlertFunctions.showOrderSaved()
+                // //imprimimos la orden   
+                console.log('Mi ordern id', order.order_id)
+                await printerService.printOrder(order)
+                existOrder = order.order_id
+                navigation.navigate(Utils.screens.PAYMENT)
+            })
+        } else {
+            console.log('Ya existe una orden')
+            navigation.navigate(Utils.screens.PAYMENT)
+        }
+
+    }
+
     const styles = StyleSheet.create({
         cardContainer: {
             backgroundColor: theme.CARD_BACKGROUND_COLOR,
@@ -82,7 +143,8 @@ const ResumeShopping = ({ elements }: { elements: AgrupatedProducts[] }) => {
             elevation: 5,
             paddingVertical: 10,
             marginTop: 20,
-            width: '100%'
+            width: '100%',
+
         },
 
 
@@ -103,9 +165,14 @@ const ResumeShopping = ({ elements }: { elements: AgrupatedProducts[] }) => {
                 >
                     <IconSelector icon_class={type_class_icon.FontAwesome5} icon='backspace' size={30} color={'white'} />
                 </TouchableOpacity> */}
-                <TouchableOpacity style={{ ...styles.button, backgroundColor: theme.CONFIRM_BUTTON_COLOR }}>
-                    <IconSelector icon_class={type_class_icon.Feather} icon='shopping-cart' size={30} color={'white'} />
-                </TouchableOpacity>
+                {
+                    total > 0 && (
+                        <TouchableOpacity style={{ ...styles.button, backgroundColor: theme.CONFIRM_BUTTON_COLOR }} onPress={saveOrder} >
+                            <IconSelector icon_class={type_class_icon.Feather} icon='shopping-cart' size={30} color={'white'} />
+                        </TouchableOpacity>
+                    )
+                }
+
             </View>
         </View>
     )

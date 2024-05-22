@@ -2,7 +2,7 @@ import { Alert, Button, StyleSheet, Text, View, TouchableOpacity } from 'react-n
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { ScrollView } from 'react-native-gesture-handler'
-import { DrawerActions, useNavigation } from '@react-navigation/native'
+import { DrawerActions, useNavigation, useRoute } from '@react-navigation/native'
 import { Utils } from '../constants/utils'
 import { themeInterface } from '../interface/themeInterface'
 import { COMMANDS, IUSBPrinter, USBPrinter } from 'react-native-ect-thermal-receipt-printer';
@@ -22,11 +22,14 @@ import { SCREENS } from '../constants/navigation/screeens'
 import { StackNavigationProp } from '@react-navigation/stack'
 import { RootStackParamList } from '../routes/StackNavigator'
 import { addToCart, clearCart } from '../store/redux/carReducer'
+import { PrintService } from '../services/PrintService'
+import { clearOrder } from '../store/redux/orderReducer'
 
-const HomePage = () => {
+const HomePage = ({ route }: { route: any }) => {
   const [homeService] = useState(new HomeServices())
   const [actualNode, setActualNode] = useState<TreeNode>()
   const { loadingState, setTrueLoading } = useLoading()
+  const reload = route ? route?.params : undefined
   const [data, setdata] = useState<TreeNode>()
   const dispatch = useDispatch()
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
@@ -35,6 +38,7 @@ const HomePage = () => {
   const [printers, setprinters] = useState<IUSBPrinter[]>()
   const [currentPrinter, setCurrentPrinter] = useState<IUSBPrinter>()
   const [visible, setVisible] = useState(false)
+
   const progress = useSharedValue(0)
   useEffect(() => {
     setTimeout(() => {
@@ -43,10 +47,15 @@ const HomePage = () => {
     }, 500)
   }, [])
 
+  useEffect(() => {
+    if (reload) {
+      getTree()
+    }
+  }, [reload])
 
   const getTree = async () => {
     homeService.getCategoriesMenu().then((tree: TreeNode) => {
-      console.log(tree)
+      // console.log(tree)
       setdata(tree)
       setActualNode(tree)
     }).catch((error) => {
@@ -68,6 +77,7 @@ const HomePage = () => {
   }
   const clearSelectedItems = () => {
     setVisible(true)
+    dispatch(clearOrder())
     progress.value = withSpring(1)
   }
 
@@ -78,7 +88,8 @@ const HomePage = () => {
     //navigation.dispatch(DrawerActions.toggleDrawer())
   }
   const goToEditShoppingCart = () => {
-    navigation.navigate(SCREENS.EDIT_SHOPPING_CART, { edit: true })
+    if (shoppingCart.length > 0)
+      navigation.navigate(SCREENS.EDIT_SHOPPING_CART, { edit: true })
   }
   const _connectPrinter = (printer: IUSBPrinter) => USBPrinter.connectPrinter(printer.vendor_id, printer.product_id).then(() => setCurrentPrinter(printer))
 
@@ -193,6 +204,11 @@ const HomePage = () => {
               }} isProduct />
             ))
           }
+          {/* <Button title='Print' onPress={async () => {
+            await printerService.initPrinter().then(async () => {
+              await printerService.connectPrinter();
+            })
+          }} /> */}
           <ModalComponent visible={visible} setVisible={setVisible} height={"50%"} width={"50%"} progress={progress}>
             <ClearSelectedItemsModal confirm={() => {
               dispatch(clearCart())

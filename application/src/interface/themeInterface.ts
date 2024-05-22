@@ -25,4 +25,12 @@ export interface themeInterface {
     NUMBER_EDIT_SHOPPING_CART_BACKGROUND_COLOR: string
     NUMBER_EDIT_SHOPPING_CART_TEXT_COLOR: string
     NUMBER_EDIT_SHOPPING_CART_BORDER_COLOR: string
+    FORM_COLOR: string,
+    SECTION_BORDER_COLOR: string,
+    CARD_SELECTED_BORDER_COLOR: string,
+    LABEL_FORM_COLOR: string,
+    COLOR_FORM_ICON: string,
+    ERROR_COLOR: string,
+    INPUT_BORDER_COLOR: string,
+    SELECTED_DATE_COLOR: string,
 }
