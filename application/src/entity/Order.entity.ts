@@ -1,5 +1,6 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { OrderDetail } from "./OrderDetail.entity";
+import { OrderPayment } from "./OrderPayment";
 
 @Entity()
 export class Order {
@@ -24,6 +25,12 @@ export class Order {
     @Column()
     print_number: number
 
-    @OneToMany(() => OrderDetail, orderDetail => orderDetail.order_id)
+    @OneToMany(() => OrderDetail, orderDetail => orderDetail.order, { cascade: true })
     orderDetails: OrderDetail[]
+
+
+    @OneToMany(() => OrderPayment, orderPaymement => orderPaymement.order, { cascade: true })
+    @JoinColumn({ name: 'order_payment_id' })
+    orderPayment: OrderPayment[]
+
 }

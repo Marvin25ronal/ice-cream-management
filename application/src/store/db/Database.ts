@@ -6,6 +6,7 @@ import { Category } from '../../entity/Category.entity';
 import { Product } from '../../entity/Product.entity';
 import { Order } from '../../entity/Order.entity';
 import { OrderDetail } from '../../entity/OrderDetail.entity';
+import { OrderPayment } from '../../entity/OrderPayment';
 enablePromise(true)
 
 export const connectToDatabase = async () => {
@@ -15,7 +16,7 @@ export const connectToDatabase = async () => {
         database: 'IceCreamDatabase.db',
         location: 'default',
         logging: ['query', 'error', 'schema'],
-        entities: [Category, Product, Order, OrderDetail],
+        entities: [Category, Product, Order, OrderDetail,OrderPayment],
         synchronize: false,
     })
     // ;(await AppDataSource.initialize()).manager.find(Category).then((categories) => {
@@ -79,6 +80,7 @@ export const CreateDatabase = async () => {
 }
 
 export const CreateBackup = async () => {
+     
     const packageName = 'com.application'; // Reemplaza esto con el nombre del paquete de tu aplicación
     const databaseName = 'IceCreamDatabase.db'; // Reemplaza esto con el nombre de tu base de datos
 

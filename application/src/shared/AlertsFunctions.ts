@@ -51,4 +51,18 @@ export  class AlertFunctions {
             text2: 'La orden no ha sido encontrada'
         })
     }
+    static orderCanNotPay() {
+        Toast.show({
+            type: 'error',
+            text1: 'Error al pagar la orden',
+            text2: 'Ha ocurrido un error al pagar la orden'
+        })
+    }
+    static orderPayed() {
+        Toast.show({
+            type: 'success',
+            text1: 'Orden pagada',
+            text2: 'La orden ha sido pagada correctamente'
+        })
+    }
 }

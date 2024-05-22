@@ -15,6 +15,7 @@ import { RootStackParamList } from '../../routes/StackNavigator';
 import { OrderDetail } from '../../entity/OrderDetail.entity';
 import { setOrder } from '../../store/redux/orderReducer';
 import { PrintService } from '../../services/PrintService';
+import moment from 'moment-timezone';
 
 
 const ResumeShopping = ({ elements }: { elements: AgrupatedProducts[] }) => {
@@ -42,22 +43,28 @@ const ResumeShopping = ({ elements }: { elements: AgrupatedProducts[] }) => {
     const saveOrder = async () => {
         console.log('Exist order', existOrder)
         if (existOrder == - 1) {
-            const order = new Order();
-            order.total = total;
-            order.status = 0;
-            order.creation_date = new Date();
-            order.print_number = 0;
-            order.orderDetails = [];
-            elements.map((element) => {
+            const neworder = new Order();
+            neworder.total = total;
+            neworder.status = 0;
+            const now = new Date();
+            const offset = now.getTimezoneOffset();
+            neworder.creation_date = new Date(now.getTime() - (offset * 60 * 1000));
+            neworder.print_number = 0;
+            let orderDetails = []
+            for (const element of elements) {
                 const product = element.products[0]
                 const orderDetail = new OrderDetail();
                 orderDetail.product_id = product.product_id;
                 orderDetail.quantity = element.products.length;
                 orderDetail.price = product.price;
                 orderDetail.product_name = product.name;
-                order.orderDetails.push(orderDetail);
-            })
-            await paymentService.saveOrder(order).then(async (order) => {
+                orderDetail.order = neworder;
+                orderDetails.push(orderDetail)
+            }
+            neworder.orderDetails = [...orderDetails]
+
+            await paymentService.saveOrder(neworder).then(async (order) => {
+
                 dispatch(setOrder(order.order_id))
                 console.log('Order saved', order)
                 AlertFunctions.showOrderSaved()
@@ -136,7 +143,8 @@ const ResumeShopping = ({ elements }: { elements: AgrupatedProducts[] }) => {
             elevation: 5,
             paddingVertical: 10,
             marginTop: 20,
-            width: '100%'
+            width: '100%',
+
         },
 
 
@@ -157,9 +165,14 @@ const ResumeShopping = ({ elements }: { elements: AgrupatedProducts[] }) => {
                 >
                     <IconSelector icon_class={type_class_icon.FontAwesome5} icon='backspace' size={30} color={'white'} />
                 </TouchableOpacity> */}
-                <TouchableOpacity style={{ ...styles.button, backgroundColor: theme.CONFIRM_BUTTON_COLOR }} onPress={saveOrder}>
-                    <IconSelector icon_class={type_class_icon.Feather} icon='shopping-cart' size={30} color={'white'} />
-                </TouchableOpacity>
+                {
+                    total > 0 && (
+                        <TouchableOpacity style={{ ...styles.button, backgroundColor: theme.CONFIRM_BUTTON_COLOR }} onPress={saveOrder} >
+                            <IconSelector icon_class={type_class_icon.Feather} icon='shopping-cart' size={30} color={'white'} />
+                        </TouchableOpacity>
+                    )
+                }
+
             </View>
         </View>
     )

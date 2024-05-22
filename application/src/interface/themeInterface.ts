@@ -31,5 +31,6 @@ export interface themeInterface {
     LABEL_FORM_COLOR: string,
     COLOR_FORM_ICON: string,
     ERROR_COLOR: string,
-    INPUT_BORDER_COLOR: string
+    INPUT_BORDER_COLOR: string,
+    SELECTED_DATE_COLOR: string,
 }

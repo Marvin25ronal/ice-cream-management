@@ -16,13 +16,14 @@ import { getHeaderTitle } from '@react-navigation/elements'
 import CustomHeader from '../components/UI/CustomHeader';
 import EditShoppingCartPage from '../pages/EditShoppingCartPage';
 import ToastComponent from '../components/UI/ToastComponent';
-import { Order } from '../entity/Order.entity';
+import FinishOrderPage from '../pages/FinishOrderPage';
 export type RootStackParamList = {
-    [Utils.screens.HOME]: undefined,
+    [Utils.screens.HOME]: { reload: boolean } | undefined,
     [Utils.screens.MENU]: undefined,
     // [Utils.screens.PAYMENT]: { products: Product[] }
     [Utils.screens.PAYMENT]: undefined,
     [Utils.screens.EDIT_SHOPPING_CART]: { edit: boolean }
+    [Utils.screens.FINISH_ORDER]: undefined,
 }
 
 const Stack = createStackNavigator<RootStackParamList>();
@@ -53,6 +54,7 @@ const StackNavigator = () => {
                 <Stack.Screen name={Utils.screens.MENU} component={MenuPage} options={options} />
                 <Stack.Screen name={Utils.screens.EDIT_SHOPPING_CART} component={EditShoppingCartPage} options={options} />
                 <Stack.Screen name={Utils.screens.PAYMENT} component={PayPage} options={options} />
+                <Stack.Screen name={Utils.screens.FINISH_ORDER} component={FinishOrderPage} options={options} />
             </Stack.Navigator>
             <ToastComponent />
         </>

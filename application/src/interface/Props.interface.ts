@@ -33,5 +33,19 @@ export interface CustomInputProps {
     icon_name: string
     icon_class: type_class_icon
     rules: RegisterOptions
+    width?: DimensionValue
+    height?: DimensionValue
+    fontSize?: number
+    defaultValue?: any
+    disabled?: boolean
+    type?: 'text' | 'number' | 'email' | 'password' | 'date'
     keyboardType?: 'default' | 'number-pad' | 'decimal-pad' | 'numeric' | 'email-address' | 'phone-pad'
+    iconSize?: number
+}
+
+export interface ButtonComponentProps {
+    onPress: () => void | null
+    text: string
+    variant?: 'primary' | 'secondary' | 'danger' | 'success' | 'filter'
+    fontSize?: number
 }

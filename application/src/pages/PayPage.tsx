@@ -16,7 +16,7 @@ import { useForm } from 'react-hook-form'
 const PayPage = () => {
   const orderId: number = useSelector((state: any) => state.order.value)
   const theme: themeInterface = useSelector((state: any) => state.theme.value)
-  const [option, setOption] = useState(-1)
+  const [option, setOption] = useState(0)
 
   const progress = useSharedValue(-1)
   const styles = StyleSheet.create({
@@ -130,7 +130,17 @@ const PayPage = () => {
         <View style={styles.paymentMethodContainer}>
           {
             option == 0 && (
-              <CashForm  />
+              <CashForm    />
+            )
+          }
+          {
+            option==1 && (
+              <CashForm card />
+            )
+          }
+          {
+            option==2 && (
+              <CashForm mix />
             )
           }
         </View>

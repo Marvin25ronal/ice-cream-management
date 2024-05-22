@@ -69,7 +69,7 @@ export class PrintService {
                     ''
                 ])
             }
-           
+
             setTimeout(() => {
                 console.log('esperamos')
             }, 1000)
@@ -77,7 +77,7 @@ export class PrintService {
             setTimeout(() => {
                 console.log('esperamos')
             }, 1000)
-        await USBPrinter.printBill(`<C>Gracias por su visita, esperamos que vuelva</C>`);
+            await USBPrinter.printBill(`<C>Gracias por su visita, esperamos que vuelva</C>`);
         } else {
             AlertFunctions.showNoPrinter()
         }
@@ -93,4 +93,9 @@ export class PrintService {
         }, 1000)
         USBPrinter.printBill(`<C>Fecha: ${order.creation_date}</C>`)
     }
+
+    printTicket(order: Order | null) {
+
+    }
+
 }
