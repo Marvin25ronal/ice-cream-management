@@ -91,7 +91,7 @@ const HomePage = ({ route }: { route: any }) => {
     if (shoppingCart.length > 0)
       navigation.navigate(SCREENS.EDIT_SHOPPING_CART, { edit: true })
   }
-  const _connectPrinter = (printer: IUSBPrinter) => USBPrinter.connectPrinter(printer.vendor_id, printer.product_id).then(() => setCurrentPrinter(printer))
+  // const _connectPrinter = (printer: IUSBPrinter) => USBPrinter.connectPrinter(printer.vendor_id, printer.product_id).then(() => setCurrentPrinter(printer))
 
   return (
     // <View style={styles.page}>

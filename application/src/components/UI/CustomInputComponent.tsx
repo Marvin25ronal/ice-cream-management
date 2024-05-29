@@ -14,7 +14,7 @@ import ButtonComponent from './ButtonComponent'
 import { format } from '@formkit/tempo'
 
 
-const CustomInputComponent = ({ type = 'text', control, rules, icon_class, icon_name, name, place_holder,
+const CustomInputComponent = ({ type = 'text', control, rules={}, icon_class, icon_name, name, place_holder,
     keyboardType,
     width, height, fontSize, defaultValue, disabled,
     iconSize

@@ -9,8 +9,8 @@ import Animated from 'react-native-reanimated'
 import { OrderService } from '../../services/OrderServices'
 import { format } from '@formkit/tempo'
 
-const OrderFilter = () => {
-    const { control } = useForm()
+const OrderFilter = ({ getOrders }: { getOrders: any }) => {
+    const { control, handleSubmit } = useForm()
     const [orderService] = useState(new OrderService())
 
     const styles = StyleSheet.create({
@@ -26,14 +26,7 @@ const OrderFilter = () => {
             flex: 1
         }
     })
-    useEffect(() => {
-        const date = new Date()
-        orderService.getAllOrders(format(date, "DD/MM/YYYY"), format(date, "DD/MM/YYYY")).then((orders) => {
-            console.log(orders)
-        }
-        )
 
-    }, [])
 
     return (
         <>
@@ -41,7 +34,7 @@ const OrderFilter = () => {
             <View style={styles.filtersContainer}>
                 <CustomInputComponent
                     control={control}
-                    rules={{ required: 'This field is required' }}
+                    rules={{}}
                     icon_class={type_class_icon.FontAwesome}
                     icon_name='search'
                     name='date'
@@ -53,14 +46,10 @@ const OrderFilter = () => {
                     defaultValue={new Date().toLocaleDateString()}
                     disabled={true}
                 />
-                <ButtonComponent text='Buscar' onPress={() => { }} />
+                <ButtonComponent text='Buscar' onPress={handleSubmit(getOrders)} />
 
             </View>
-            <Animated.ScrollView horizontal={true} showsHorizontalScrollIndicator={false}
-                style={styles.scrollContainer}
-            >
 
-            </Animated.ScrollView>
         </>
     )
 }

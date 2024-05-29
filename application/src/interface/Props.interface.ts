@@ -44,7 +44,7 @@ export interface CustomInputProps {
 }
 
 export interface ButtonComponentProps {
-    onPress: () => void | null
+    onPress: () => void | null | any
     text: string
     variant?: 'primary' | 'secondary' | 'danger' | 'success' | 'filter'
     fontSize?: number

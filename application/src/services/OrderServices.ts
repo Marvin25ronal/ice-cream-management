@@ -95,7 +95,13 @@ export class OrderService {
                 relations: {
                     orderDetails: true,
                     orderPayment: true
-                }
+                },
+                order:{
+                    creation_date: 'DESC'
+                },
+                // where: {
+                //     creation_date: Between(start, end)
+                // }
             }).then((orders) => {
                 resolve(orders)
             }).catch((error) => {

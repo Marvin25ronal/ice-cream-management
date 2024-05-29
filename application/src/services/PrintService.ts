@@ -3,6 +3,7 @@ import { AlertFunctions } from "../shared/AlertsFunctions";
 import { Order } from "../entity/Order.entity";
 import { CURRENCY_SYMBOL } from "../constants/utils";
 const BOLD_ON = COMMANDS.TEXT_FORMAT.TXT_BOLD_ON;
+const PRINT_TIME = 300
 export class PrintService {
     printer: IUSBPrinter | null = null
     constructor() { }
@@ -27,72 +28,107 @@ export class PrintService {
             AlertFunctions.showNoPrinter()
         }
     }
+    // async printOrder(order: Order) {
+    //     if (this.printer) {
+    //         await USBPrinter.printText('<CM>Heladeria Cathy<CM>')
+    //         await USBPrinter.printText('<CM>------------------<CM>')
+    //         await setTimeout(async () => {
+    //             await USBPrinter.printText(`<CD>Orden: ${order.order_id}</CD>`)
+    //             await USBPrinter.printText(`<C>Fecha: ${order.creation_date}</C>`)
+    //         }, PRINT_TIME);
+
+
+    //         await setTimeout(async () => {
+    //             let orderList = []
+    //             let columnAlignment = [
+    //                 ColumnAlignment.LEFT,
+    //                 ColumnAlignment.RIGHT,
+    //             ]
+    //             let count = 1
+    //             for (let i = 0; i < order.orderDetails.length; i++) {
+    //                 const element = order.orderDetails[i];
+    //                 for (let j = 0; j < element.quantity; j++) {
+    //                     orderList.push([`${count++}. ${element.product_name}`, `${CURRENCY_SYMBOL}${element.price}`])
+    //                 }
+    //             }
+    //             let columnWidth = [20, 10]
+    //             const header = ['Producto', 'Precio']
+    //             /// await time
+    //             //creamos un delay para que la impresora pueda imprimir el texto
+
+
+    //             await USBPrinter.printColumnsText(header, columnWidth, columnAlignment, [
+    //                 `${BOLD_ON}`,
+    //                 ''
+    //             ]);
+    //             for (let i = 0; i < orderList.length; i++) {
+    //                 await USBPrinter.printColumnsText(orderList[i], columnWidth, columnAlignment, [
+    //                     `${BOLD_ON}`,
+    //                     ''
+    //                 ])
+    //             }
+    //             await setTimeout(async () => {
+    //                 await USBPrinter.printText(`<CM>Total: ${CURRENCY_SYMBOL}${order.total}</CM>`)
+    //                 await USBPrinter.printBill(`<C>Gracias por su visita, esperamos que vuelva</C>`);
+    //             }, PRINT_TIME);
+    //         }, PRINT_TIME);
+
+    //     } else {
+    //         AlertFunctions.showNoPrinter()
+    //     }
+    // }
+    delay(ms: number) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
     async printOrder(order: Order) {
         if (this.printer) {
+            await USBPrinter.printText('<CM>Heladeria Cathy<CM>');
+            await USBPrinter.printText('<CM>------------------<CM>');
 
-            // USBPrinter.printText('<CM>Heladeria Cathy<CM>')
-            // USBPrinter.printBill(`<CD>Orden: ${order.order_id}</CD>`)
-            // USBPrinter.printBill(`<C>Fecha: ${order.creation_date}</C>`)
-            this.printHeader(order)
-            let orderList = []
+            await this.delay(PRINT_TIME);
+
+            await USBPrinter.printText(`<CD>Orden: ${order.order_id}</CD>`);
+            await USBPrinter.printText(`<C>Fecha: ${order.creation_date}</C>`);
+
+            await this.delay(PRINT_TIME);
+
+            let orderList = [];
             let columnAlignment = [
                 ColumnAlignment.LEFT,
                 ColumnAlignment.RIGHT,
-            ]
+            ];
+            let count = 1;
             for (let i = 0; i < order.orderDetails.length; i++) {
                 const element = order.orderDetails[i];
                 for (let j = 0; j < element.quantity; j++) {
-                    orderList.push([`1. ${element.product_name}`, `${CURRENCY_SYMBOL}${element.price}`])
+                    orderList.push([`${count++}. ${element.product_name}`, `${CURRENCY_SYMBOL}${element.price}`]);
                 }
             }
-            let columnWidth = [20, 10]
-            const header = ['Producto', 'Precio']
-            /// await time
-            //creamos un delay para que la impresora pueda imprimir el texto
-            setTimeout(() => {
-                console.log('esperamos')
-            }, 1000)
+            let columnWidth = [20, 10];
+            const header = ['Producto', 'Precio'];
 
             await USBPrinter.printColumnsText(header, columnWidth, columnAlignment, [
                 `${BOLD_ON}`,
                 ''
             ]);
-            setTimeout(() => {
-                console.log('esperamos')
-            }, 1000)
             for (let i = 0; i < orderList.length; i++) {
-                setTimeout(() => {
-                    console.log('esperamos')
-                }, 1000)
                 await USBPrinter.printColumnsText(orderList[i], columnWidth, columnAlignment, [
                     `${BOLD_ON}`,
                     ''
-                ])
+                ]);
             }
 
-            setTimeout(() => {
-                console.log('esperamos')
-            }, 1000)
-            USBPrinter.printBill(`<CM>Total: ${CURRENCY_SYMBOL}${order.total}</CM>`)
-            setTimeout(() => {
-                console.log('esperamos')
-            }, 1000)
+            await this.delay(PRINT_TIME);
+
+            await USBPrinter.printText(`<CM>Total: ${CURRENCY_SYMBOL}${order.total}</CM>`);
+            await this.delay(PRINT_TIME);
             await USBPrinter.printBill(`<C>Gracias por su visita, esperamos que vuelva</C>`);
+
         } else {
-            AlertFunctions.showNoPrinter()
+            AlertFunctions.showNoPrinter();
         }
     }
-    private printHeader(order: Order) {
-        USBPrinter.printText('<CB>Heladeria Cathy<CB>')
-        setTimeout(() => {
-            console.log('esperamos')
-        }, 1000)
-        USBPrinter.printBill(`<CD>Orden: ${order.order_id}</CD>`)
-        setTimeout(() => {
-            console.log('esperamos')
-        }, 1000)
-        USBPrinter.printBill(`<C>Fecha: ${order.creation_date}</C>`)
-    }
+
 
     printTicket(order: Order | null) {
 

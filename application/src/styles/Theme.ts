@@ -35,4 +35,5 @@ export const darkTheme: themeInterface = {
     ERROR_COLOR:'#f44336',
     INPUT_BORDER_COLOR:'#98c1d9',
     SELECTED_DATE_COLOR: '#0077b6',
+    DIVIDER_COLOR: '#ced4da'
 }
