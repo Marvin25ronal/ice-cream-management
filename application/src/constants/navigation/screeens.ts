@@ -7,4 +7,5 @@ export enum SCREENS {
     EDIT_SHOPPING_CART = 'Editar carrito de compras',
     FINISH_ORDER = 'Finalizar orden',
     ORDER_LIST = 'Lista de ordenes',
+    FEL = 'FEL',
 }

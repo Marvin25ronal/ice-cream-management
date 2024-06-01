@@ -12,6 +12,7 @@ import SplashScreen from '../components/UI/SplashScreen';
 import { useLoading } from '../shared/LoaderHook';
 import ToastComponent from '../components/UI/ToastComponent';
 import OrderStackNavigator from './OrderStackNavigator';
+import FelPage from '../pages/FelPage';
 
 
 const Drawer = createDrawerNavigator();
@@ -41,13 +42,26 @@ const DrawerNavigator = () => {
         headerTintColor: theme.HEADER_TEXT_COLOR,
         headerShown: false
     }
+    const felOptions: DrawerNavigationOptions = {
+        headerStyle: {
+            backgroundColor: theme.HEADER_COLOR,
+
+        },
+        headerTitleStyle: {
+            color: theme.HEADER_TEXT_COLOR,
+            fontFamily: Fonts.LatoBold,
+            fontSize: FontsSize.large
+        },
+        headerTintColor: theme.HEADER_TEXT_COLOR,
+        headerShown: true
+    }
     return (
         <>
             <SplashScreen callback={setFalseLoading} />
             <Drawer.Navigator>
-
                 <Drawer.Screen name={Utils.screens.HOME_STACK} component={StackNavigator} options={options} />
                 <Drawer.Screen name={Utils.screens.ORDER_STACK} component={OrderStackNavigator} options={options} />
+                <Drawer.Screen name={Utils.screens.FEL} component={FelPage} options={felOptions} />
             </Drawer.Navigator>
         </>
 
