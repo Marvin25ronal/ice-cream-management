@@ -1,7 +1,7 @@
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { themeInterface } from '../../interface/themeInterface'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { Fonts, FontsSize } from '../../constants/Fonts'
 import { TextInput } from 'react-native-gesture-handler'
 import { CURRENCY_SYMBOL, Utils } from '../../constants/utils'
@@ -15,6 +15,12 @@ import { error } from 'console'
 import { useNavigation } from '@react-navigation/native'
 import { StackNavigationProp } from '@react-navigation/stack'
 import { RootStackParamList } from '../../routes/StackNavigator'
+import { clearCart } from '../../store/redux/carReducer'
+import { clearOrder } from '../../store/redux/orderReducer'
+import ModalComponent from '../UI/ModalComponent'
+import { useSharedValue, withSpring } from 'react-native-reanimated'
+import GenericModal from '../UI/GenericModal'
+import { PrintService } from '../../services/PrintService'
 
 const CashForm = ({ card = false, mix = false }: { card?: boolean, mix?: boolean }) => {
     const theme: themeInterface = useSelector((state: any) => state.theme.value)
@@ -22,19 +28,31 @@ const CashForm = ({ card = false, mix = false }: { card?: boolean, mix?: boolean
     const navigation = useNavigation<StackNavigationProp<RootStackParamList>>()
     const [total, setTotal] = useState(0)
     const [orderService] = useState(new OrderService())
+    const [printService] = useState(new PrintService())
     const [order, setOrder] = useState<Order | null>(null)
     const { control, watch, handleSubmit } = useForm()
+    const progress = useSharedValue(0)
+    const [visible, setVisible] = useState(false)
+    const [reload, setReload] = useState(false)
+    const dispatch = useDispatch()
     useEffect(() => {
         console.log('Order id', orderId)
-        orderService.getOrder(orderId).then((order) => {
-            if (order) {
-                setTotal(order.total)
-                setOrder(order)
-                console.log(order)
-            } else {
-                AlertFunctions.orderNotFound()
-            }
+        printService.initPrinter().then(() => {
+            printService.connectPrinter().then(() => {
+                console.log('printer connected')
+            })
         })
+        if (reload == false)
+            orderService.getOrder(orderId).then((order) => {
+                if (order) {
+                    setTotal(order.total)
+                    setOrder(order)
+                    console.log(order)
+                } else {
+                    AlertFunctions.orderNotFound()
+                }
+            })
+        setReload(false)
     }, [orderId])
     const styles = StyleSheet.create({
         container: {
@@ -46,13 +64,12 @@ const CashForm = ({ card = false, mix = false }: { card?: boolean, mix?: boolean
             fontSize: 20,
             fontFamily: Fonts.LatoBlack,
             color: theme.LABEL_FORM_COLOR
-
         },
         amount: {
             flexDirection: 'row',
             justifyContent: 'center',
             alignItems: 'center',
-            marginVertical: 20
+            marginVertical: 5
         },
         textAmount: {
             fontSize: FontsSize.xxl,
@@ -72,6 +89,7 @@ const CashForm = ({ card = false, mix = false }: { card?: boolean, mix?: boolean
             },
             shadowOpacity: 0.25,
             shadowRadius: 3.84,
+            width: '30%',
 
             elevation: 5,
         },
@@ -92,10 +110,17 @@ const CashForm = ({ card = false, mix = false }: { card?: boolean, mix?: boolean
             gap: 50,
         }
     })
+    const clearShoppingCart = () => {
+        setReload(true)
+        dispatch(clearCart())
+        dispatch(clearOrder())
+        navigation.navigate(Utils.screens.HOME, { reload: true })
+    }
     const pay = (data: any) => {
         if (order) {
             if (card) {
                 orderService.payOrder(orderId, PaymentMethod.CARD, 0, total).then((response) => {
+                    printService.printOrder(order)
                     AlertFunctions.orderPayed()
                     navigation.navigate(Utils.screens.FINISH_ORDER)
                 }).catch((error) => {
@@ -103,6 +128,7 @@ const CashForm = ({ card = false, mix = false }: { card?: boolean, mix?: boolean
                 })
             } else if (mix) {
                 orderService.payOrder(orderId, PaymentMethod.MIX, parseFloat(data.cash), parseFloat(data.card)).then((response) => {
+                    printService.printOrder(order)
                     AlertFunctions.orderPayed()
                     navigation.navigate(Utils.screens.FINISH_ORDER)
                 }).catch((error) => {
@@ -111,6 +137,7 @@ const CashForm = ({ card = false, mix = false }: { card?: boolean, mix?: boolean
 
             } else {
                 orderService.payOrder(orderId, PaymentMethod.CASH, parseFloat(data.cash), 0).then((response) => {
+                    printService.printOrder(order)
                     AlertFunctions.orderPayed()
                     navigation.navigate(Utils.screens.FINISH_ORDER)
                 }).catch((error) => {
@@ -129,13 +156,31 @@ const CashForm = ({ card = false, mix = false }: { card?: boolean, mix?: boolean
                 <Text style={styles.textWithCard}>
                     Realize el cobro con la terminal, y presione el boton de abajo
                 </Text>
-                <TouchableOpacity style={styles.button}
-                    onPress={handleSubmit(pay)}
-                >
-                    <Text style={styles.buttonTextColor}>
-                        Cobrar
-                    </Text>
-                </TouchableOpacity>
+                <View style={{
+                    flexDirection: 'row',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    gap: 10,
+                    marginTop: 10
+                }}>
+                    <TouchableOpacity style={[styles.button, { backgroundColor: theme.ERROR_COLOR }]}
+                        onPress={() => {
+                            setVisible(true)
+                            progress.value = withSpring(1)
+                        }}
+                    >
+                        <Text style={styles.buttonTextColor}>
+                            Cancelar
+                        </Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.button}
+                        onPress={handleSubmit(pay)}
+                    >
+                        <Text style={styles.buttonTextColor}>
+                            Cobrar
+                        </Text>
+                    </TouchableOpacity>
+                </View>
             </View>
         )
     if (mix)
@@ -172,7 +217,7 @@ const CashForm = ({ card = false, mix = false }: { card?: boolean, mix?: boolean
                     iconSize={30}
                 />
                 <Text style={styles.label}>Vuelto</Text>
-               
+
                 <View style={styles.amount}>
                     <Text style={styles.textAmount}>
                         {
@@ -184,7 +229,24 @@ const CashForm = ({ card = false, mix = false }: { card?: boolean, mix?: boolean
                         }
                     </Text>
                 </View>
-                <View>
+                <View style={{
+                    flexDirection: 'row',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    gap: 10,
+                    marginTop: 10
+                }}>
+                    <TouchableOpacity style={[styles.button, { backgroundColor: theme.ERROR_COLOR }]}
+                        onPress={() => {
+                            setVisible(true)
+                            progress.value = withSpring(1)
+
+                        }}
+                    >
+                        <Text style={styles.buttonTextColor}>
+                            Cancelar
+                        </Text>
+                    </TouchableOpacity>
                     <TouchableOpacity style={styles.button}
                         onPress={handleSubmit(pay)}
                     >
@@ -196,45 +258,80 @@ const CashForm = ({ card = false, mix = false }: { card?: boolean, mix?: boolean
             </View>
         )
     return (
-        <View style={styles.container}>
-            <Text style={styles.label}>Monto a cobrar</Text>
-            <View style={styles.amount}>
-                <Text style={styles.textAmount}>
-                    {CURRENCY_SYMBOL} {total.toFixed(2)}
-                </Text>
-            </View>
-            <Text style={styles.label}>Efectivo</Text>
-            <CustomInputComponent
-                control={control}
-                name={'cash'}
-                icon_class={type_class_icon.FontAwesome5}
-                icon_name='coins'
-                rules={{ required: 'Campo requerido' }}
-                place_holder='Efectivo'
-                keyboardType='numeric'
-            />
-            <Text style={styles.label}>Vuelto</Text>
-            <View style={styles.amount}>
-                <Text style={styles.textAmount}>
-                    {
-                        watch('cash') ?
-                            parseFloat(watch('cash')) - total >= 0 ?
-                                (CURRENCY_SYMBOL + (parseFloat(watch('cash')) - total).toFixed(2))
-                                : 'ERROR AL INGRESAR EL MONTO'
-                            : CURRENCY_SYMBOL + 0
-                    }
-                </Text>
-            </View>
-            <View>
-                <TouchableOpacity style={styles.button}
-                    onPress={handleSubmit(pay)}
-                >
-                    <Text style={styles.buttonTextColor}>
-                        Cobrar
+        <>
+            <View style={styles.container}>
+                <Text style={styles.label}>Monto a cobrar</Text>
+                <View style={styles.amount}>
+                    <Text style={styles.textAmount}>
+                        {CURRENCY_SYMBOL} {total.toFixed(2)}
                     </Text>
-                </TouchableOpacity>
+                </View>
+                <Text style={styles.label}>Efectivo</Text>
+                <CustomInputComponent
+                    control={control}
+                    name={'cash'}
+                    icon_class={type_class_icon.FontAwesome5}
+                    icon_name='coins'
+                    rules={{ required: 'Campo requerido' }}
+                    place_holder='Efectivo'
+                    keyboardType='numeric'
+                />
+                <Text style={styles.label}>Vuelto</Text>
+                <View style={styles.amount}>
+                    <Text style={styles.textAmount}>
+                        {
+                            watch('cash') ?
+                                parseFloat(watch('cash')) - total >= 0 ?
+                                    (CURRENCY_SYMBOL + (parseFloat(watch('cash')) - total).toFixed(2))
+                                    : 'ERROR AL INGRESAR EL MONTO'
+                                : CURRENCY_SYMBOL + 0
+                        }
+                    </Text>
+                </View>
+                <View style={{
+                    flexDirection: 'row',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    gap: 10,
+                    marginTop: 10
+                }}>
+                    <TouchableOpacity style={[styles.button, { backgroundColor: theme.ERROR_COLOR }]}
+                        onPress={() => {
+                            setVisible(true)
+                            progress.value = withSpring(1)
+                        }}
+                    >
+                        <Text style={styles.buttonTextColor}>
+                            Cancelar
+                        </Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.button}
+                        onPress={handleSubmit(pay)}
+                    >
+                        <Text style={styles.buttonTextColor}>
+                            Cobrar
+                        </Text>
+                    </TouchableOpacity>
+
+
+                </View>
             </View>
-        </View>
+            <ModalComponent visible={visible} setVisible={setVisible} height={"50%"} width={"50%"} progress={progress}>
+                <GenericModal cancel={() => {
+                    setVisible(false)
+                    progress.value = withSpring(0)
+                }}
+                    confirm={() => {
+                        setVisible(false)
+                        progress.value = withSpring(0)
+                        clearShoppingCart()
+                    }}
+                    text='¿Desea cancelar la orden?'
+                />
+            </ModalComponent>
+        </>
+
+
     )
 }
 

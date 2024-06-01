@@ -81,7 +81,7 @@ const ShoppingCartListItem = ({ item, edit }: { item: AgrupatedProducts, edit: b
         },
         button: {
             backgroundColor: 'blue',
-            paddingHorizontal: 20,
+            paddingHorizontal: 10,
             justifyContent: 'center',
             borderRadius: 10,
             flexDirection: 'row',
@@ -136,7 +136,7 @@ const ShoppingCartListItem = ({ item, edit }: { item: AgrupatedProducts, edit: b
                                     progress.value = withSpring(1)
                                 }}
                             >
-                                <IconSelector icon_class={type_class_icon.Feather} color='white' icon='trash' size={25} />
+                                <IconSelector icon_class={type_class_icon.Feather} color='white' icon='trash' size={20} />
                             </TouchableOpacity>
                             <TouchableOpacity style={{ ...styles.button, backgroundColor: theme.EDIT_BUTTON_COLOR }}
                                 onPress={() => {
@@ -150,14 +150,14 @@ const ShoppingCartListItem = ({ item, edit }: { item: AgrupatedProducts, edit: b
                                         removeProduct(item.id)
                                 }}
                             >
-                                <IconSelector icon_class={type_class_icon.AntDesign} color='white' icon='minus' size={25} />
+                                <IconSelector icon_class={type_class_icon.AntDesign} color='white' icon='minus' size={20} />
                             </TouchableOpacity>
                             <TouchableOpacity style={{ ...styles.button, backgroundColor: theme.PAY_BUTTON_COLOR }}
                                 onPress={() => {
                                     addProduct(item.id)
                                 }}
                             >
-                                <IconSelector icon_class={type_class_icon.AntDesign} color='white' icon='plus' size={25} />
+                                <IconSelector icon_class={type_class_icon.AntDesign} color='white' icon='plus' size={20} />
                             </TouchableOpacity>
                         </View>
                     )

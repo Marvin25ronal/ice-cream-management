@@ -33,11 +33,11 @@ const ResumeShopping = ({ elements }: { elements: AgrupatedProducts[] }) => {
         setTotal(totalPrices)
     }, [elements])
     useEffect(() => {
-        printerService.initPrinter().then(() => {
-            printerService.connectPrinter().then(() => {
-                console.log('printer connected')
-            })
-        })
+        // printerService.initPrinter().then(() => {
+        //     printerService.connectPrinter().then(() => {
+        //         console.log('printer connected')
+        //     })
+        // })
     }, [])
     const navigation = useNavigation<StackNavigationProp<RootStackParamList>>()
     const saveOrder = async () => {
@@ -46,9 +46,8 @@ const ResumeShopping = ({ elements }: { elements: AgrupatedProducts[] }) => {
             const neworder = new Order();
             neworder.total = total;
             neworder.status = 0;
-            const now = new Date();
-            const offset = now.getTimezoneOffset();
-            neworder.creation_date = new Date(now.getTime() - (offset * 60 * 1000));
+            console.log('Fecha', moment().tz('America/Guatemala').toDate())
+            neworder.creation_date = moment().tz('America/Guatemala').toDate()
             neworder.print_number = 0;
             let orderDetails = []
             for (const element of elements) {
@@ -70,7 +69,7 @@ const ResumeShopping = ({ elements }: { elements: AgrupatedProducts[] }) => {
                 AlertFunctions.showOrderSaved()
                 // //imprimimos la orden   
                 console.log('Mi ordern id', order.order_id)
-                await printerService.printOrder(order)
+                // await printerService.printOrder(order)
                 existOrder = order.order_id
                 navigation.navigate(Utils.screens.PAYMENT)
             })

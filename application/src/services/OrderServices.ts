@@ -18,6 +18,10 @@ export class OrderService {
             db?.manager.findOne(Order, {
                 where: {
                     order_id: order_id
+                },
+                relations:{
+                    orderDetails:true,
+                    orderPayment:true
                 }
             }).then((order) => {
                 resolve(order)
@@ -64,6 +68,10 @@ export class OrderService {
             db?.manager.findOne(Order, {
                 where: {
                     order_id: orderId
+                },
+                relations:{
+                    orderDetails:true,
+                    orderPayment:true
                 }
             }).then((order) => {
                 if (order) {

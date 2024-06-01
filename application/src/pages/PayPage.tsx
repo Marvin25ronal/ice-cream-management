@@ -8,7 +8,7 @@ import { useSelector } from 'react-redux'
 import { Fonts, FontsSize } from '../constants/Fonts'
 import PaymentMethodCard from '../components/ShoppingCart/PaymentMethodCard'
 import { FlatList } from 'react-native-gesture-handler'
-import { useSharedValue } from 'react-native-reanimated'
+import Animated, { useSharedValue } from 'react-native-reanimated'
 import { themeInterface } from '../interface/themeInterface'
 import CashForm from '../components/ShoppingCart/CashForm'
 import { useForm } from 'react-hook-form'
@@ -51,6 +51,7 @@ const PayPage = () => {
       borderColor: theme.SECTION_BORDER_COLOR,
       borderRadius: 10,
       backgroundColor: theme.CARD_BACKGROUND_COLOR,
+      paddingVertical: 30
     },
     paymentMethodContainer: {
       width: '80%',
@@ -99,7 +100,7 @@ const PayPage = () => {
 
   })
   return (
-    <View style={styles.container}>
+    <Animated.ScrollView style={styles.container}>
       {/* <View style={styles.titleContainer}>
         <Text style={styles.title}>
           Selecciona el metodo de pago
@@ -130,16 +131,16 @@ const PayPage = () => {
         <View style={styles.paymentMethodContainer}>
           {
             option == 0 && (
-              <CashForm    />
+              <CashForm />
             )
           }
           {
-            option==1 && (
+            option == 1 && (
               <CashForm card />
             )
           }
           {
-            option==2 && (
+            option == 2 && (
               <CashForm mix />
             )
           }
@@ -167,7 +168,7 @@ const PayPage = () => {
           </Text>
         </TouchableOpacity>
       </View> */}
-    </View>
+    </Animated.ScrollView>
   )
 }
 

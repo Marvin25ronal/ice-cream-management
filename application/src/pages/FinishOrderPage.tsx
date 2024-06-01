@@ -1,5 +1,5 @@
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../store/redux/store'
 import { Fonts, FontsSize } from '../constants/Fonts'
@@ -62,9 +62,15 @@ const FinishOrderPage = () => {
             fontFamily: Fonts.LatoBold,
         }
     })
+    useEffect(() => {
+        printService.initPrinter().then(() => {
+            printService.connectPrinter()
+        })
+    }, [])
     const printTicket = async () => {
         await orderService.incrementsPrintNumber(orderId).then((order) => {
-            printService.printTicket(order)
+            if (order)
+                printService.printOrder(order)
         })
     }
     const clearShoppingCart = async () => {
@@ -77,12 +83,16 @@ const FinishOrderPage = () => {
                 Selecciona una opción
             </Text>
             <View style={styles.optionsContainer}>
-                <TouchableOpacity style={[styles.card, { backgroundColor: theme.CLEAN_BUTTON_COLOR }]}>
+                {/* <TouchableOpacity style={[styles.card, { backgroundColor: theme.CLEAN_BUTTON_COLOR }]}>
                     <Text style={styles.cardText}>
                         Imprimir ticket
                     </Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={[styles.card, { backgroundColor: theme.EDIT_BUTTON_COLOR }]}>
+                </TouchableOpacity> */}
+                <TouchableOpacity style={[styles.card, { backgroundColor: theme.EDIT_BUTTON_COLOR }]}
+                    onPress={() => {
+                        printTicket()
+                    }}
+                >
                     <Text style={styles.cardText}>
                         Imprimir Orden
                     </Text>

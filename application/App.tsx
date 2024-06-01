@@ -1,4 +1,4 @@
-import { View, Text, useColorScheme } from 'react-native'
+import { View, Text, useColorScheme, StatusBar } from 'react-native'
 import React, { useEffect } from 'react'
 import { NavigationContainer } from '@react-navigation/native'
 import { Provider, useDispatch } from 'react-redux';
@@ -23,7 +23,9 @@ const App = () => {
   //   }
   // }, [])
   useEffect(() => {
+    StatusBar.setHidden(false)
     CreateDatabase()
+    
   }, [])
 
   return (

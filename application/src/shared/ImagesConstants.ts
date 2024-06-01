@@ -521,12 +521,80 @@ export const ImagesDefinition = [
         image: require('../../assets/images/app/money.jpg')
     },
     {
-        name:'/paymentMethods/card',
+        name: '/paymentMethods/card',
         image: require('../../assets/images/app/credit-card.jpeg')
     },
     {
         name: '/paymentMethods/mix',
         image: require('../../assets/images/app/mix.jpg')
+    },
+    {
+        name: '/categories/cans_category.jpg',
+        image: require('../../assets/images/categories/cans_category.jpg')
+    },
+    {
+        name: '/categories/desechables.png',
+        image: require('../../assets/images/categories/desechables.png')
+    },
+    {
+        name: '/categories/juice.jpg',
+        image: require('../../assets/images/categories/juice.jpg')
+    },
+    {
+        name:'/products/coca.jpeg',
+        image: require('../../assets/images/products/coca.jpeg')
+    },
+    {
+        name:'/products/sprite.jpg',
+        image: require('../../assets/images/products/sprite.jpg')
+    },
+    {
+        name:'/products/mirinda.jpeg',
+        image: require('../../assets/images/products/mirinda.jpg')
+    },
+    {
+        name:'/products/aguapura.jpg',
+        image: require('../../assets/images/products/aguapura.jpg')
+    },
+    {
+        name:'/products/chowicoca.jpg',
+        image: require('../../assets/images/products/chowicoca.jpg')
+    },
+    {
+        name:'/products/mirindachowi.jpg',
+        image: require('../../assets/images/products/mirindachowi.jpg')
+    },
+    {
+        name:'/products/grapete.jpg',
+        image: require('../../assets/images/products/grapete.jpg')
+    },
+    {
+        name:'/products/chowisrpite.jpg',
+        image: require('../../assets/images/products/chowisrpite.jpg')
+    },
+    {
+        name:'/products/jugomanzana.jpg',
+        image: require('../../assets/images/products/jugomanzana.jpg')
+    },
+    {
+        name:'/products/jugopina.png',
+        image: require('../../assets/images/products/jugopina.png')
+    },
+    {
+        name:'/products/vainilla.jpg',
+        image: require('../../assets/images/products/vainilla.jpg')
+    },
+    {
+        name:'/products/chocolate.jpg',
+        image: require('../../assets/images/products/chocolate.jpg')
+    },
+    {
+        name:'/products/fresa.jpg',
+        image: require('../../assets/images/products/fresa.jpg')
+    },
+    {
+        name:'/products/delvalle.jpg',
+        image: require('../../assets/images/products/delvalle.jpg')
     }
 
 ]

@@ -82,7 +82,7 @@ export class PrintService {
     }
     async printOrder(order: Order) {
         if (this.printer) {
-            await USBPrinter.printText('<CM>Heladeria Cathy<CM>');
+            await USBPrinter.printText('<CM>Sarita Pacific Villa Hermosa<CM>');
             await USBPrinter.printText('<CM>------------------<CM>');
 
             await this.delay(PRINT_TIME);
@@ -111,11 +111,13 @@ export class PrintService {
                 `${BOLD_ON}`,
                 ''
             ]);
+            await this.delay(PRINT_TIME);
             for (let i = 0; i < orderList.length; i++) {
                 await USBPrinter.printColumnsText(orderList[i], columnWidth, columnAlignment, [
                     `${BOLD_ON}`,
                     ''
                 ]);
+                await this.delay(PRINT_TIME / 2);
             }
 
             await this.delay(PRINT_TIME);
