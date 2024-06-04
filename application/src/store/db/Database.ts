@@ -83,9 +83,9 @@ export const CreateBackup = async () => {
      
     const packageName = 'com.application'; // Reemplaza esto con el nombre del paquete de tu aplicación
     const databaseName = 'IceCreamDatabase.db'; // Reemplaza esto con el nombre de tu base de datos
-
+    const destination=`backup-${new Date().getTime()}.db`
     const sourcePath = `/data/data/${packageName}/databases/${databaseName}`;
-    const destinationPath = `${RNFS.DownloadDirectoryPath}/${databaseName}`;
+    const destinationPath = `${RNFS.DownloadDirectoryPath}/${destination}`;
     console.log('destinationPath', destinationPath)
     try {
         await RNFS.copyFile(sourcePath, destinationPath);

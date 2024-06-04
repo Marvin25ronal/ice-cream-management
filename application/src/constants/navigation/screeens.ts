@@ -8,4 +8,6 @@ export enum SCREENS {
     FINISH_ORDER = 'Finalizar orden',
     ORDER_LIST = 'Lista de ordenes',
     FEL = 'FEL',
+    MAINTENANCE = 'Mantenimiento',
+    MAINTENANCE_STACK='Mantenimientos'
 }
