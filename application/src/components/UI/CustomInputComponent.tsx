@@ -14,7 +14,7 @@ import ButtonComponent from './ButtonComponent'
 import { format } from '@formkit/tempo'
 
 
-const CustomInputComponent = ({ type = 'text', control, rules={}, icon_class, icon_name, name, place_holder,
+const CustomInputComponent = ({ type = 'text', control, rules = {}, icon_class, icon_name, name, place_holder,
     keyboardType,
     width, height, fontSize, defaultValue, disabled,
     iconSize
@@ -119,13 +119,13 @@ const CustomInputComponent = ({ type = 'text', control, rules={}, icon_class, ic
                             {
                                 error && <Text style={{ color: theme.ERROR_COLOR }}>{error.message || 'Error'}</Text>
                             }
-                            <ModalComponent visible={visible} setVisible={setVisible} height={"90%"} width={"80%"} progress={progress}>
+                            <ModalComponent visible={visible} setVisible={setVisible} height={"50%"} width={"80%"} progress={progress}>
                                 <View style={{
-                                    padding: 20,
+                                    padding:50
                                 }}>
                                     <CalendarPicker
-                                        width={800}
-                                        height={700}
+                                        width={600}
+                                        height={600}
                                         nextTitleStyle={{ color: theme.COLOR_FORM_ICON }}
                                         previousTitleStyle={{ color: theme.COLOR_FORM_ICON }}
                                         previousTitle='Anterior'
@@ -137,14 +137,20 @@ const CustomInputComponent = ({ type = 'text', control, rules={}, icon_class, ic
                                         selectedDayTextColor='white'
                                         weekdays={['Dom', 'Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab']}
                                         onDateChange={(date, type) => {
+                                            console.log('date', date)
+                                            console.log('type', type)
                                             if (type === 'END_DATE') {
+
                                                 onChange(value + ' - ' + format(new Date(date), "DD/MM/YYYY"))
+                                                setVisible(false)
                                             } else {
+                                                value = format(new Date(date), "DD/MM/YYYY")
                                                 onChange(format(new Date(date), "DD/MM/YYYY"))
+                                               
                                             }
                                         }}
                                     />
-                                    <View style={{ marginTop: 10, padding: 10 }}>
+                                    {/* <View style={{ marginTop: 10, padding: 10 }}>
                                         <ButtonComponent text='Aceptar' onPress={() => {
                                             progress.value = withSpring(0)
 
@@ -152,7 +158,7 @@ const CustomInputComponent = ({ type = 'text', control, rules={}, icon_class, ic
                                                 setVisible(false)
                                             }, 300);
                                         }} fontSize={20} variant='primary' />
-                                    </View>
+                                    </View> */}
 
                                 </View>
 

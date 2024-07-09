@@ -595,6 +595,38 @@ export const ImagesDefinition = [
     {
         name:'/products/delvalle.jpg',
         image: require('../../assets/images/products/delvalle.jpg')
-    }
+    },
+    {
+        name:'/products/shrek.jpg',
+        image: require('../../assets/images/products/shrek.jpg')
+    },
+    {
+        name:'/products/bola.jpg',
+        image: require('../../assets/images/products/bola.jpg')
+    },
+    {
+        name:'/products/chocobanano.jpg',
+        image: require('../../assets/images/products/chocobanano.jpg')
+    },
+    {
+        name:'/products/chocolateb.jpg',
+        image: require('../../assets/images/products/chocolateb.jpg')
+    },
+    {
+        name:'/products/conosolo.jpg',
+        image: require('../../assets/images/products/conosolo.jpg')
+    },
+    {
+        name:'/products/crema.jpg',
+        image: require('../../assets/images/products/crema.jpg')
+    },
+    {
+        name:'/products/gawaffle.png',
+        image: require('../../assets/images/products/gawaffle.png')
+    },
+    {
+        name: '/products/nevada_guanaba.png',
+        image: require('../../assets/images/products/nevada_guanaba.png')
+    },
 
 ]

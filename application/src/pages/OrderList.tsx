@@ -15,8 +15,20 @@ const OrderList = () => {
         getOrders(null)
     }, [])
     const getOrders = (data: any) => {
-        console.log('data de getOrders', data)
-        orderService.getAllOrders('05/20/2024', '05/20/2024').then((orders) => {
+        let date: string = data?.date
+        if (date == null) {
+            date = new Date().toLocaleDateString()
+        }
+        let start = ''
+        let end = ''
+        if (date.indexOf('-') != -1) {
+            start = date.split('-')[0]
+            end = date.split('-')[1]
+        } else {
+            start = date
+            end = date
+        }
+        orderService.getAllOrders(start, end).then((orders) => {
             console.log('MIS ORDENES')
             console.log(orders)
             if (orders != null)
@@ -51,7 +63,7 @@ const OrderList = () => {
                 )}
                 style={styles.flatListContainer}
                 numColumns={2}
-                contentContainerStyle={{padding:20}}
+                contentContainerStyle={{ padding: 20 }}
             />
         </View>
     )

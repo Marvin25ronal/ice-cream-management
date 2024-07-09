@@ -9,5 +9,7 @@ export enum SCREENS {
     ORDER_LIST = 'Lista de ordenes',
     FEL = 'FEL',
     MAINTENANCE = 'Mantenimiento',
-    MAINTENANCE_STACK='Mantenimientos'
+    MAINTENANCE_STACK='Mantenimientos',
+    DAILY_REPORT = 'Reporte diario',
+    DAILY_REPORT_STACK = 'Reportes diarios',
 }

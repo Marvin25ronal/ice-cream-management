@@ -1,10 +1,13 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import WebView from 'react-native-webview'
-
+const url='https://farm3.sat.gob.gt/menu/login.jsf'
+const url2='https://webbrowsertools.com/test-download-with/'
 const FelPage = () => {
     return (
-        <WebView source={{ uri: 'https://farm3.sat.gob.gt/menu/login.jsf' }} style={{ flex: 1 }} />
+        <WebView  
+        
+        source={{ uri: url }} style={{ flex: 1 }} />
     )
 }
 

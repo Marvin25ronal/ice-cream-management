@@ -107,9 +107,9 @@ export class OrderService {
                 order:{
                     creation_date: 'DESC'
                 },
-                // where: {
-                //     creation_date: Between(start, end)
-                // }
+                where: {
+                    creation_date: Between(start, end)
+                }
             }).then((orders) => {
                 resolve(orders)
             }).catch((error) => {

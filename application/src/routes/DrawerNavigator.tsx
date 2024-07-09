@@ -15,6 +15,7 @@ import OrderStackNavigator from './OrderStackNavigator';
 import FelPage from '../pages/FelPage';
 import MaintenancePage from '../pages/MaintenancePage';
 import MaintenanceStack from './MaintenanceStack';
+import DailyReportNavigator from './DailyReportNavigator';
 
 
 const Drawer = createDrawerNavigator();
@@ -64,6 +65,7 @@ const DrawerNavigator = () => {
                 <Drawer.Screen name={Utils.screens.HOME_STACK} component={StackNavigator} options={options} />
                 <Drawer.Screen name={Utils.screens.ORDER_STACK} component={OrderStackNavigator} options={options} />
                 <Drawer.Screen name={Utils.screens.FEL} component={FelPage} options={felOptions} />
+                <Drawer.Screen name={Utils.screens.DAILY_REPORT_STACK} component={DailyReportNavigator} options={options} />
                 <Drawer.Screen name={Utils.screens.MAINTENANCE_STACK} component={MaintenanceStack} options={options} />
             </Drawer.Navigator>
         </>

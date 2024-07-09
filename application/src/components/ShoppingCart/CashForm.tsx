@@ -136,7 +136,7 @@ const CashForm = ({ card = false, mix = false }: { card?: boolean, mix?: boolean
                 })
 
             } else {
-                orderService.payOrder(orderId, PaymentMethod.CASH, parseFloat(data.cash), 0).then((response) => {
+                orderService.payOrder(orderId, PaymentMethod.CASH, total, 0).then((response) => {
                     printService.printOrder(order)
                     AlertFunctions.orderPayed()
                     navigation.navigate(Utils.screens.FINISH_ORDER)

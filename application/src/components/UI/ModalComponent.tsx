@@ -12,18 +12,20 @@ const ModalComponent = ({ visible, children, setVisible, width, height, progress
     const icon = 40;
     const styles = StyleSheet.create({
         container: {
-            flex: 1,
+
+            width: '100%',
+            height: '100%',
             justifyContent: 'center',
             alignItems: 'center',
         },
         modal: {
             backgroundColor: theme.MODAL_BACKGROUND_COLOR,
-            width: width,
-            height: height,
+
             borderRadius: 15,
             // justifyContent: 'center',
             // alignItems: 'center',
             zIndex: 1,
+            padding: 10
         },
         close: {
             width: icon,

@@ -1,4 +1,4 @@
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Button, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React, { useState } from 'react'
 import { Product } from '../../entity/Product.entity'
 import { themeInterface } from '../../interface/themeInterface';
@@ -164,7 +164,7 @@ const ShoppingCartListItem = ({ item, edit }: { item: AgrupatedProducts, edit: b
                 }
 
             </View>
-            <ModalComponent visible={visible} setVisible={setVisible} height={"50%"} width={"50%"} progress={progress}>
+            <ModalComponent visible={visible} setVisible={setVisible} height={"10%"} width={"50%"} progress={progress}>
                 <ClearSelectedItemsModal confirm={() => {
                     if (selectedItems)
                         removeById(selectedItems.id)
@@ -178,6 +178,8 @@ const ShoppingCartListItem = ({ item, edit }: { item: AgrupatedProducts, edit: b
                         }
                     }
                 />
+
+             
             </ModalComponent>
         </>
 

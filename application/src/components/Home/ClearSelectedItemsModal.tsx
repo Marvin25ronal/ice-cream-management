@@ -10,9 +10,8 @@ const ClearSelectedItemsModal = ({ confirm, cancel }: { confirm: any, cancel: an
     const theme: themeInterface = useSelector((state: any) => state.theme.value);
     const styles = StyleSheet.create({
         container: {
-            flex: 1,
+            //flex: 1,
             width: '100%',
-            height: '100%',
             justifyContent: 'center',
             alignItems: 'center',
             padding: 20,
@@ -55,6 +54,7 @@ const ClearSelectedItemsModal = ({ confirm, cancel }: { confirm: any, cancel: an
             justifyContent: 'center',
             marginTop: 50,
             width: '100%',
+            
         },
         confirmText: {
             color: theme.CONFIRM_BUTTON_TEXT_COLOR,
