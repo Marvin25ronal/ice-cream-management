@@ -541,92 +541,112 @@ export const ImagesDefinition = [
         image: require('../../assets/images/categories/juice.jpg')
     },
     {
-        name:'/products/coca.jpeg',
+        name: '/products/coca.jpeg',
         image: require('../../assets/images/products/coca.jpeg')
     },
     {
-        name:'/products/sprite.jpg',
+        name: '/products/sprite.jpg',
         image: require('../../assets/images/products/sprite.jpg')
     },
     {
-        name:'/products/mirinda.jpeg',
+        name: '/products/mirinda.jpeg',
         image: require('../../assets/images/products/mirinda.jpg')
     },
     {
-        name:'/products/aguapura.jpg',
+        name: '/products/aguapura.jpg',
         image: require('../../assets/images/products/aguapura.jpg')
     },
     {
-        name:'/products/chowicoca.jpg',
+        name: '/products/chowicoca.jpg',
         image: require('../../assets/images/products/chowicoca.jpg')
     },
     {
-        name:'/products/mirindachowi.jpg',
+        name: '/products/mirindachowi.jpg',
         image: require('../../assets/images/products/mirindachowi.jpg')
     },
     {
-        name:'/products/grapete.jpg',
+        name: '/products/grapete.jpg',
         image: require('../../assets/images/products/grapete.jpg')
     },
     {
-        name:'/products/chowisrpite.jpg',
+        name: '/products/chowisrpite.jpg',
         image: require('../../assets/images/products/chowisrpite.jpg')
     },
     {
-        name:'/products/jugomanzana.jpg',
+        name: '/products/jugomanzana.jpg',
         image: require('../../assets/images/products/jugomanzana.jpg')
     },
     {
-        name:'/products/jugopina.png',
+        name: '/products/jugopina.png',
         image: require('../../assets/images/products/jugopina.png')
     },
     {
-        name:'/products/vainilla.jpg',
+        name: '/products/vainilla.jpg',
         image: require('../../assets/images/products/vainilla.jpg')
     },
     {
-        name:'/products/chocolate.jpg',
+        name: '/products/chocolate.jpg',
         image: require('../../assets/images/products/chocolate.jpg')
     },
     {
-        name:'/products/fresa.jpg',
+        name: '/products/fresa.jpg',
         image: require('../../assets/images/products/fresa.jpg')
     },
     {
-        name:'/products/delvalle.jpg',
+        name: '/products/delvalle.jpg',
         image: require('../../assets/images/products/delvalle.jpg')
     },
     {
-        name:'/products/shrek.jpg',
+        name: '/products/shrek.jpg',
         image: require('../../assets/images/products/shrek.jpg')
     },
     {
-        name:'/products/bola.jpg',
+        name: '/products/bola.jpg',
         image: require('../../assets/images/products/bola.jpg')
     },
     {
-        name:'/products/chocobanano.jpg',
+        name: '/products/chocobanano.jpg',
         image: require('../../assets/images/products/chocobanano.jpg')
     },
     {
-        name:'/products/chocolateb.jpg',
+        name: '/products/chocolateb.jpg',
         image: require('../../assets/images/products/chocolateb.jpg')
     },
     {
-        name:'/products/conosolo.jpg',
+        name: '/products/conosolo.jpg',
         image: require('../../assets/images/products/conosolo.jpg')
     },
     {
-        name:'/products/crema.jpg',
+        name: '/products/crema.jpg',
         image: require('../../assets/images/products/crema.jpg')
     },
     {
-        name:'/products/gawaffle.png',
+        name: '/products/gawaffle.png',
         image: require('../../assets/images/products/gawaffle.png')
     },
     {
         name: '/products/nevada_guanaba.png',
         image: require('../../assets/images/products/nevada_guanaba.png')
     },
+    {
+        name: '/products/chocolatebarra.jpg',
+        image: require('../../assets/images/products/chocolatebarra.jpg')
+    },
+    {
+        name: '/products/medchocomenta.jpg',
+        image: require('../../assets/images/products/medchocomenta.jpg')
+    },
+    {
+        name: '/products/mediogbrownie.jpg',
+        image: require('../../assets/images/products/mediogbrownie.jpg')
+    },
+    {
+        name: '/products/elote.jpg',
+        image: require('../../assets/images/products/elote.jpg')
+    },
+    {
+        name:'/products/nino.jpg',
+        image: require('../../assets/images/products/nino.jpg')
+    }
 
 ]
