@@ -84,7 +84,51 @@ const CustomInputComponent = ({ type = 'text', control, rules = {}, icon_class, 
 
             />
         )
+    if(type === 'number')
+        return (
+            <Controller
+                control={control}
+                rules={rules}
+                name={name}
+                render={({ field: { value, onChange, onBlur }, fieldState: { error } }) => {
+                    return (
+                        <>
+                            <TouchableOpacity
+                                onPress={() => {
+                                    setVisible(true)
+                                    progress.value = withSpring(1)
+                                }}
+                                style={[styles.action, { borderColor: error ? theme.ERROR_COLOR : theme.INPUT_BORDER_COLOR }]}>
+                                <IconSelector icon_class={icon_class}
+                                    color={theme.COLOR_FORM_ICON}
+                                    size={iconSize ?? 60}
+                                    icon={icon_name} />
+                                <TextInput placeholder={place_holder}
+                                    style={[styles.text_input]}
+                                    keyboardType='numeric'
+                                    placeholderTextColor={'grey'}
+                                    textAlign='center'
+                                    value={value?.toString()}
+                                    onChangeText={(text) => {
+                                        const numericValue = text.replace(/[^0-9]/g, '');
+                                        onChange(numericValue);
+                                    }}
+                                    onBlur={onBlur}
+                                    editable={!disabled}
+                                    defaultValue={defaultValue?.toString()}
+                                />
+                            </TouchableOpacity>
+                            {
+                                error && <Text style={{ color: theme.ERROR_COLOR }}>{error.message || 'Error'}</Text>
+                            }
 
+                        </>
+
+                    );
+                }}
+
+            />
+        )
     if (type === 'date')
         return (
             <Controller

@@ -33,5 +33,7 @@ export interface themeInterface {
     ERROR_COLOR: string,
     INPUT_BORDER_COLOR: string,
     SELECTED_DATE_COLOR: string,
-    DIVIDER_COLOR: string
+    DIVIDER_COLOR: string,
+    EDIT_PRODUCT_BUTTON_COLOR: string,
+    SELECTED_EDIT_PRODUCT_BUTTON_COLOR: string,
 }

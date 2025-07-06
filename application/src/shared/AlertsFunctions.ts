@@ -65,4 +65,18 @@ export  class AlertFunctions {
             text2: 'La orden ha sido pagada correctamente'
         })
     }
+    static updateProductSuccess(){
+        Toast.show({
+            type: 'success',
+            text1: 'Producto actualizado',
+            text2: 'El producto ha sido actualizado correctamente'
+        })
+    }
+    static updateProductError(){
+        Toast.show({
+            type: 'error',
+            text1: 'Error al actualizar el producto',
+            text2: 'Ha ocurrido un error al actualizar el producto'
+        })
+    }
 }
