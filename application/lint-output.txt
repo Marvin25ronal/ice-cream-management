@@ -1,0 +1,380 @@
+
+> application@0.0.1 lint
+> eslint .
+
+
+C:\Users\marvi\OneDrive\Escritorio\ice-cream-management\application\App.tsx
+   1:10  warning  'View' is defined but never used. Allowed unused vars must match /^_/u                   @typescript-eslint/no-unused-vars
+   1:16  warning  'Text' is defined but never used. Allowed unused vars must match /^_/u                   @typescript-eslint/no-unused-vars
+   1:22  warning  'useColorScheme' is defined but never used. Allowed unused vars must match /^_/u         @typescript-eslint/no-unused-vars
+   4:20  warning  'useDispatch' is defined but never used. Allowed unused vars must match /^_/u            @typescript-eslint/no-unused-vars
+   6:10  warning  'darkTheme' is defined but never used. Allowed unused vars must match /^_/u              @typescript-eslint/no-unused-vars
+   9:8   warning  'StackScreensNavigator' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+  10:10  warning  'PERMISSIONS' is defined but never used. Allowed unused vars must match /^_/u            @typescript-eslint/no-unused-vars
+  10:23  warning  'request' is defined but never used. Allowed unused vars must match /^_/u                @typescript-eslint/no-unused-vars
+  12:10  warning  'useLoading' is defined but never used. Allowed unused vars must match /^_/u             @typescript-eslint/no-unused-vars
+
+C:\Users\marvi\OneDrive\Escritorio\ice-cream-management\application\generate-icons.js
+  66:20  error  'Buffer' is not defined  no-undef
+
+C:\Users\marvi\OneDrive\Escritorio\ice-cream-management\application\src\components\Home\ButtonsOptions.tsx
+   9:10  warning  'Product' is defined but never used. Allowed unused vars must match /^_/u          @typescript-eslint/no-unused-vars
+  10:8   warning  'NumberIndicator' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+C:\Users\marvi\OneDrive\Escritorio\ice-cream-management\application\src\components\Home\MenuCardComponent.tsx
+   15:10  warning  'Product' is defined but never used. Allowed unused vars must match /^_/u      @typescript-eslint/no-unused-vars
+   20:3   warning  'description' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+  100:40  warning  Expected '===' and instead saw '=='                                            eqeqeq
+  102:56  warning  Expected '===' and instead saw '=='                                            eqeqeq
+
+C:\Users\marvi\OneDrive\Escritorio\ice-cream-management\application\src\components\Maintenance\EditProducts\CategoryProductsChooser.tsx
+   11:8   warning  'Entypo' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+  157:28  warning  Expected '===' and instead saw '=='                                       eqeqeq
+  159:29  warning  Expected '===' and instead saw '=='                                       eqeqeq
+  159:51  warning  Expected '===' and instead saw '=='                                       eqeqeq
+  175:33  warning  Expected '===' and instead saw '=='                                       eqeqeq
+
+C:\Users\marvi\OneDrive\Escritorio\ice-cream-management\application\src\components\Maintenance\EditProducts\EditProductListItem.tsx
+  90:7  warning  'styles' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+C:\Users\marvi\OneDrive\Escritorio\ice-cream-management\application\src\components\Order\OrderFilter.tsx
+   1:22  warning  'Text' is defined but never used. Allowed unused vars must match /^_/u                   @typescript-eslint/no-unused-vars
+   2:17  warning  'useEffect' is defined but never used. Allowed unused vars must match /^_/u              @typescript-eslint/no-unused-vars
+   6:10  warning  'TouchableOpacity' is defined but never used. Allowed unused vars must match /^_/u       @typescript-eslint/no-unused-vars
+   8:8   warning  'Animated' is defined but never used. Allowed unused vars must match /^_/u               @typescript-eslint/no-unused-vars
+  10:10  warning  'format' is defined but never used. Allowed unused vars must match /^_/u                 @typescript-eslint/no-unused-vars
+  14:10  warning  'orderService' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+C:\Users\marvi\OneDrive\Escritorio\ice-cream-management\application\src\components\ShoppingCart\CashForm.tsx
+   12:10  warning  'TextInput' is defined but never used. Allowed unused vars must match /^_/u                                                                      @typescript-eslint/no-unused-vars
+   20:10  warning  'error' is defined but never used. Allowed unused vars must match /^_/u                                                                          @typescript-eslint/no-unused-vars
+   60:16  warning  Expected '===' and instead saw '=='                                                                                                              eqeqeq
+   61:43  warning  'order' is already declared in the upper scope on line 45 column 10                                                                              @typescript-eslint/no-shadow
+   72:6   error    React Hook useEffect has missing dependencies: 'orderService', 'printService', and 'reload'. Either include them or remove the dependency array  react-hooks/exhaustive-deps
+  182:17  warning  'response' is defined but never used. Allowed unused args must match /^_/u                                                                       @typescript-eslint/no-unused-vars
+  189:18  warning  'error' is defined but never used. Allowed unused args must match /^_/u                                                                          @typescript-eslint/no-unused-vars
+  189:18  warning  'error' is already declared in the upper scope on line 20 column 10                                                                              @typescript-eslint/no-shadow
+  200:17  warning  'response' is defined but never used. Allowed unused args must match /^_/u                                                                       @typescript-eslint/no-unused-vars
+  207:18  warning  'error' is defined but never used. Allowed unused args must match /^_/u                                                                          @typescript-eslint/no-unused-vars
+  207:18  warning  'error' is already declared in the upper scope on line 20 column 10                                                                              @typescript-eslint/no-shadow
+  213:17  warning  'response' is defined but never used. Allowed unused args must match /^_/u                                                                       @typescript-eslint/no-unused-vars
+  220:18  warning  'error' is defined but never used. Allowed unused args must match /^_/u                                                                          @typescript-eslint/no-unused-vars
+  220:18  warning  'error' is already declared in the upper scope on line 20 column 10                                                                              @typescript-eslint/no-shadow
+  242:15  warning  Inline style: { backgroundColor: "shouldPrint ? '#4CAF50' : '#E0E0E0'" }                                                                         react-native/no-inline-styles
+  247:17  warning  Inline style: { backgroundColor: '#FFFFFF' }                                                                                                     react-native/no-inline-styles
+  264:18  warning  Inline style: {
+  flexDirection: 'row',
+  justifyContent: 'center',
+  alignItems: 'center',
+  gap: 10,
+  marginTop: 10
+}                         react-native/no-inline-styles
+  345:15  warning  Inline style: { backgroundColor: "shouldPrint ? '#4CAF50' : '#E0E0E0'" }                                                                         react-native/no-inline-styles
+  350:17  warning  Inline style: { backgroundColor: '#FFFFFF' }                                                                                                     react-native/no-inline-styles
+  367:18  warning  Inline style: {
+  flexDirection: 'row',
+  justifyContent: 'center',
+  alignItems: 'center',
+  gap: 10,
+  marginTop: 10
+}                         react-native/no-inline-styles
+  428:15  warning  Inline style: { backgroundColor: "shouldPrint ? '#4CAF50' : '#E0E0E0'" }                                                                         react-native/no-inline-styles
+  433:17  warning  Inline style: { backgroundColor: '#FFFFFF' }                                                                                                     react-native/no-inline-styles
+  450:18  warning  Inline style: {
+  flexDirection: 'row',
+  justifyContent: 'center',
+  alignItems: 'center',
+  gap: 10,
+  marginTop: 10
+}                         react-native/no-inline-styles
+
+C:\Users\marvi\OneDrive\Escritorio\ice-cream-management\application\src\components\ShoppingCart\PaymentMethodCard.tsx
+    2:3   warning  'Easing' is defined but never used. Allowed unused vars must match /^_/u                    @typescript-eslint/no-unused-vars
+    7:3   warning  'TouchableWithoutFeedback' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+   16:3   warning  'ReduceMotion' is defined but never used. Allowed unused vars must match /^_/u              @typescript-eslint/no-unused-vars
+   22:10  warning  'WIDTH' is defined but never used. Allowed unused vars must match /^_/u                     @typescript-eslint/no-unused-vars
+   24:10  warning  'TouchableHighlight' is defined but never used. Allowed unused vars must match /^_/u        @typescript-eslint/no-unused-vars
+   27:3   warning  'children' is defined but never used. Allowed unused args must match /^_/u                  @typescript-eslint/no-unused-vars
+  103:27  warning  Expected '===' and instead saw '=='                                                         eqeqeq
+  105:17  warning  Expected '===' and instead saw '=='                                                         eqeqeq
+  119:23  warning  Inline style: { borderRadius: 15 }                                                          react-native/no-inline-styles
+
+C:\Users\marvi\OneDrive\Escritorio\ice-cream-management\application\src\components\ShoppingCart\ResumeShopping.tsx
+  25:10  warning  'printerService' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+  28:42  warning  'total' is already declared in the upper scope on line 26 column 10                        @typescript-eslint/no-shadow
+  47:20  warning  Expected '===' and instead saw '=='                                                        eqeqeq
+
+C:\Users\marvi\OneDrive\Escritorio\ice-cream-management\application\src\components\ShoppingCart\ShoppingCartListItem.tsx
+    1:10  warning  'Button' is defined but never used. Allowed unused vars must match /^_/u     @typescript-eslint/no-unused-vars
+    3:10  warning  'Product' is defined but never used. Allowed unused vars must match /^_/u    @typescript-eslint/no-unused-vars
+   12:3   warning  'clearCart' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+  160:42  warning  Expected '===' and instead saw '=='                                          eqeqeq
+
+C:\Users\marvi\OneDrive\Escritorio\ice-cream-management\application\src\components\UI\BackDrop.tsx
+   1:33  warning  'Text' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+   1:39  warning  'View' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+  32:24  warning  Expected '===' and instead saw '=='                                     eqeqeq
+  32:49  warning  Expected '===' and instead saw '=='                                     eqeqeq
+
+C:\Users\marvi\OneDrive\Escritorio\ice-cream-management\application\src\components\UI\ButtonComponent.tsx
+  1:46  warning  'View' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+C:\Users\marvi\OneDrive\Escritorio\ice-cream-management\application\src\components\UI\CustomHeader.tsx
+   4:3   warning  'Touchable' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+  11:10  warning  'Fonts' is defined but never used. Allowed unused vars must match /^_/u      @typescript-eslint/no-unused-vars
+  46:18  warning  Inline style: { padding: 5 }                                                 react-native/no-inline-styles
+  56:62  warning  Inline style: { padding: 5 }                                                 react-native/no-inline-styles
+
+C:\Users\marvi\OneDrive\Escritorio\ice-cream-management\application\src\components\UI\CustomInputComponent.tsx
+    9:10  warning  'themeInterface' is defined but never used. Allowed unused vars must match /^_/u   @typescript-eslint/no-unused-vars
+   12:22  warning  'set' is defined but never used. Allowed unused vars must match /^_/u              @typescript-eslint/no-unused-vars
+   19:8   warning  'ButtonComponent' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+   32:3   warning  'height' is defined but never used. Allowed unused args must match /^_/u           @typescript-eslint/no-unused-vars
+  230:26  warning  Inline style: { padding: 50 }                                                      react-native/no-inline-styles
+  259:42  warning  'type' is already declared in the upper scope on line 23 column 3                  @typescript-eslint/no-shadow
+
+C:\Users\marvi\OneDrive\Escritorio\ice-cream-management\application\src\components\UI\GenericModal.tsx
+  93:7  warning  'styles' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+C:\Users\marvi\OneDrive\Escritorio\ice-cream-management\application\src\components\UI\IconSelector.tsx
+   1:22  warning  'Text' is defined but never used. Allowed unused vars must match /^_/u              @typescript-eslint/no-unused-vars
+   1:28  warning  'View' is defined but never used. Allowed unused vars must match /^_/u              @typescript-eslint/no-unused-vars
+  14:3   warning  'AntDesign' is already declared in the upper scope on line 10 column 8              @typescript-eslint/no-shadow
+  15:3   warning  'Entypo' is already declared in the upper scope on line 11 column 8                 @typescript-eslint/no-shadow
+  16:3   warning  'EvilIcons' is already declared in the upper scope on line 12 column 8              @typescript-eslint/no-shadow
+  17:3   warning  'Feather' is already declared in the upper scope on line 3 column 8                 @typescript-eslint/no-shadow
+  18:3   warning  'MaterialCommunityIcons' is already declared in the upper scope on line 4 column 8  @typescript-eslint/no-shadow
+  19:3   warning  'SimpleLineIcons' is already declared in the upper scope on line 5 column 8         @typescript-eslint/no-shadow
+  21:3   warning  'Ionicons' is already declared in the upper scope on line 7 column 8                @typescript-eslint/no-shadow
+  22:3   warning  'Fontisto' is already declared in the upper scope on line 8 column 8                @typescript-eslint/no-shadow
+  23:3   warning  'FontAwesome' is already declared in the upper scope on line 9 column 8             @typescript-eslint/no-shadow
+  65:7   warning  'styles' is assigned a value but never used. Allowed unused vars must match /^_/u   @typescript-eslint/no-unused-vars
+
+C:\Users\marvi\OneDrive\Escritorio\ice-cream-management\application\src\components\UI\ModalComponent.tsx
+   1:29  warning  'Text' is defined but never used. Allowed unused vars must match /^_/u    @typescript-eslint/no-unused-vars
+  19:3   warning  'width' is defined but never used. Allowed unused args must match /^_/u   @typescript-eslint/no-unused-vars
+  20:3   warning  'height' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+  69:51  warning  Inline style: { zIndex: 0 }                                               react-native/no-inline-styles
+  82:31  warning  Expected '===' and instead saw '=='                                       eqeqeq
+
+C:\Users\marvi\OneDrive\Escritorio\ice-cream-management\application\src\components\UI\SplashScreen.tsx
+   4:3   warning  'Text' is defined but never used. Allowed unused vars must match /^_/u                                                                                                                                                                                                @typescript-eslint/no-unused-vars
+   5:3   warning  'View' is defined but never used. Allowed unused vars must match /^_/u                                                                                                                                                                                                @typescript-eslint/no-unused-vars
+  31:6   error    React Hook useEffect has missing dependencies: 'dispatch' and 'isDarkMode'. Either include them or remove the dependency array                                                                                                                                        react-hooks/exhaustive-deps
+  40:6   error    React Hook useEffect has missing dependencies: 'callback', 'scaleLogo', and 'startAnimation'. Either include them or remove the dependency array. If 'callback' changes too often, find the parent component that defines it and wrap that definition in useCallback  react-hooks/exhaustive-deps
+  65:11  warning  Inline style: {
+  position: 'absolute',
+  top: 0,
+  left: 0,
+  right: 0,
+  bottom: 0,
+  zIndex: 1
+}                                                                                                                                                                   react-native/no-inline-styles
+  77:18  warning  Inline style: { flex: 1, justifyContent: 'center', alignItems: 'center' }                                                                                                                                                                                             react-native/no-inline-styles
+  87:7   warning  'styles' is assigned a value but never used. Allowed unused vars must match /^_/u                                                                                                                                                                                     @typescript-eslint/no-unused-vars
+
+C:\Users\marvi\OneDrive\Escritorio\ice-cream-management\application\src\components\UI\ToastComponent.tsx
+  53:14  warning  Do not define components during render. React will see a new component type on every render and destroy the entire subtree’s DOM nodes and state (https://reactjs.org/docs/reconciliation.html#elements-of-different-types). Instead, move this component definition out of the parent component “ToastComponent” and pass data as props. If you want to allow component creation in props, set allowAsProps option to true  react/no-unstable-nested-components
+  59:12  warning  Do not define components during render. React will see a new component type on every render and destroy the entire subtree’s DOM nodes and state (https://reactjs.org/docs/reconciliation.html#elements-of-different-types). Instead, move this component definition out of the parent component “ToastComponent” and pass data as props. If you want to allow component creation in props, set allowAsProps option to true  react/no-unstable-nested-components
+  65:11  warning  Do not define components during render. React will see a new component type on every render and destroy the entire subtree’s DOM nodes and state (https://reactjs.org/docs/reconciliation.html#elements-of-different-types). Instead, move this component definition out of the parent component “ToastComponent” and pass data as props. If you want to allow component creation in props, set allowAsProps option to true  react/no-unstable-nested-components
+  77:7   warning  'styles' is assigned a value but never used. Allowed unused vars must match /^_/u                                                                                                                                                                                                                                                                                                                                            @typescript-eslint/no-unused-vars
+
+C:\Users\marvi\OneDrive\Escritorio\ice-cream-management\application\src\entity\Category.entity.ts
+  4:3  warning  'ManyToOne' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+C:\Users\marvi\OneDrive\Escritorio\ice-cream-management\application\src\entity\OrderPayment.ts
+  6:3  warning  'OneToOne' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+C:\Users\marvi\OneDrive\Escritorio\ice-cream-management\application\src\interface\Card.interface.ts
+  2:8  warning  'Animated' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+C:\Users\marvi\OneDrive\Escritorio\ice-cream-management\application\src\interface\Props.interface.ts
+   1:10  warning  'RouteProp' is defined but never used. Allowed unused vars must match /^_/u           @typescript-eslint/no-unused-vars
+   4:10  warning  'RootStackParamList' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+   5:10  warning  'Utils' is defined but never used. Allowed unused vars must match /^_/u               @typescript-eslint/no-unused-vars
+   6:10  warning  'SCREENS' is defined but never used. Allowed unused vars must match /^_/u             @typescript-eslint/no-unused-vars
+   9:3   warning  'FieldValues' is defined but never used. Allowed unused vars must match /^_/u         @typescript-eslint/no-unused-vars
+  11:3   warning  'ValidationRule' is defined but never used. Allowed unused vars must match /^_/u      @typescript-eslint/no-unused-vars
+
+C:\Users\marvi\OneDrive\Escritorio\ice-cream-management\application\src\pages\DailyReport.tsx
+   44:6   error    React Hook useEffect has a missing dependency: 'getOrders'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+   51:37  warning  Expected '===' and instead saw '=='                                                                           eqeqeq
+   51:66  warning  Expected '===' and instead saw '=='                                                                           eqeqeq
+   63:37  warning  Expected '===' and instead saw '=='                                                                           eqeqeq
+   63:66  warning  Expected '===' and instead saw '=='                                                                           eqeqeq
+   75:11  warning  'hours' is already declared in the upper scope on line 13 column 7                                            @typescript-eslint/no-shadow
+   82:30  warning  'orders' is already declared in the upper scope on line 33 column 10                                          @typescript-eslint/no-shadow
+  109:27  warning  Expected '!==' and instead saw '!='                                                                           eqeqeq
+  118:13  warning  'orders' is already declared in the upper scope on line 33 column 10                                          @typescript-eslint/no-shadow
+  195:49  warning  Inline style: { color: '#bc4749' }                                                                            react-native/no-inline-styles
+  203:49  warning  Inline style: { color: '#55a630' }                                                                            react-native/no-inline-styles
+  209:49  warning  Inline style: { color: '#1e6091' }                                                                            react-native/no-inline-styles
+  215:49  warning  Inline style: { color: '#2d2a32' }                                                                            react-native/no-inline-styles
+  222:20  warning  Expected '===' and instead saw '=='                                                                           eqeqeq
+  252:22  warning  Inline style: { marginVertical: 8, borderRadius: 16 }                                                         react-native/no-inline-styles
+  266:7   warning  'styles' is assigned a value but never used. Allowed unused vars must match /^_/u                             @typescript-eslint/no-unused-vars
+
+C:\Users\marvi\OneDrive\Escritorio\ice-cream-management\application\src\pages\EditListProducts.tsx
+  14:10  warning  'products' is assigned a value but never used. Allowed unused vars must match /^_/u                         @typescript-eslint/no-unused-vars
+  14:20  warning  'setProducts' is assigned a value but never used. Allowed unused vars must match /^_/u                      @typescript-eslint/no-unused-vars
+  29:6   error    React Hook useEffect has a missing dependency: 'getTree'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+  38:24  warning  Inline style: { fontWeight: 'bold', fontSize: 16, color: 'black' }                                          react-native/no-inline-styles
+  82:32  warning  Inline style: { padding: 10 }                                                                               react-native/no-inline-styles
+  94:7   warning  'styles' is assigned a value but never used. Allowed unused vars must match /^_/u                           @typescript-eslint/no-unused-vars
+
+C:\Users\marvi\OneDrive\Escritorio\ice-cream-management\application\src\pages\EditProduct.tsx
+   30:20  warning  'watch' is assigned a value but never used. Allowed unused vars must match /^_/u                                                    @typescript-eslint/no-unused-vars
+   38:49  warning  'product' is already declared in the upper scope on line 32 column 10                                                               @typescript-eslint/no-shadow
+   44:6   error    React Hook useEffect has missing dependencies: 'productService' and 'setValue'. Either include them or remove the dependency array  react-hooks/exhaustive-deps
+  130:14  warning  'error' is defined but never used. Allowed unused args must match /^_/u                                                             @typescript-eslint/no-unused-vars
+  136:14  warning  Inline style: { flex: 1 }                                                                                                           react-native/no-inline-styles
+
+C:\Users\marvi\OneDrive\Escritorio\ice-cream-management\application\src\pages\EditShoppingCartPage.tsx
+   1:22  warning  'Text' is defined but never used. Allowed unused vars must match /^_/u                                          @typescript-eslint/no-unused-vars
+   7:10  warning  'themeInterface' is defined but never used. Allowed unused vars must match /^_/u                                @typescript-eslint/no-unused-vars
+  32:35  warning  Expected '===' and instead saw '=='                                                                             eqeqeq
+  33:47  warning  Expected '===' and instead saw '=='                                                                             eqeqeq
+  34:59  warning  Expected '===' and instead saw '=='                                                                             eqeqeq
+  41:59  warning  Expected '===' and instead saw '=='                                                                             eqeqeq
+  52:6   error    React Hook useEffect has a missing dependency: 'homeService'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+C:\Users\marvi\OneDrive\Escritorio\ice-cream-management\application\src\pages\FelPage.tsx
+   1:22  warning  'Text' is defined but never used. Allowed unused vars must match /^_/u             @typescript-eslint/no-unused-vars
+   1:28  warning  'View' is defined but never used. Allowed unused vars must match /^_/u             @typescript-eslint/no-unused-vars
+   5:7   warning  'url2' is assigned a value but never used. Allowed unused vars must match /^_/u    @typescript-eslint/no-unused-vars
+   7:48  warning  Inline style: { flex: 1 }                                                          react-native/no-inline-styles
+  12:7   warning  'styles' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+C:\Users\marvi\OneDrive\Escritorio\ice-cream-management\application\src\pages\FinishOrderPage.tsx
+  67:6  error  React Hook useEffect has a missing dependency: 'printService'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+
+C:\Users\marvi\OneDrive\Escritorio\ice-cream-management\application\src\pages\HomePage.tsx
+    2:3   warning  'Alert' is defined but never used. Allowed unused vars must match /^_/u                                                      @typescript-eslint/no-unused-vars
+    3:3   warning  'Button' is defined but never used. Allowed unused vars must match /^_/u                                                     @typescript-eslint/no-unused-vars
+    5:3   warning  'Text' is defined but never used. Allowed unused vars must match /^_/u                                                       @typescript-eslint/no-unused-vars
+    7:3   warning  'TouchableOpacity' is defined but never used. Allowed unused vars must match /^_/u                                           @typescript-eslint/no-unused-vars
+   11:10  warning  'ScrollView' is defined but never used. Allowed unused vars must match /^_/u                                                 @typescript-eslint/no-unused-vars
+   13:3   warning  'DrawerActions' is defined but never used. Allowed unused vars must match /^_/u                                              @typescript-eslint/no-unused-vars
+   15:3   warning  'useRoute' is defined but never used. Allowed unused vars must match /^_/u                                                   @typescript-eslint/no-unused-vars
+   17:10  warning  'Utils' is defined but never used. Allowed unused vars must match /^_/u                                                      @typescript-eslint/no-unused-vars
+   20:3   warning  'COMMANDS' is defined but never used. Allowed unused vars must match /^_/u                                                   @typescript-eslint/no-unused-vars
+   22:3   warning  'USBPrinter' is defined but never used. Allowed unused vars must match /^_/u                                                 @typescript-eslint/no-unused-vars
+   25:3   warning  'CreateBackup' is defined but never used. Allowed unused vars must match /^_/u                                               @typescript-eslint/no-unused-vars
+   26:3   warning  'CreateDatabase' is defined but never used. Allowed unused vars must match /^_/u                                             @typescript-eslint/no-unused-vars
+   27:3   warning  'connectToDatabase' is defined but never used. Allowed unused vars must match /^_/u                                          @typescript-eslint/no-unused-vars
+   29:10  warning  'Category' is defined but never used. Allowed unused vars must match /^_/u                                                   @typescript-eslint/no-unused-vars
+   34:10  warning  'Fonts' is defined but never used. Allowed unused vars must match /^_/u                                                      @typescript-eslint/no-unused-vars
+   44:10  warning  'PrintService' is defined but never used. Allowed unused vars must match /^_/u                                               @typescript-eslint/no-unused-vars
+   50:25  warning  'setTrueLoading' is assigned a value but never used. Allowed unused vars must match /^_/u                                    @typescript-eslint/no-unused-vars
+   59:10  warning  'printers' is assigned a value but never used. Allowed unused vars must match /^_/u                                          @typescript-eslint/no-unused-vars
+   59:20  warning  'setprinters' is assigned a value but never used. Allowed unused vars must match /^_/u                                       @typescript-eslint/no-unused-vars
+   60:10  warning  'currentPrinter' is assigned a value but never used. Allowed unused vars must match /^_/u                                    @typescript-eslint/no-unused-vars
+   60:26  warning  'setCurrentPrinter' is assigned a value but never used. Allowed unused vars must match /^_/u                                 @typescript-eslint/no-unused-vars
+   69:6   error    React Hook useEffect has missing dependencies: 'dispatch' and 'getTree'. Either include them or remove the dependency array  react-hooks/exhaustive-deps
+   75:6   error    React Hook useEffect has a missing dependency: 'getTree'. Either include it or remove the dependency array                   react-hooks/exhaustive-deps
+  210:32  warning  Inline style: { paddingBottom: 10 }                                                                                          react-native/no-inline-styles
+  224:18  warning  Inline style: { flex: 1, flexDirection: 'row', flexWrap: 'wrap', height: 'auto' }                                            react-native/no-inline-styles
+
+C:\Users\marvi\OneDrive\Escritorio\ice-cream-management\application\src\pages\MenuPage.tsx
+   7:20  warning  Inline style: { fontFamily: 'Lato-Regular' }                                       react-native/no-inline-styles
+  14:7   warning  'styles' is assigned a value but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+C:\Users\marvi\OneDrive\Escritorio\ice-cream-management\application\src\pages\OrderList.tsx
+   4:3   warning  'Text' is defined but never used. Allowed unused vars must match /^_/u                                        @typescript-eslint/no-unused-vars
+   5:3   warning  'TouchableOpacity' is defined but never used. Allowed unused vars must match /^_/u                            @typescript-eslint/no-unused-vars
+  12:10  warning  'CreateBackup' is defined but never used. Allowed unused vars must match /^_/u                                @typescript-eslint/no-unused-vars
+  21:6   error    React Hook useEffect has a missing dependency: 'getOrders'. Either include it or remove the dependency array  react-hooks/exhaustive-deps
+  29:27  warning  Expected '!==' and instead saw '!='                                                                           eqeqeq
+  38:13  warning  'orders' is already declared in the upper scope on line 18 column 10                                          @typescript-eslint/no-shadow
+  71:32  warning  Inline style: { padding: 20 }                                                                                 react-native/no-inline-styles
+
+C:\Users\marvi\OneDrive\Escritorio\ice-cream-management\application\src\pages\PayPage.tsx
+    1:10  warning  'Button' is defined but never used. Allowed unused vars must match /^_/u               @typescript-eslint/no-unused-vars
+    1:30  warning  'Text' is defined but never used. Allowed unused vars must match /^_/u                 @typescript-eslint/no-unused-vars
+    1:36  warning  'TouchableOpacity' is defined but never used. Allowed unused vars must match /^_/u     @typescript-eslint/no-unused-vars
+    3:10  warning  'NavigationProp' is defined but never used. Allowed unused vars must match /^_/u       @typescript-eslint/no-unused-vars
+    3:26  warning  'RouteProp' is defined but never used. Allowed unused vars must match /^_/u            @typescript-eslint/no-unused-vars
+    3:37  warning  'useRoute' is defined but never used. Allowed unused vars must match /^_/u             @typescript-eslint/no-unused-vars
+    4:10  warning  'StackNavigationProp' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+    5:10  warning  'RootStackParamList' is defined but never used. Allowed unused vars must match /^_/u   @typescript-eslint/no-unused-vars
+    6:10  warning  'SCREENS' is defined but never used. Allowed unused vars must match /^_/u              @typescript-eslint/no-unused-vars
+   10:10  warning  'FlatList' is defined but never used. Allowed unused vars must match /^_/u             @typescript-eslint/no-unused-vars
+   14:10  warning  'useForm' is defined but never used. Allowed unused vars must match /^_/u              @typescript-eslint/no-unused-vars
+   17:9   warning  'orderId' is assigned a value but never used. Allowed unused vars must match /^_/u     @typescript-eslint/no-unused-vars
+  138:19  warning  Expected '===' and instead saw '=='                                                    eqeqeq
+  139:19  warning  Expected '===' and instead saw '=='                                                    eqeqeq
+  140:19  warning  Expected '===' and instead saw '=='                                                    eqeqeq
+
+C:\Users\marvi\OneDrive\Escritorio\ice-cream-management\application\src\routes\DailyReportNavigator.tsx
+   1:10  warning  'StyleSheet' is defined but never used. Allowed unused vars must match /^_/u                                                                                                                                                                                                                                                                                                                                                       @typescript-eslint/no-unused-vars
+   1:22  warning  'Text' is defined but never used. Allowed unused vars must match /^_/u                                                                                                                                                                                                                                                                                                                                                             @typescript-eslint/no-unused-vars
+   1:28  warning  'View' is defined but never used. Allowed unused vars must match /^_/u                                                                                                                                                                                                                                                                                                                                                             @typescript-eslint/no-unused-vars
+  31:13  warning  Do not define components during render. React will see a new component type on every render and destroy the entire subtree’s DOM nodes and state (https://reactjs.org/docs/reconciliation.html#elements-of-different-types). Instead, move this component definition out of the parent component “DailyReportNavigator” and pass data as props. If you want to allow component creation in props, set allowAsProps option to true  react/no-unstable-nested-components
+  31:35  warning  'options' is already declared in the upper scope on line 20 column 9                                                                                                                                                                                                                                                                                                                                                               @typescript-eslint/no-shadow
+
+C:\Users\marvi\OneDrive\Escritorio\ice-cream-management\application\src\routes\DrawerNavigator.tsx
+    1:10  warning  'View' is defined but never used. Allowed unused vars must match /^_/u                                                                             @typescript-eslint/no-unused-vars
+   16:8   warning  'ToastComponent' is defined but never used. Allowed unused vars must match /^_/u                                                                   @typescript-eslint/no-unused-vars
+   64:11  warning  'loadingState' is assigned a value but never used. Allowed unused vars must match /^_/u                                                            @typescript-eslint/no-unused-vars
+   74:6   error    React Hook useEffect has missing dependencies: 'dispatch', 'isDarkMode', and 'setTrueLoading'. Either include them or remove the dependency array  react-hooks/exhaustive-deps
+  107:26  warning  'focused' is defined but never used. Allowed unused args must match /^_/u                                                                          @typescript-eslint/no-unused-vars
+  107:35  warning  'size' is defined but never used. Allowed unused args must match /^_/u                                                                             @typescript-eslint/no-unused-vars
+
+C:\Users\marvi\OneDrive\Escritorio\ice-cream-management\application\src\routes\EditProductNavigator.tsx
+  40:5  error  Parsing error: ',' expected
+
+C:\Users\marvi\OneDrive\Escritorio\ice-cream-management\application\src\routes\MaintenanceStack.tsx
+  36:5  error  Parsing error: ',' expected
+
+C:\Users\marvi\OneDrive\Escritorio\ice-cream-management\application\src\routes\OrderStackNavigator.tsx
+   1:22  warning  'Text' is defined but never used. Allowed unused vars must match /^_/u                                                                                                                                                                                                                                                                                                                                                            @typescript-eslint/no-unused-vars
+   1:28  warning  'View' is defined but never used. Allowed unused vars must match /^_/u                                                                                                                                                                                                                                                                                                                                                            @typescript-eslint/no-unused-vars
+   3:10  warning  'themeInterface' is defined but never used. Allowed unused vars must match /^_/u                                                                                                                                                                                                                                                                                                                                                  @typescript-eslint/no-unused-vars
+  32:13  warning  Do not define components during render. React will see a new component type on every render and destroy the entire subtree’s DOM nodes and state (https://reactjs.org/docs/reconciliation.html#elements-of-different-types). Instead, move this component definition out of the parent component “OrderStackNavigator” and pass data as props. If you want to allow component creation in props, set allowAsProps option to true  react/no-unstable-nested-components
+  32:35  warning  'options' is already declared in the upper scope on line 21 column 9                                                                                                                                                                                                                                                                                                                                                              @typescript-eslint/no-shadow
+  55:7   warning  'styles' is assigned a value but never used. Allowed unused vars must match /^_/u                                                                                                                                                                                                                                                                                                                                                 @typescript-eslint/no-unused-vars
+
+C:\Users\marvi\OneDrive\Escritorio\ice-cream-management\application\src\routes\StackNavigator.tsx
+   1:10  warning  'View' is defined but never used. Allowed unused vars must match /^_/u                                                                                                                                                                                                                                                                                                                                                       @typescript-eslint/no-unused-vars
+   1:16  warning  'Text' is defined but never used. Allowed unused vars must match /^_/u                                                                                                                                                                                                                                                                                                                                                       @typescript-eslint/no-unused-vars
+   1:22  warning  'useColorScheme' is defined but never used. Allowed unused vars must match /^_/u                                                                                                                                                                                                                                                                                                                                             @typescript-eslint/no-unused-vars
+   2:17  warning  'useEffect' is defined but never used. Allowed unused vars must match /^_/u                                                                                                                                                                                                                                                                                                                                                  @typescript-eslint/no-unused-vars
+  10:10  warning  'useDispatch' is defined but never used. Allowed unused vars must match /^_/u                                                                                                                                                                                                                                                                                                                                                @typescript-eslint/no-unused-vars
+  11:10  warning  'setTheme' is defined but never used. Allowed unused vars must match /^_/u                                                                                                                                                                                                                                                                                                                                                   @typescript-eslint/no-unused-vars
+  12:10  warning  'darkTheme' is defined but never used. Allowed unused vars must match /^_/u                                                                                                                                                                                                                                                                                                                                                  @typescript-eslint/no-unused-vars
+  15:8   warning  'SplashScreen' is defined but never used. Allowed unused vars must match /^_/u                                                                                                                                                                                                                                                                                                                                               @typescript-eslint/no-unused-vars
+  17:10  warning  'Product' is defined but never used. Allowed unused vars must match /^_/u                                                                                                                                                                                                                                                                                                                                                    @typescript-eslint/no-unused-vars
+  47:13  warning  Do not define components during render. React will see a new component type on every render and destroy the entire subtree’s DOM nodes and state (https://reactjs.org/docs/reconciliation.html#elements-of-different-types). Instead, move this component definition out of the parent component “StackNavigator” and pass data as props. If you want to allow component creation in props, set allowAsProps option to true  react/no-unstable-nested-components
+  47:35  warning  'options' is already declared in the upper scope on line 36 column 9                                                                                                                                                                                                                                                                                                                                                         @typescript-eslint/no-shadow
+
+C:\Users\marvi\OneDrive\Escritorio\ice-cream-management\application\src\services\HomeServices.ts
+   1:10  warning  'DataSource' is defined but never used. Allowed unused vars must match /^_/u                          @typescript-eslint/no-unused-vars
+   1:26  warning  'PrimaryColumnCannotBeNullableError' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+  35:5   warning  'actual' is defined but never used. Allowed unused args must match /^_/u                              @typescript-eslint/no-unused-vars
+  68:38  warning  Expected '===' and instead saw '=='                                                                   eqeqeq
+  70:23  warning  Expected '===' and instead saw '=='                                                                   eqeqeq
+
+C:\Users\marvi\OneDrive\Escritorio\ice-cream-management\application\src\services\OrderServices.ts
+   4:10  warning  'OrderDetail' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+  64:21  warning  'order' is already declared in the upper scope on line 50 column 15            @typescript-eslint/no-shadow
+  97:21  warning  'order' is already declared in the upper scope on line 92 column 15            @typescript-eslint/no-shadow
+
+C:\Users\marvi\OneDrive\Escritorio\ice-cream-management\application\src\services\PaymentServices.ts
+  14:15  warning  'order' is already declared in the upper scope on line 9 column 13         @typescript-eslint/no-shadow
+  28:15  warning  'orderDetail' is already declared in the upper scope on line 23 column 19  @typescript-eslint/no-shadow
+
+C:\Users\marvi\OneDrive\Escritorio\ice-cream-management\application\src\services\PrintService.ts
+   36:16  warning  'error' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+  149:15  warning  'order' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+
+C:\Users\marvi\OneDrive\Escritorio\ice-cream-management\application\src\store\redux\carReducer.ts
+  2:10  warning  'Product' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+C:\Users\marvi\OneDrive\Escritorio\ice-cream-management\application\src\store\redux\orderReducer.ts
+  2:10  warning  'Order' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+C:\Users\marvi\OneDrive\Escritorio\ice-cream-management\application\src\store\redux\themeReducer.ts
+  5:11  warning  'ThemeState' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+✖ 254 problems (15 errors, 239 warnings)
+
