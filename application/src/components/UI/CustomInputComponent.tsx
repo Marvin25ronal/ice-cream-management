@@ -37,24 +37,73 @@ const CustomInputComponent = ({
 }: CustomInputProps) => {
   const theme = useSelector((state: RootState) => state.theme.value);
   const [visible, setVisible] = useState(false);
+  const [isFocused, setIsFocused] = useState(false);
   const progress = useSharedValue(0);
+
   const styles = StyleSheet.create({
-    action: {
+    container: {
+      width: width ?? '100%',
+      marginVertical: 8,
+    },
+    inputWrapper: {
       flexDirection: 'row',
-      justifyContent: 'center',
       alignItems: 'center',
+      backgroundColor: theme.INPUT_BACKGROUND_COLOR,
+      borderRadius: 12,
       borderWidth: 2,
       borderColor: theme.INPUT_BORDER_COLOR,
-      borderRadius: 5,
-      marginVertical: 10,
-      paddingHorizontal: 10,
-      width: width ?? '100%',
+      paddingHorizontal: 14,
+      paddingVertical: 12,
+      shadowColor: theme.INPUT_SHADOW_COLOR,
+      shadowOffset: {
+        width: 0,
+        height: 2,
+      },
+      shadowOpacity: 0.08,
+      shadowRadius: 4,
+      elevation: 3,
+    },
+    inputWrapperFocused: {
+      borderColor: theme.INPUT_BORDER_COLOR_FOCUSED,
+      backgroundColor: theme.INPUT_BACKGROUND_COLOR_FOCUSED,
+      shadowColor: theme.INPUT_SHADOW_COLOR,
+      shadowOpacity: 0.2,
+      elevation: 5,
+    },
+    inputWrapperError: {
+      borderColor: theme.ERROR_COLOR,
+      backgroundColor: theme.INPUT_BACKGROUND_COLOR_ERROR,
+    },
+    iconContainer: {
+      width: 40,
+      height: 40,
+      borderRadius: 20,
+      backgroundColor: theme.INPUT_ICON_BACKGROUND_COLOR,
+      justifyContent: 'center',
+      alignItems: 'center',
+      marginRight: 12,
+    },
+    iconContainerFocused: {
+      backgroundColor: theme.INPUT_ICON_BACKGROUND_COLOR_FOCUSED,
     },
     text_input: {
       flex: 1,
-      color: 'black',
+      color: '#2C3E50',
       fontFamily: Fonts.LatoRegular,
-      fontSize: fontSize ?? 60,
+      fontSize: fontSize ?? 16,
+      paddingVertical: 0,
+    },
+    errorContainer: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      marginTop: 6,
+      marginLeft: 14,
+    },
+    errorText: {
+      color: theme.ERROR_COLOR,
+      fontSize: 12,
+      fontFamily: Fonts.LatoRegular,
+      marginLeft: 4,
     },
     calendarContainer: {
       width: '100%',
@@ -76,45 +125,49 @@ const CustomInputComponent = ({
           fieldState: { error },
         }) => {
           return (
-            <>
-              <TouchableOpacity
-                onPress={() => {
-                  setVisible(true);
-                  progress.value = withSpring(1);
-                }}
+            <View style={styles.container}>
+              <View
                 style={[
-                  styles.action,
-                  {
-                    borderColor: error
-                      ? theme.ERROR_COLOR
-                      : theme.INPUT_BORDER_COLOR,
-                  },
+                  styles.inputWrapper,
+                  isFocused && styles.inputWrapperFocused,
+                  error && styles.inputWrapperError,
                 ]}>
-                <IconSelector
-                  icon_class={icon_class}
-                  color={theme.COLOR_FORM_ICON}
-                  size={iconSize ?? 60}
-                  icon={icon_name}
-                />
+                <View
+                  style={[
+                    styles.iconContainer,
+                    isFocused && styles.iconContainerFocused,
+                  ]}>
+                  <IconSelector
+                    icon_class={icon_class}
+                    color={isFocused ? theme.INPUT_ICON_COLOR_FOCUSED : theme.INPUT_ICON_COLOR}
+                    size={iconSize ?? 20}
+                    icon={icon_name}
+                  />
+                </View>
                 <TextInput
                   placeholder={place_holder}
-                  style={[styles.text_input]}
+                  style={styles.text_input}
                   keyboardType={keyboardType}
-                  placeholderTextColor={'grey'}
-                  textAlign="center"
+                  placeholderTextColor={theme.INPUT_PLACEHOLDER_COLOR}
                   value={value}
                   onChangeText={onChange}
-                  onBlur={onBlur}
+                  onFocus={() => setIsFocused(true)}
+                  onBlur={() => {
+                    setIsFocused(false);
+                    onBlur();
+                  }}
                   editable={!disabled}
                   defaultValue={defaultValue}
                 />
-              </TouchableOpacity>
+              </View>
               {error && (
-                <Text style={{ color: theme.ERROR_COLOR }}>
-                  {error.message || 'Error'}
-                </Text>
+                <View style={styles.errorContainer}>
+                  <Text style={styles.errorText}>
+                    {error.message || 'Error'}
+                  </Text>
+                </View>
               )}
-            </>
+            </View>
           );
         }}
       />
@@ -131,48 +184,52 @@ const CustomInputComponent = ({
           fieldState: { error },
         }) => {
           return (
-            <>
-              <TouchableOpacity
-                onPress={() => {
-                  setVisible(true);
-                  progress.value = withSpring(1);
-                }}
+            <View style={styles.container}>
+              <View
                 style={[
-                  styles.action,
-                  {
-                    borderColor: error
-                      ? theme.ERROR_COLOR
-                      : theme.INPUT_BORDER_COLOR,
-                  },
+                  styles.inputWrapper,
+                  isFocused && styles.inputWrapperFocused,
+                  error && styles.inputWrapperError,
                 ]}>
-                <IconSelector
-                  icon_class={icon_class}
-                  color={theme.COLOR_FORM_ICON}
-                  size={iconSize ?? 60}
-                  icon={icon_name}
-                />
+                <View
+                  style={[
+                    styles.iconContainer,
+                    isFocused && styles.iconContainerFocused,
+                  ]}>
+                  <IconSelector
+                    icon_class={icon_class}
+                    color={isFocused ? theme.INPUT_ICON_COLOR_FOCUSED : theme.INPUT_ICON_COLOR}
+                    size={iconSize ?? 20}
+                    icon={icon_name}
+                  />
+                </View>
                 <TextInput
                   placeholder={place_holder}
-                  style={[styles.text_input]}
+                  style={styles.text_input}
                   keyboardType="numeric"
-                  placeholderTextColor={'grey'}
-                  textAlign="center"
+                  placeholderTextColor={theme.INPUT_PLACEHOLDER_COLOR}
                   value={value?.toString()}
                   onChangeText={text => {
-                    const numericValue = text.replace(/[^0-9]/g, '');
+                    const numericValue = text.replace(/[^0-9.]/g, '');
                     onChange(numericValue);
                   }}
-                  onBlur={onBlur}
+                  onFocus={() => setIsFocused(true)}
+                  onBlur={() => {
+                    setIsFocused(false);
+                    onBlur();
+                  }}
                   editable={!disabled}
                   defaultValue={defaultValue?.toString()}
                 />
-              </TouchableOpacity>
+              </View>
               {error && (
-                <Text style={{ color: theme.ERROR_COLOR }}>
-                  {error.message || 'Error'}
-                </Text>
+                <View style={styles.errorContainer}>
+                  <Text style={styles.errorText}>
+                    {error.message || 'Error'}
+                  </Text>
+                </View>
               )}
-            </>
+            </View>
           );
         }}
       />
@@ -189,43 +246,39 @@ const CustomInputComponent = ({
           fieldState: { error },
         }) => {
           return (
-            <>
+            <View style={styles.container}>
               <TouchableOpacity
                 onPress={() => {
                   setVisible(true);
                   progress.value = withSpring(1);
                 }}
                 style={[
-                  styles.action,
-                  {
-                    borderColor: error
-                      ? theme.ERROR_COLOR
-                      : theme.INPUT_BORDER_COLOR,
-                  },
-                ]}>
-                <IconSelector
-                  icon_class={icon_class}
-                  color={theme.COLOR_FORM_ICON}
-                  size={fontSize || 60}
-                  icon={icon_name}
-                />
-                <TextInput
-                  placeholder={place_holder}
-                  style={[styles.text_input]}
-                  keyboardType={keyboardType}
-                  placeholderTextColor={'grey'}
-                  textAlign="center"
-                  value={value}
-                  onChangeText={onChange}
-                  onBlur={onBlur}
-                  editable={!disabled}
-                  defaultValue={defaultValue}
-                />
+                  styles.inputWrapper,
+                  error && styles.inputWrapperError,
+                ]}
+                activeOpacity={0.7}>
+                <View style={styles.iconContainer}>
+                  <IconSelector
+                    icon_class={icon_class}
+                    color={theme.INPUT_ICON_COLOR}
+                    size={iconSize ?? 20}
+                    icon={icon_name}
+                  />
+                </View>
+                <Text
+                  style={[
+                    styles.text_input,
+                    !value && { color: theme.INPUT_PLACEHOLDER_COLOR },
+                  ]}>
+                  {value || place_holder}
+                </Text>
               </TouchableOpacity>
               {error && (
-                <Text style={{ color: theme.ERROR_COLOR }}>
-                  {error.message || 'Error'}
-                </Text>
+                <View style={styles.errorContainer}>
+                  <Text style={styles.errorText}>
+                    {error.message || 'Error'}
+                  </Text>
+                </View>
               )}
               <ModalComponent
                 visible={visible}
@@ -274,18 +327,9 @@ const CustomInputComponent = ({
                       }
                     }}
                   />
-                  {/* <View style={{ marginTop: 10, padding: 10 }}>
-                                        <ButtonComponent text='Aceptar' onPress={() => {
-                                            progress.value = withSpring(0)
-
-                                            setTimeout(() => {
-                                                setVisible(false)
-                                            }, 300);
-                                        }} fontSize={20} variant='primary' />
-                                    </View> */}
                 </View>
               </ModalComponent>
-            </>
+            </View>
           );
         }}
       />
