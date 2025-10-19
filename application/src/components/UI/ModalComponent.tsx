@@ -30,15 +30,25 @@ const ModalComponent = ({
       height: '100%',
       justifyContent: 'center',
       alignItems: 'center',
+      padding: 20,
     },
     modal: {
       backgroundColor: theme.MODAL_BACKGROUND_COLOR,
-
+      width: width || '80%',
+      height: height || 'auto',
+      maxWidth: '90%',
+      maxHeight: '90%',
       borderRadius: 15,
-      // justifyContent: 'center',
-      // alignItems: 'center',
       zIndex: 1,
-      padding: 10,
+      padding: 20,
+      shadowColor: '#000',
+      shadowOffset: {
+        width: 0,
+        height: 2,
+      },
+      shadowOpacity: 0.25,
+      shadowRadius: 3.84,
+      elevation: 5,
     },
     close: {
       width: icon,
@@ -47,7 +57,6 @@ const ModalComponent = ({
       top: 20,
       right: 20,
       zIndex: 2,
-      //backgroundColor:'red'
     },
   });
   const reanimatedStyle = useAnimatedStyle(() => {

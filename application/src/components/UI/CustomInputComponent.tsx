@@ -56,6 +56,13 @@ const CustomInputComponent = ({
       fontFamily: Fonts.LatoRegular,
       fontSize: fontSize ?? 60,
     },
+    calendarContainer: {
+      width: '100%',
+      paddingTop: 50,
+      paddingHorizontal: 10,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
   });
 
   if (type === 'text') {
@@ -223,15 +230,12 @@ const CustomInputComponent = ({
               <ModalComponent
                 visible={visible}
                 setVisible={setVisible}
-                height={'50%'}
-                width={'80%'}
+                height={'auto'}
+                width={'auto'}
                 progress={progress}>
-                <View
-                  style={{
-                    padding: 50,
-                  }}>
+                <View style={styles.calendarContainer}>
                   <CalendarPicker
-                    width={600}
+                    width={450}
                     height={600}
                     nextTitleStyle={{ color: theme.COLOR_FORM_ICON }}
                     previousTitleStyle={{ color: theme.COLOR_FORM_ICON }}

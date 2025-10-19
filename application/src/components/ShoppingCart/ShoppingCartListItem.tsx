@@ -193,7 +193,7 @@ const ShoppingCartListItem = ({
       <ModalComponent
         visible={visible}
         setVisible={setVisible}
-        height={'10%'}
+        height={'auto'}
         width={'50%'}
         progress={progress}>
         <ClearSelectedItemsModal
