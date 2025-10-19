@@ -15,16 +15,18 @@ const ClearSelectedItemsModal = ({
   const theme: themeInterface = useSelector((state: any) => state.theme.value);
   const styles = StyleSheet.create({
     container: {
-      //flex: 1,
       width: '100%',
       justifyContent: 'center',
       alignItems: 'center',
       padding: 20,
+      paddingTop: 40,
     },
     message: {
       color: theme.MODAL_TEXT_COLOR,
       fontSize: FontsSize.extraLarge,
       fontFamily: Fonts.LatoRegular,
+      textAlign: 'center',
+      marginBottom: 10,
     },
     confirmButton: {
       backgroundColor: theme.CONFIRM_BUTTON_COLOR,
@@ -57,7 +59,7 @@ const ClearSelectedItemsModal = ({
     buttonContainer: {
       flexDirection: 'row',
       justifyContent: 'center',
-      marginTop: 50,
+      marginTop: 30,
       width: '100%',
     },
     confirmText: {
