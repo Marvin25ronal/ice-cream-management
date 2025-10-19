@@ -1,7 +1,3 @@
-module.exports={
-    assets:[
-        
-        './assets/db',
-        './assets/fonts',
-    ],
-}
+module.exports = {
+  assets: ['./assets/db', './assets/fonts'],
+};

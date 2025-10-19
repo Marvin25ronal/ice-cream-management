@@ -1,6 +1,6 @@
-import { View, Text, useColorScheme, StatusBar } from 'react-native'
-import React, { useEffect } from 'react'
-import { NavigationContainer } from '@react-navigation/native'
+import { View, Text, useColorScheme, StatusBar } from 'react-native';
+import React, { useEffect } from 'react';
+import { NavigationContainer } from '@react-navigation/native';
 import { Provider, useDispatch } from 'react-redux';
 
 import { darkTheme } from './src/styles/Theme';
@@ -12,9 +12,7 @@ import { CreateDatabase } from './src/store/db/Database';
 import { useLoading } from './src/shared/LoaderHook';
 import DrawerNavigator from './src/routes/DrawerNavigator';
 
-
 const App = () => {
-
   // useEffect(() => {
   //   if (isDarkMode) {
   //     dispatch(setTheme(darkTheme))
@@ -23,24 +21,21 @@ const App = () => {
   //   }
   // }, [])
   useEffect(() => {
-    StatusBar.setHidden(false)
-    CreateDatabase()
-    
-  }, [])
+    StatusBar.setHidden(false);
+    CreateDatabase();
+  }, []);
 
   return (
     <>
       <SafeAreaProvider>
         <Provider store={store}>
-          <NavigationContainer  >
+          <NavigationContainer>
             <DrawerNavigator />
           </NavigationContainer>
         </Provider>
       </SafeAreaProvider>
     </>
+  );
+};
 
-  )
-
-}
-
-export default App
+export default App;

@@ -1,98 +1,102 @@
 import { Alert } from 'react-native';
-import { enablePromise, openDatabase } from 'react-native-sqlite-storage'
-import RNFS from 'react-native-fs'
+import { enablePromise, openDatabase } from 'react-native-sqlite-storage';
+import RNFS from 'react-native-fs';
 import { DataSource } from 'typeorm';
 import { Category } from '../../entity/Category.entity';
 import { Product } from '../../entity/Product.entity';
 import { Order } from '../../entity/Order.entity';
 import { OrderDetail } from '../../entity/OrderDetail.entity';
 import { OrderPayment } from '../../entity/OrderPayment';
-enablePromise(true)
+enablePromise(true);
 
 export const connectToDatabase = async () => {
-
-    const AppDataSource = new DataSource({
-        type: 'react-native',
-        database: 'IceCreamDatabase.db',
-        location: 'default',
-        logging: ['query', 'error', 'schema'],
-        entities: [Category, Product, Order, OrderDetail,OrderPayment],
-        synchronize: false,
-    })
-    // ;(await AppDataSource.initialize()).manager.find(Category).then((categories) => {
-    //     console.log(categories)
-    // }
-    // )
-    return AppDataSource.initialize()
-    // return openDatabase(
-    //     {
-    //         name: "IceCreamDatabase.db",
-    //         createFromLocation: '~/IceCreamDatabase.db',
-    //         location: 'default'
-    //     }, ((db) => {
-    //         console.log("Base de datos conectada")
-    //     }),
-    //     ((e) => {
-    //         console.log("Error al conectar la base de datos ")
-    //         console.log(e.message)
-    //         console.log(e)
-    //     })
-    // )
-}
+  const AppDataSource = new DataSource({
+    type: 'react-native',
+    database: 'IceCreamDatabase.db',
+    location: 'default',
+    logging: ['query', 'error', 'schema'],
+    entities: [Category, Product, Order, OrderDetail, OrderPayment],
+    synchronize: false,
+  });
+  // ;(await AppDataSource.initialize()).manager.find(Category).then((categories) => {
+  //     console.log(categories)
+  // }
+  // )
+  return AppDataSource.initialize();
+  // return openDatabase(
+  //     {
+  //         name: "IceCreamDatabase.db",
+  //         createFromLocation: '~/IceCreamDatabase.db',
+  //         location: 'default'
+  //     }, ((db) => {
+  //         console.log("Base de datos conectada")
+  //     }),
+  //     ((e) => {
+  //         console.log("Error al conectar la base de datos ")
+  //         console.log(e.message)
+  //         console.log(e)
+  //     })
+  // )
+};
 
 export const CreateDatabase = async () => {
-    return openDatabase(
-        {
-            name: "IceCreamDatabase.db",
-            createFromLocation: '~/custom/IceCreamDatabase.db',
-            location: 'default'
-        }, ((db) => {
-            console.log("Base de datos conectada")
-            //obtenemos el listado de tablas
-            db.transaction(tx => {
-                //listado de tablas
-                tx.executeSql(
-                    'SELECT name FROM sqlite_master WHERE type="table"',
-                    [],
-                    (_, resultSet) => {
-                        const rows = resultSet.rows;
-                        const tables = [];
+  return openDatabase(
+    {
+      name: 'IceCreamDatabase.db',
+      createFromLocation: '~/custom/IceCreamDatabase.db',
+      location: 'default',
+    },
+    db => {
+      console.log('Base de datos conectada');
+      //obtenemos el listado de tablas
+      db.transaction(tx => {
+        //listado de tablas
+        tx.executeSql(
+          'SELECT name FROM sqlite_master WHERE type="table"',
+          [],
+          (_, resultSet) => {
+            const rows = resultSet.rows;
+            const tables = [];
 
-                        for (let i = 0; i < rows.length; i++) {
-                            tables.push(rows.item(i));
-                        }
-
-                        console.log('Tablas:', tables);
-                    },
-                    (_, error) => {
-                        console.error('Error al obtener las tablas:', error);
-                    }
-                );
+            for (let i = 0; i < rows.length; i++) {
+              tables.push(rows.item(i));
             }
-            )
-        }),
-        ((e) => {
-            console.log("Error al conectar la base de datos ")
-            console.log(e.message)
-            console.log(e)
-        })
-    )
-}
+
+            console.log('Tablas:', tables);
+          },
+          (_, error) => {
+            console.error('Error al obtener las tablas:', error);
+          },
+        );
+      });
+    },
+    e => {
+      console.log('Error al conectar la base de datos ');
+      console.log(e.message);
+      console.log(e);
+    },
+  );
+};
 
 export const CreateBackup = async () => {
-     
-    const packageName = 'com.application'; // Reemplaza esto con el nombre del paquete de tu aplicación
-    const databaseName = 'IceCreamDatabase.db'; // Reemplaza esto con el nombre de tu base de datos
-    const destination=`backup-${new Date().getTime()}.db`
-    const sourcePath = `/data/data/${packageName}/databases/${databaseName}`;
-    const destinationPath = `${RNFS.DownloadDirectoryPath}/${destination}`;
-    console.log('destinationPath', destinationPath)
-    try {
-        await RNFS.copyFile(sourcePath, destinationPath);
-        console.log('Copia de seguridad de la base de datos realizada con éxito');
-        Alert.alert('Copia de seguridad realizada', `La copia de seguridad de la base de datos se ha realizado con éxito en ${destinationPath}`);
-    } catch (error) {
-        console.error('Error al hacer la copia de seguridad de la base de datos', error);
-        Alert.alert('Error al hacer el backup');
-    }
-}
+  const packageName = 'com.application'; // Reemplaza esto con el nombre del paquete de tu aplicación
+  const databaseName = 'IceCreamDatabase.db'; // Reemplaza esto con el nombre de tu base de datos
+  const destination = `backup-${new Date().getTime()}.db`;
+  const sourcePath = `/data/data/${packageName}/databases/${databaseName}`;
+  const destinationPath = `${RNFS.DownloadDirectoryPath}/${destination}`;
+  console.log('destinationPath', destinationPath);
+  try {
+    await RNFS.copyFile(sourcePath, destinationPath);
+    console.log('Copia de seguridad de la base de datos realizada con éxito');
+    Alert.alert(
+      'Copia de seguridad realizada',
+      `La copia de seguridad de la base de datos se ha realizado con éxito en ${destinationPath}`,
+    );
+  } catch (error) {
+    console.error(
+      'Error al hacer la copia de seguridad de la base de datos',
+      error,
+    );
+    Alert.alert('Error al hacer el backup');
+  }
+};

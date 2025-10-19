@@ -1,24 +1,22 @@
-import { createSlice } from "@reduxjs/toolkit";
-import { themeInterface } from "../../interface/themeInterface";
-import { darkTheme } from "../../styles/Theme";
+import { createSlice } from '@reduxjs/toolkit';
+import { themeInterface } from '../../interface/themeInterface';
+import { darkTheme } from '../../styles/Theme';
 
 interface ThemeState {
-    value: themeInterface
+  value: themeInterface;
 }
 export const themeSlice = createSlice({
-    name: 'theme',
-    initialState: {
-        value: darkTheme
+  name: 'theme',
+  initialState: {
+    value: darkTheme,
+  },
+  reducers: {
+    setTheme: (state, action) => {
+      state.value = action.payload;
     },
-    reducers: {
-        setTheme: (state, action) => {
-            state.value = action.payload
-        }
-    }
-})
+  },
+});
 
+export default themeSlice.reducer;
 
-export default themeSlice.reducer
-
-
-export const { setTheme } = themeSlice.actions
+export const { setTheme } = themeSlice.actions;
