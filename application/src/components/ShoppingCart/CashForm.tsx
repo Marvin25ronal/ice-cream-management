@@ -30,9 +30,11 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 const CashForm = ({
   card = false,
   mix = false,
+  hideTotal = false,
 }: {
   card?: boolean;
   mix?: boolean;
+  hideTotal?: boolean;
 }) => {
   const theme: themeInterface = useSelector((state: any) => state.theme.value);
   const orderId: number = useSelector((state: any) => state.order.value);
@@ -143,10 +145,10 @@ const CashForm = ({
       color: theme.LABEL_FORM_COLOR,
     },
     cardContainer: {
-      flex: 1,
       flexDirection: 'column',
       padding: 10,
-      gap: 50,
+      gap: 20,
+      justifyContent: 'space-between',
     },
     printSwitchContainer: {
       flexDirection: 'row',
@@ -267,170 +269,220 @@ const CashForm = ({
   };
   if (card) {
     return (
-      <View style={styles.cardContainer}>
-        <Text style={styles.textAmount}>Pago con tarjeta</Text>
-        <Text style={styles.textWithCard}>
-          Realize el cobro con la terminal, y presione el boton de abajo
-        </Text>
+      <>
+        <View style={styles.cardContainer}>
+          <Text style={styles.textAmount}>Pago con tarjeta</Text>
+          <Text style={styles.textWithCard}>
+            Realize el cobro con la terminal, y presione el boton de abajo
+          </Text>
 
-        <View style={styles.printSwitchContainer}>
-          <Icon name="print" size={24} color={theme.LABEL_FORM_COLOR} />
-          <Text style={styles.printLabel}>Imprimir ticket</Text>
-          <TouchableOpacity
-            onPress={togglePrintSwitch}
-            activeOpacity={0.8}
-            style={[
-              styles.switchTrack,
-              shouldPrint
-                ? styles.switchTrackActive
-                : styles.switchTrackInactive,
-            ]}>
-            <Animated.View
+          <View style={styles.printSwitchContainer}>
+            <Icon name="print" size={24} color={theme.LABEL_FORM_COLOR} />
+            <Text style={styles.printLabel}>Imprimir ticket</Text>
+            <TouchableOpacity
+              onPress={togglePrintSwitch}
+              activeOpacity={0.8}
               style={[
-                styles.switchThumb,
-                styles.switchThumbWhite,
-                {
-                  transform: [
-                    {
-                      translateX: switchAnimation.interpolate({
-                        inputRange: [0, 1],
-                        outputRange: [0, 35],
-                      }),
-                    },
-                  ],
-                },
-              ]}
-            />
-          </TouchableOpacity>
-        </View>
+                styles.switchTrack,
+                shouldPrint
+                  ? styles.switchTrackActive
+                  : styles.switchTrackInactive,
+              ]}>
+              <Animated.View
+                style={[
+                  styles.switchThumb,
+                  styles.switchThumbWhite,
+                  {
+                    transform: [
+                      {
+                        translateX: switchAnimation.interpolate({
+                          inputRange: [0, 1],
+                          outputRange: [0, 35],
+                        }),
+                      },
+                    ],
+                  },
+                ]}
+              />
+            </TouchableOpacity>
+          </View>
 
-        <View style={styles.buttonRow}>
-          <TouchableOpacity
-            style={[styles.button, styles.errorButton]}
-            onPress={() => {
-              setVisible(true);
-              progress.value = withSpring(1);
-            }}>
-            <Text style={styles.buttonTextColor}>Cancelar</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.button} onPress={handleSubmit(pay)}>
-            <Text style={styles.buttonTextColor}>Cobrar</Text>
-          </TouchableOpacity>
+          <View style={styles.buttonRow}>
+            <TouchableOpacity
+              style={[styles.button, styles.errorButton]}
+              onPress={() => {
+                setVisible(true);
+                progress.value = withSpring(1);
+              }}>
+              <Text style={styles.buttonTextColor}>Cancelar</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.button} onPress={handleSubmit(pay)}>
+              <Text style={styles.buttonTextColor}>Cobrar</Text>
+            </TouchableOpacity>
+          </View>
         </View>
-      </View>
+        <ModalComponent
+          visible={visible}
+          setVisible={setVisible}
+          height={'50%'}
+          width={'50%'}
+          progress={progress}>
+          <GenericModal
+            cancel={() => {
+              setVisible(false);
+              progress.value = withSpring(0);
+            }}
+            confirm={() => {
+              setVisible(false);
+              progress.value = withSpring(0);
+              clearShoppingCart();
+            }}
+            text="¿Desea cancelar la orden?"
+          />
+        </ModalComponent>
+      </>
     );
   }
   if (mix) {
     return (
-      <View style={styles.container}>
-        <Text style={styles.label}>Monto a cobrar</Text>
-        <View style={styles.amount}>
-          <Text style={styles.textAmount}>
-            {CURRENCY_SYMBOL} {total.toFixed(2)}
-          </Text>
-        </View>
-        <Text style={styles.label}>Efectivo</Text>
-        <View onTouchStart={() => setLastEditedField('cash')}>
-          <CustomInputComponent
-            control={control}
-            name={'cash'}
-            icon_class={type_class_icon.FontAwesome5}
-            icon_name="coins"
-            rules={{ required: 'Campo requerido' }}
-            place_holder="Efectivo"
-            keyboardType="numeric"
-            fontSize={30}
-            iconSize={30}
-          />
-        </View>
-        <Text style={styles.label}>Tarjeta</Text>
-        <View onTouchStart={() => setLastEditedField('card')}>
-          <CustomInputComponent
-            control={control}
-            name={'card'}
-            icon_class={type_class_icon.FontAwesome5}
-            icon_name="credit-card"
-            rules={{ required: 'Campo requerido' }}
-            place_holder="Monto a cobrar en tarjeta"
-            keyboardType="numeric"
-            fontSize={30}
-            iconSize={30}
-          />
-        </View>
-        <Text style={styles.label}>Vuelto</Text>
-
-        <View style={styles.amount}>
-          <Text style={styles.textAmount}>
-            {watch('cash')
-              ? parseFloat(watch('cash')) + parseFloat(watch('card')) - total >=
-                0
-                ? CURRENCY_SYMBOL +
-                  (
-                    parseFloat(watch('cash')) +
-                    parseFloat(watch('card')) -
-                    total
-                  ).toFixed(2)
-                : 'ERROR AL INGRESAR EL MONTO'
-              : CURRENCY_SYMBOL + 0}
-          </Text>
-        </View>
-
-        <View style={styles.printSwitchContainer}>
-          <Icon name="print" size={24} color={theme.LABEL_FORM_COLOR} />
-          <Text style={styles.printLabel}>Imprimir ticket</Text>
-          <TouchableOpacity
-            onPress={togglePrintSwitch}
-            activeOpacity={0.8}
-            style={[
-              styles.switchTrack,
-              shouldPrint
-                ? styles.switchTrackActive
-                : styles.switchTrackInactive,
-            ]}>
-            <Animated.View
-              style={[
-                styles.switchThumb,
-                styles.switchThumbWhite,
-                {
-                  transform: [
-                    {
-                      translateX: switchAnimation.interpolate({
-                        inputRange: [0, 1],
-                        outputRange: [0, 35],
-                      }),
-                    },
-                  ],
-                },
-              ]}
+      <>
+        <View style={styles.container}>
+          {!hideTotal && (
+            <>
+              <Text style={styles.label}>Monto a cobrar</Text>
+              <View style={styles.amount}>
+                <Text style={styles.textAmount}>
+                  {CURRENCY_SYMBOL} {total.toFixed(2)}
+                </Text>
+              </View>
+            </>
+          )}
+          <Text style={styles.label}>Efectivo</Text>
+          <View onTouchStart={() => setLastEditedField('cash')}>
+            <CustomInputComponent
+              control={control}
+              name={'cash'}
+              icon_class={type_class_icon.FontAwesome5}
+              icon_name="coins"
+              rules={{ required: 'Campo requerido' }}
+              place_holder="Efectivo"
+              keyboardType="numeric"
+              fontSize={30}
+              iconSize={30}
             />
-          </TouchableOpacity>
-        </View>
+          </View>
+          <Text style={styles.label}>Tarjeta</Text>
+          <View onTouchStart={() => setLastEditedField('card')}>
+            <CustomInputComponent
+              control={control}
+              name={'card'}
+              icon_class={type_class_icon.FontAwesome5}
+              icon_name="credit-card"
+              rules={{ required: 'Campo requerido' }}
+              place_holder="Monto a cobrar en tarjeta"
+              keyboardType="numeric"
+              fontSize={30}
+              iconSize={30}
+            />
+          </View>
+          <Text style={styles.label}>Vuelto</Text>
 
-        <View style={styles.buttonRow}>
-          <TouchableOpacity
-            style={[styles.button, styles.errorButton]}
-            onPress={() => {
-              setVisible(true);
-              progress.value = withSpring(1);
-            }}>
-            <Text style={styles.buttonTextColor}>Cancelar</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.button} onPress={handleSubmit(pay)}>
-            <Text style={styles.buttonTextColor}>Cobrar</Text>
-          </TouchableOpacity>
+          <View style={styles.amount}>
+            <Text style={styles.textAmount}>
+              {watch('cash')
+                ? parseFloat(watch('cash')) + parseFloat(watch('card')) - total >=
+                  0
+                  ? CURRENCY_SYMBOL +
+                    (
+                      parseFloat(watch('cash')) +
+                      parseFloat(watch('card')) -
+                      total
+                    ).toFixed(2)
+                  : 'ERROR AL INGRESAR EL MONTO'
+                : CURRENCY_SYMBOL + 0}
+            </Text>
+          </View>
+
+          <View style={styles.printSwitchContainer}>
+            <Icon name="print" size={24} color={theme.LABEL_FORM_COLOR} />
+            <Text style={styles.printLabel}>Imprimir ticket</Text>
+            <TouchableOpacity
+              onPress={togglePrintSwitch}
+              activeOpacity={0.8}
+              style={[
+                styles.switchTrack,
+                shouldPrint
+                  ? styles.switchTrackActive
+                  : styles.switchTrackInactive,
+              ]}>
+              <Animated.View
+                style={[
+                  styles.switchThumb,
+                  styles.switchThumbWhite,
+                  {
+                    transform: [
+                      {
+                        translateX: switchAnimation.interpolate({
+                          inputRange: [0, 1],
+                          outputRange: [0, 35],
+                        }),
+                      },
+                    ],
+                  },
+                ]}
+              />
+            </TouchableOpacity>
+          </View>
+
+          <View style={styles.buttonRow}>
+            <TouchableOpacity
+              style={[styles.button, styles.errorButton]}
+              onPress={() => {
+                setVisible(true);
+                progress.value = withSpring(1);
+              }}>
+              <Text style={styles.buttonTextColor}>Cancelar</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.button} onPress={handleSubmit(pay)}>
+              <Text style={styles.buttonTextColor}>Cobrar</Text>
+            </TouchableOpacity>
+          </View>
         </View>
-      </View>
+        <ModalComponent
+          visible={visible}
+          setVisible={setVisible}
+          height={'50%'}
+          width={'50%'}
+          progress={progress}>
+          <GenericModal
+            cancel={() => {
+              setVisible(false);
+              progress.value = withSpring(0);
+            }}
+            confirm={() => {
+              setVisible(false);
+              progress.value = withSpring(0);
+              clearShoppingCart();
+            }}
+            text="¿Desea cancelar la orden?"
+          />
+        </ModalComponent>
+      </>
     );
   }
   return (
     <>
       <View style={styles.container}>
-        <Text style={styles.label}>Monto a cobrar</Text>
-        <View style={styles.amount}>
-          <Text style={styles.textAmount}>
-            {CURRENCY_SYMBOL} {total.toFixed(2)}
-          </Text>
-        </View>
+        {!hideTotal && (
+          <>
+            <Text style={styles.label}>Monto a cobrar</Text>
+            <View style={styles.amount}>
+              <Text style={styles.textAmount}>
+                {CURRENCY_SYMBOL} {total.toFixed(2)}
+              </Text>
+            </View>
+          </>
+        )}
         <Text style={styles.label}>Efectivo</Text>
         <CustomInputComponent
           control={control}
