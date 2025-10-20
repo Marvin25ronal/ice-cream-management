@@ -139,7 +139,11 @@ const CustomInputComponent = ({
                   ]}>
                   <IconSelector
                     icon_class={icon_class}
-                    color={isFocused ? theme.INPUT_ICON_COLOR_FOCUSED : theme.INPUT_ICON_COLOR}
+                    color={
+                      isFocused
+                        ? theme.INPUT_ICON_COLOR_FOCUSED
+                        : theme.INPUT_ICON_COLOR
+                    }
                     size={iconSize ?? 20}
                     icon={icon_name}
                   />
@@ -198,7 +202,11 @@ const CustomInputComponent = ({
                   ]}>
                   <IconSelector
                     icon_class={icon_class}
-                    color={isFocused ? theme.INPUT_ICON_COLOR_FOCUSED : theme.INPUT_ICON_COLOR}
+                    color={
+                      isFocused
+                        ? theme.INPUT_ICON_COLOR_FOCUSED
+                        : theme.INPUT_ICON_COLOR
+                    }
                     size={iconSize ?? 20}
                     icon={icon_name}
                   />
@@ -252,10 +260,7 @@ const CustomInputComponent = ({
                   setVisible(true);
                   progress.value = withSpring(1);
                 }}
-                style={[
-                  styles.inputWrapper,
-                  error && styles.inputWrapperError,
-                ]}
+                style={[styles.inputWrapper, error && styles.inputWrapperError]}
                 activeOpacity={0.7}>
                 <View style={styles.iconContainer}>
                   <IconSelector

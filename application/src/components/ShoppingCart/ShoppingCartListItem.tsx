@@ -40,7 +40,9 @@ const ShoppingCartListItem = ({
   const [visible, setVisible] = useState(false);
   const progress = useSharedValue(0);
   const [selectedItems, setSelectedItems] = useState<AgrupatedProducts>();
-  const [quantity, setQuantityState] = useState(item.products.length.toString());
+  const [quantity, setQuantityState] = useState(
+    item.products.length.toString(),
+  );
   const [isFocused, setIsFocused] = useState(false);
 
   // Update quantity when item changes
@@ -227,11 +229,12 @@ const ShoppingCartListItem = ({
             />
           ) : (
             <View style={[styles.quantityInput, { justifyContent: 'center' }]}>
-              <Text style={{
-                color: '#c9184a',
-                fontSize: isTablet ? FontsSize.xxl : FontsSize.large + 6,
-                fontFamily: Fonts.LatoBlack,
-              }}>
+              <Text
+                style={{
+                  color: '#c9184a',
+                  fontSize: isTablet ? FontsSize.xxl : FontsSize.large + 6,
+                  fontFamily: Fonts.LatoBlack,
+                }}>
                 {item.products.length}
               </Text>
             </View>
@@ -245,11 +248,13 @@ const ShoppingCartListItem = ({
           </Text>
           <View style={styles.priceRow}>
             <Text style={styles.priceText}>
-              {CURRENCY_SYMBOL}{totalPrice.toFixed(2)}
+              {CURRENCY_SYMBOL}
+              {totalPrice.toFixed(2)}
             </Text>
             {item.products.length > 1 && (
               <Text style={styles.unitPriceText}>
-                ({CURRENCY_SYMBOL}{item.products[0].price.toFixed(2)} each)
+                ({CURRENCY_SYMBOL}
+                {item.products[0].price.toFixed(2)} each)
               </Text>
             )}
           </View>

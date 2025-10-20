@@ -41,13 +41,21 @@ const CashForm = ({
   const [orderService] = useState(new OrderService());
   const [printService] = useState(new PrintService());
   const [order, setOrder] = useState<Order | null>(null);
-  const { control, watch, handleSubmit } = useForm();
+  const { control, watch, handleSubmit, setValue } = useForm();
   const progress = useSharedValue(0);
   const [visible, setVisible] = useState(false);
   const [reload, setReload] = useState(false);
   const [shouldPrint, setShouldPrint] = useState(true);
   const switchAnimation = useRef(new Animated.Value(1)).current;
   const dispatch = useDispatch();
+
+  // Watch for changes in cash and card fields for mix mode
+  const cashValue = watch('cash');
+  const cardValue = watch('card');
+  const [lastEditedField, setLastEditedField] = useState<
+    'cash' | 'card' | null
+  >(null);
+
   useEffect(() => {
     console.log('Order id', orderId);
     printService.initPrinter().then(() => {
@@ -69,6 +77,22 @@ const CashForm = ({
     setReload(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [orderId]);
+
+  // Auto-calculate the remaining amount in mix mode
+  useEffect(() => {
+    if (mix && total > 0 && lastEditedField) {
+      if (lastEditedField === 'cash') {
+        const cashAmount = parseFloat(cashValue) || 0;
+        const remainingForCard = Math.max(0, total - cashAmount);
+        setValue('card', remainingForCard.toFixed(2));
+      } else if (lastEditedField === 'card') {
+        const cardAmount = parseFloat(cardValue) || 0;
+        const remainingForCash = Math.max(0, total - cardAmount);
+        setValue('cash', remainingForCash.toFixed(2));
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [cashValue, cardValue, lastEditedField]);
   const styles = StyleSheet.create({
     container: {
       flexDirection: 'column',
@@ -306,29 +330,33 @@ const CashForm = ({
           </Text>
         </View>
         <Text style={styles.label}>Efectivo</Text>
-        <CustomInputComponent
-          control={control}
-          name={'cash'}
-          icon_class={type_class_icon.FontAwesome5}
-          icon_name="coins"
-          rules={{ required: 'Campo requerido' }}
-          place_holder="Efectivo"
-          keyboardType="numeric"
-          fontSize={30}
-          iconSize={30}
-        />
+        <View onTouchStart={() => setLastEditedField('cash')}>
+          <CustomInputComponent
+            control={control}
+            name={'cash'}
+            icon_class={type_class_icon.FontAwesome5}
+            icon_name="coins"
+            rules={{ required: 'Campo requerido' }}
+            place_holder="Efectivo"
+            keyboardType="numeric"
+            fontSize={30}
+            iconSize={30}
+          />
+        </View>
         <Text style={styles.label}>Tarjeta</Text>
-        <CustomInputComponent
-          control={control}
-          name={'card'}
-          icon_class={type_class_icon.FontAwesome5}
-          icon_name="credit-card"
-          rules={{ required: 'Campo requerido' }}
-          place_holder="Monto a cobrar en tarjeta"
-          keyboardType="numeric"
-          fontSize={30}
-          iconSize={30}
-        />
+        <View onTouchStart={() => setLastEditedField('card')}>
+          <CustomInputComponent
+            control={control}
+            name={'card'}
+            icon_class={type_class_icon.FontAwesome5}
+            icon_name="credit-card"
+            rules={{ required: 'Campo requerido' }}
+            place_holder="Monto a cobrar en tarjeta"
+            keyboardType="numeric"
+            fontSize={30}
+            iconSize={30}
+          />
+        </View>
         <Text style={styles.label}>Vuelto</Text>
 
         <View style={styles.amount}>

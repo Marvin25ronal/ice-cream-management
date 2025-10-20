@@ -18,7 +18,11 @@ const EditProductListItem = ({ product }: { product: Product }) => {
 
     const now = new Date();
     const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-    const compareDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+    const compareDate = new Date(
+      date.getFullYear(),
+      date.getMonth(),
+      date.getDate(),
+    );
 
     const diffTime = today.getTime() - compareDate.getTime();
     const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));

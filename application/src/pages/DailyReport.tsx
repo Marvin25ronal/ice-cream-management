@@ -269,13 +269,15 @@ const DailyReport = () => {
         end={{ x: 1, y: 1 }}
         style={styles.revenueGradient}>
         <View style={styles.revenueHeader}>
-          <View style={[styles.revenueIconBadge, { backgroundColor: iconColor }]}>
+          <View
+            style={[styles.revenueIconBadge, { backgroundColor: iconColor }]}>
             <Icon name={icon} size={24} color="white" />
           </View>
           <Text style={styles.revenueLabel}>{label}</Text>
         </View>
         <Text style={styles.revenueValue}>
-          {CURRENCY_SYMBOL} {typeof value === 'number' ? value.toFixed(2) : value}
+          {CURRENCY_SYMBOL}{' '}
+          {typeof value === 'number' ? value.toFixed(2) : value}
         </Text>
       </LinearGradient>
     </View>
@@ -516,7 +518,6 @@ const DailyReport = () => {
       <Animated.ScrollView
         style={styles.dashboardContainer}
         showsVerticalScrollIndicator={false}>
-
         {/* Orders Metrics Section */}
         <Text style={styles.sectionTitle}>Resumen de Órdenes</Text>
         <View style={styles.metricsGrid}>
@@ -582,7 +583,9 @@ const DailyReport = () => {
         </View>
 
         {/* KPIs Section */}
-        <Text style={styles.sectionTitle}>Indicadores Clave de Rendimiento</Text>
+        <Text style={styles.sectionTitle}>
+          Indicadores Clave de Rendimiento
+        </Text>
         <View style={styles.metricsGrid}>
           <MetricCard
             icon="ticket-percent"
@@ -621,7 +624,9 @@ const DailyReport = () => {
         {/* Top Products Section */}
         {loading && topProducts.length > 0 && (
           <>
-            <Text style={styles.sectionTitle}>Top 10 Productos Más Vendidos</Text>
+            <Text style={styles.sectionTitle}>
+              Top 10 Productos Más Vendidos
+            </Text>
             <View style={styles.chartContainer}>
               <View style={styles.chartCard}>
                 <View style={styles.chartHeader}>
@@ -689,7 +694,9 @@ const DailyReport = () => {
         {/* Payment Methods Comparison */}
         {loading && (
           <>
-            <Text style={styles.sectionTitle}>Distribución de Métodos de Pago</Text>
+            <Text style={styles.sectionTitle}>
+              Distribución de Métodos de Pago
+            </Text>
             <View style={styles.chartContainer}>
               <View style={styles.chartCard}>
                 <View style={styles.chartHeader}>
@@ -757,7 +764,9 @@ const DailyReport = () => {
         {/* Chart Section */}
         {loading && (
           <>
-            <Text style={styles.sectionTitle}>Frecuencia de Órdenes por Hora</Text>
+            <Text style={styles.sectionTitle}>
+              Frecuencia de Órdenes por Hora
+            </Text>
             <View style={styles.chartContainer}>
               <View style={styles.chartCard}>
                 <View style={styles.chartHeader}>
@@ -784,7 +793,8 @@ const DailyReport = () => {
                     backgroundGradientTo: '#c9184a',
                     decimalPlaces: 0,
                     color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-                    labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+                    labelColor: (opacity = 1) =>
+                      `rgba(255, 255, 255, ${opacity})`,
                     style: {
                       borderRadius: 16,
                     },
