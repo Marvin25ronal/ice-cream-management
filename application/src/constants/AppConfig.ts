@@ -36,6 +36,11 @@ export const AppConfig = {
    * Build environment
    */
   ENVIRONMENT: __DEV__ ? 'development' : 'production',
+
+  /**
+   * Currency symbol (Guatemalan Quetzales)
+   */
+  CURRENCY_SYMBOL: 'Q',
 } as const;
 
 /**
