@@ -30,8 +30,28 @@ export const carSlice = createSlice({
     clearCart: state => {
       state.value = [];
     },
+    setQuantity: (state, action) => {
+      // action.payload: { productId: number, quantity: number }
+      const { productId, quantity } = action.payload;
+
+      // Find the first occurrence index of this product
+      const firstIndex = state.value.findIndex(item => item === productId);
+
+      if (firstIndex !== -1) {
+        // Remove all instances of this product
+        const filteredArray = state.value.filter(item => item !== productId);
+
+        // Create array with new quantity
+        const newItems = Array(quantity).fill(productId);
+
+        // Insert at the original position
+        filteredArray.splice(firstIndex, 0, ...newItems);
+
+        state.value = filteredArray;
+      }
+    },
   },
 });
 export default carSlice.reducer;
-export const { addToCart, removeFromCart, clearCart, removeAllProductsId } =
+export const { addToCart, removeFromCart, clearCart, removeAllProductsId, setQuantity } =
   carSlice.actions;
