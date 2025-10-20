@@ -1,39 +1,12 @@
-import {
-  Alert,
-  Button,
-  StyleSheet,
-  Text,
-  View,
-  TouchableOpacity,
-} from 'react-native';
+import { StyleSheet, Text, View, SafeAreaView, StatusBar } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { ScrollView } from 'react-native-gesture-handler';
-import {
-  DrawerActions,
-  useNavigation,
-  useRoute,
-} from '@react-navigation/native';
-import { Utils } from '../constants/utils';
+import { useNavigation } from '@react-navigation/native';
 import { themeInterface } from '../interface/themeInterface';
-import {
-  COMMANDS,
-  IUSBPrinter,
-  USBPrinter,
-} from 'react-native-ect-thermal-receipt-printer';
-import {
-  CreateBackup,
-  CreateDatabase,
-  connectToDatabase,
-} from '../store/db/Database';
-import { Category } from '../entity/Category.entity';
 import { HomeServices } from '../services/HomeServices';
 import { TreeNode } from '../interface/TreeInterface';
 import { useLoading } from '../shared/LoaderHook';
-import MenuCardComponent from '../components/Home/MenuCardComponent';
-import { Fonts } from '../constants/Fonts';
-import Animated, { useSharedValue, withSpring } from 'react-native-reanimated';
-import ButtonsOptions from '../components/Home/ButtonsOptions';
 import { Product } from '../entity/Product.entity';
 import ModalComponent from '../components/UI/ModalComponent';
 import ClearSelectedItemsModal from '../components/Home/ClearSelectedItemsModal';
@@ -41,13 +14,19 @@ import { SCREENS } from '../constants/navigation/screeens';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../routes/StackNavigator';
 import { addToCart, clearCart } from '../store/redux/carReducer';
-import { PrintService } from '../services/PrintService';
 import { clearOrder } from '../store/redux/orderReducer';
+import Animated, { useSharedValue, withSpring } from 'react-native-reanimated';
+
+// Modern Components
+import ModernProductCard from '../components/Home/ModernProductCard';
+import ModernActionButtons from '../components/Home/ModernActionButtons';
+import CartSummary from '../components/Home/CartSummary';
+import CategoryBreadcrumb from '../components/Home/CategoryBreadcrumb';
 
 const HomePage = ({ route }: { route: any }) => {
   const [homeService] = useState(new HomeServices());
   const [actualNode, setActualNode] = useState<TreeNode>();
-  const { loadingState, setTrueLoading } = useLoading();
+  const { loadingState } = useLoading();
   const reload = route ? route?.params : undefined;
   const [data, setdata] = useState<TreeNode>();
   const dispatch = useDispatch();
@@ -56,11 +35,10 @@ const HomePage = ({ route }: { route: any }) => {
   const shoppingCart: number[] = useSelector(
     (state: any) => state.shoppingCart.value,
   );
-  const [printers, setprinters] = useState<IUSBPrinter[]>();
-  const [currentPrinter, setCurrentPrinter] = useState<IUSBPrinter>();
   const [visible, setVisible] = useState(false);
 
   const progress = useSharedValue(0);
+
   useEffect(() => {
     setTimeout(() => {
       getTree();
@@ -78,7 +56,6 @@ const HomePage = ({ route }: { route: any }) => {
     homeService
       .getCategoriesMenu()
       .then((tree: TreeNode) => {
-        // console.log(tree)
         setdata(tree);
         setActualNode(tree);
       })
@@ -86,19 +63,15 @@ const HomePage = ({ route }: { route: any }) => {
         console.log(error);
       });
   };
+
   const loadTree = () => {
     setActualNode(data);
   };
-  const styles = StyleSheet.create({
-    page: {
-      backgroundColor: theme.PAGE_BACKGROUND_COLOR,
-      flex: 1,
-    },
-  });
+
   const addProduct = (product: Product) => {
     dispatch(addToCart(product.product_id));
-    //setSelectedItems([...selectedItems, product])
   };
+
   const clearSelectedItems = () => {
     setVisible(true);
     dispatch(clearOrder());
@@ -109,179 +82,145 @@ const HomePage = ({ route }: { route: any }) => {
     if (shoppingCart.length > 0) {
       navigation.navigate(SCREENS.EDIT_SHOPPING_CART, { edit: false });
     }
-    //TODO: Mostrar mensaje de error faltan productos
-    //navigation.dispatch(DrawerActions.toggleDrawer())
   };
+
   const goToEditShoppingCart = () => {
     if (shoppingCart.length > 0) {
       navigation.navigate(SCREENS.EDIT_SHOPPING_CART, { edit: true });
     }
   };
-  // const _connectPrinter = (printer: IUSBPrinter) => USBPrinter.connectPrinter(printer.vendor_id, printer.product_id).then(() => setCurrentPrinter(printer))
+
+  const styles = StyleSheet.create({
+    safeArea: {
+      flex: 1,
+      backgroundColor: theme.PAGE_BACKGROUND_COLOR,
+    },
+    page: {
+      backgroundColor: theme.PAGE_BACKGROUND_COLOR,
+      flex: 1,
+    },
+    contentContainer: {
+      paddingBottom: 100,
+      paddingTop: 10,
+    },
+    gridContainer: {
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+      paddingHorizontal: 8,
+      paddingTop: 10,
+      justifyContent: 'flex-start',
+    },
+    emptyState: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+      paddingVertical: 60,
+    },
+    emptyStateText: {
+      fontSize: 18,
+      color: '#6C757D',
+      fontFamily: 'Lato-Regular',
+      textAlign: 'center',
+    },
+  });
 
   return (
-    // <View style={styles.page}>
-    //   <Text style={{ color: 'red' }}>Home Screen</Text>
-    //   <View>
-    //     {/* <Button
-    //       onPress={() => {
-    //         // USBPrinter.init().then(async () => {
-    //         //   console.log("Iniciamos")
-    //         //   USBPrinter.getDeviceList().then(async (items) => {
-    //         //     setprinters(items)
-    //         //     _connectPrinter(items[0])
-    //         //   }).catch(() => {
-    //         //     Alert.alert("Errorr")
-    //         //     console.log("Error")
-    //         //   })
-    //         // })
+    <SafeAreaView style={styles.safeArea}>
+      <StatusBar
+        backgroundColor={theme.HEADER_COLOR}
+        barStyle="light-content"
+      />
 
-    //       }}
-    //       title="Learn More"
-    //       color="#841584"
-    //       accessibilityLabel="Learn more about this purple button"
-    //     />
-    //     {/* <Button
-    //     onPress={()=>{
-    //       USBPrinter.printText("<C>sample text</C>\n");
-    //       USBPrinter.closeConn()
-    //     }}
-    //     color="red"
-    //     title="Print"/> */}
-    //     {/* <Button
-    //       onPress={() => {
-    //         console.log("Entramos")
-    //         CreateDatabase().then((db) => {
-    //           console.log(db)
-    //         }).catch((error) => {
-    //           console.log(error)
-    //         })
-    //         let db = connectToDatabase().then((db) => {
-    //           console.log("Eea")
-    //           db.transaction(tx => {
-    //             tx.executeSql(
-    //               'SELECT * from Category',
-    //               [],
-    //               (_, resultSet) => {
-    //                 const rows = resultSet.rows;
-    //                 const tables = [];
+      {/* Modern Action Buttons - Fixed at Top */}
+      <ModernActionButtons
+        loadTree={loadTree}
+        actualNode={actualNode}
+        setActualNode={setActualNode}
+        clearSelectedItems={clearSelectedItems}
+        goToPayment={goToPayment}
+        goToEditShoppingCart={goToEditShoppingCart}
+      />
 
-    //                 for (let i = 0; i < rows.length; i++) {
-    //                   tables.push(rows.item(i));
-    //                 }
+      {/* Category Breadcrumb Navigation */}
+      
 
-    //                 console.log('Tablas:', tables);
-    //               },
-    //               (_, error) => {
-    //                 console.error('Error al obtener las tablas:', error);
-    //               }
-    //             );
-    //           })
-    //         })
-    //         connectToDatabase().then((db) => {
-    //           db.manager.find(Category).then((categories) => {
-    //             console.log(categories)
-    //           })
-    //           db.getRepository(Category).save({
-    //             name: "Ejemplo",
-    //             description: "Ejemplo",
-    //             image: "Ejemplo",
-    //             order: 1
-    //           })
-    //           db.manager.find(Category).then((categories) => {
-    //             console.log(categories)
-    //           })
-    //         })
-    //       }}
-    //       title="ejemplo"
-    //     />
-    //     <Button
-    //       onPress={() => {
-    //         CreateBackup()
-    //       }}
-    //       title="Menu"
-    //     /> */}
-    //   </View>
-
-    // </View>
-    <>
+      {/* Main Content - Product/Category Grid */}
       <Animated.ScrollView
         style={styles.page}
-        contentContainerStyle={{ paddingBottom: 10 }}
-        scrollEnabled={true}
-        showsVerticalScrollIndicator={true}
-        showsHorizontalScrollIndicator={true}
-        horizontal={false}>
-        <ButtonsOptions
-          loadTree={loadTree}
-          actualNode={actualNode}
-          setActualNode={setActualNode}
-          clearSelectedItems={clearSelectedItems}
-          goToPayment={goToPayment}
-          goToEditShoppingCart={goToEditShoppingCart}
-        />
-        <View
-          style={{
-            flex: 1,
-            flexDirection: 'row',
-            flexWrap: 'wrap',
-            height: 'auto',
-          }}>
+        contentContainerStyle={styles.contentContainer}
+        showsVerticalScrollIndicator={true}>
+        <View style={styles.gridContainer}>
+          {/* Render Categories */}
           {!loadingState &&
             actualNode &&
             actualNode.children &&
             actualNode.children.map((node: TreeNode, index: number) => (
-              <MenuCardComponent
-                id={index}
-                key={index}
-                {...node}
+              <ModernProductCard
+                key={`category-${node.category_id}-${index}`}
+                id={node.category_id}
+                name={node.name}
+                description={node.description}
                 image={node.image}
                 onPress={() => {
                   setActualNode(node);
                 }}
+                isProduct={false}
               />
             ))}
+
+          {/* Render Products */}
           {!loadingState &&
             actualNode &&
             actualNode.products &&
-            actualNode.products.map((product: any, index: number) => (
-              <MenuCardComponent
+            actualNode.products.map((product: Product, index: number) => (
+              <ModernProductCard
+                key={`product-${product.product_id}-${index}`}
                 id={product.product_id}
-                key={index}
-                {...product}
+                name={product.name}
                 image={product.image}
+                price={product.price}
                 onPress={() => {
                   addProduct(product);
                 }}
-                isProduct
+                isProduct={true}
               />
             ))}
-          {/* <Button title='Print' onPress={async () => {
-            await printerService.initPrinter().then(async () => {
-              await printerService.connectPrinter();
-            })
-          }} /> */}
-          <ModalComponent
-            visible={visible}
-            setVisible={setVisible}
-            height={'50%'}
-            width={'50%'}
-            progress={progress}>
-            <ClearSelectedItemsModal
-              confirm={() => {
-                dispatch(clearCart());
-                setVisible(false);
-                progress.value = withSpring(0);
-              }}
-              cancel={() => {
-                setVisible(false);
-                progress.value = withSpring(0);
-              }}
-            />
-          </ModalComponent>
         </View>
+
+        {/* Empty State */}
+        {!loadingState &&
+          actualNode &&
+          !actualNode.children?.length &&
+          !actualNode.products?.length && (
+            <View style={styles.emptyState}>
+              <Text style={styles.emptyStateText}>
+                No items available in this category
+              </Text>
+            </View>
+          )}
       </Animated.ScrollView>
-    </>
+
+
+      {/* Clear Cart Confirmation Modal */}
+      <ModalComponent
+        visible={visible}
+        setVisible={setVisible}
+        height={'50%'}
+        width={'50%'}
+        progress={progress}>
+        <ClearSelectedItemsModal
+          confirm={() => {
+            dispatch(clearCart());
+            setVisible(false);
+            progress.value = withSpring(0);
+          }}
+          cancel={() => {
+            setVisible(false);
+            progress.value = withSpring(0);
+          }}
+        />
+      </ModalComponent>
+    </SafeAreaView>
   );
 };
 
