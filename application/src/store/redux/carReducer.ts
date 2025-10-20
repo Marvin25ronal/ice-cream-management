@@ -53,5 +53,10 @@ export const carSlice = createSlice({
   },
 });
 export default carSlice.reducer;
-export const { addToCart, removeFromCart, clearCart, removeAllProductsId, setQuantity } =
-  carSlice.actions;
+export const {
+  addToCart,
+  removeFromCart,
+  clearCart,
+  removeAllProductsId,
+  setQuantity,
+} = carSlice.actions;

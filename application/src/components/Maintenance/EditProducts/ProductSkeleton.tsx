@@ -15,10 +15,10 @@ const ProductSkeleton = () => {
     opacity.value = withRepeat(
       withSequence(
         withTiming(1, { duration: 800 }),
-        withTiming(0.3, { duration: 800 })
+        withTiming(0.3, { duration: 800 }),
       ),
       -1,
-      false
+      false,
     );
   }, []);
 
@@ -131,7 +131,9 @@ const ProductSkeleton = () => {
             <Animated.View style={[styles.nameSkeleton, animatedStyle]} />
 
             <View style={styles.priceRowSkeleton}>
-              <Animated.View style={[styles.priceLabelSkeleton, animatedStyle]} />
+              <Animated.View
+                style={[styles.priceLabelSkeleton, animatedStyle]}
+              />
               <Animated.View style={[styles.priceSkeleton, animatedStyle]} />
             </View>
           </View>

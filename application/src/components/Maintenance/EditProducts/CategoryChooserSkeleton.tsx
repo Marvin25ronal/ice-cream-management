@@ -18,10 +18,10 @@ const CategoryChooserSkeleton = () => {
     opacity.value = withRepeat(
       withSequence(
         withTiming(1, { duration: 800 }),
-        withTiming(0.3, { duration: 800 })
+        withTiming(0.3, { duration: 800 }),
       ),
       -1,
-      false
+      false,
     );
   }, []);
 
