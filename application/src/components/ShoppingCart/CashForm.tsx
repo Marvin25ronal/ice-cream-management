@@ -80,6 +80,14 @@ const CashForm = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [orderId]);
 
+  // Set initial cash value when total is loaded (only for cash payment mode)
+  useEffect(() => {
+    if (total > 0 && !card && !mix) {
+      setValue('cash', total.toFixed(2));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [total]);
+
   // Auto-calculate the remaining amount in mix mode
   useEffect(() => {
     if (mix && total > 0 && lastEditedField) {
