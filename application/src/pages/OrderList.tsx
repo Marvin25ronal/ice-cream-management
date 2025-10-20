@@ -18,11 +18,20 @@ import { RootState } from '../store/redux/store';
 import IconSelector, { type_class_icon } from '../components/UI/IconSelector';
 import { Fonts, FontsSize } from '../constants/Fonts';
 import LinearGradient from 'react-native-linear-gradient';
+import { useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { OrderStackParamList } from '../routes/OrderStackNavigator';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
+type OrderListNavigationProp = StackNavigationProp<
+  OrderStackParamList,
+  'OrderList'
+>;
+
 const OrderList = () => {
   const theme = useSelector((state: RootState) => state.theme.value);
+  const navigation = useNavigation<OrderListNavigationProp>();
   const [orderService] = useState(new OrderService());
   const [orders, setOrders] = useState<Order[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -32,38 +41,41 @@ const OrderList = () => {
     getOrders(null);
   }, []);
 
-  const getOrders = useCallback((data: any) => {
-    setIsLoading(true);
-    let date: string = data?.date;
-    if (date == null) {
-      date = new Date().toLocaleDateString();
-    }
-    let start = '';
-    let end = '';
-    if (date.indexOf('-') != -1) {
-      start = date.split('-')[0];
-      end = date.split('-')[1];
-    } else {
-      start = date;
-      end = date;
-    }
-    orderService
-      .getAllOrders(start, end)
-      .then(orders => {
-        console.log('MIS ORDENES');
-        console.log(orders);
-        if (orders != null) {
-          setOrders(orders);
-        }
-      })
-      .catch(error => {
-        console.log(error);
-      })
-      .finally(() => {
-        setIsLoading(false);
-        setIsRefreshing(false);
-      });
-  }, [orderService]);
+  const getOrders = useCallback(
+    (data: any) => {
+      setIsLoading(true);
+      let date: string = data?.date;
+      if (date == null) {
+        date = new Date().toLocaleDateString();
+      }
+      let start = '';
+      let end = '';
+      if (date.indexOf('-') != -1) {
+        start = date.split('-')[0];
+        end = date.split('-')[1];
+      } else {
+        start = date;
+        end = date;
+      }
+      orderService
+        .getAllOrders(start, end)
+        .then(orders => {
+          console.log('MIS ORDENES');
+          console.log(orders);
+          if (orders != null) {
+            setOrders(orders);
+          }
+        })
+        .catch(error => {
+          console.log(error);
+        })
+        .finally(() => {
+          setIsLoading(false);
+          setIsRefreshing(false);
+        });
+    },
+    [orderService],
+  );
 
   const onRefresh = useCallback(() => {
     setIsRefreshing(true);
@@ -129,7 +141,8 @@ const OrderList = () => {
       alignItems: 'center',
     },
     emptyTitle: {
-      fontSize: SCREEN_WIDTH >= 768 ? FontsSize.extraLarge + 2 : FontsSize.extraLarge,
+      fontSize:
+        SCREEN_WIDTH >= 768 ? FontsSize.extraLarge + 2 : FontsSize.extraLarge,
       fontFamily: Fonts.LatoBlack,
       color: theme.MODAL_TEXT_COLOR,
       marginBottom: 12,
@@ -148,7 +161,10 @@ const OrderList = () => {
   const EmptyState = () => (
     <View style={styles.emptyContainer}>
       <LinearGradient
-        colors={[theme.ORDER_EMPTY_STATE_PRIMARY, theme.ORDER_EMPTY_STATE_SECONDARY]}
+        colors={[
+          theme.ORDER_EMPTY_STATE_PRIMARY,
+          theme.ORDER_EMPTY_STATE_SECONDARY,
+        ]}
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 1 }}
         style={styles.emptyGradient}>
@@ -172,7 +188,10 @@ const OrderList = () => {
   // Loading state component
   const LoadingState = () => (
     <View style={styles.loadingContainer}>
-      <ActivityIndicator size="large" color={theme.SPLASH_SCREEN_BACKGROUND_COLOR} />
+      <ActivityIndicator
+        size="large"
+        color={theme.SPLASH_SCREEN_BACKGROUND_COLOR}
+      />
       <Text style={styles.loadingText}>Cargando ordenes...</Text>
     </View>
   );
@@ -186,8 +205,15 @@ const OrderList = () => {
       ) : (
         <FlatList
           data={orders}
-          renderItem={({ item }) => <OrderResumeCard order={item} />}
-          keyExtractor={(item) => `order-${item.order_id}`}
+          renderItem={({ item }) => (
+            <OrderResumeCard
+              order={item}
+              onPress={() =>
+                navigation.navigate('OrderDetail', { orderId: item.order_id })
+              }
+            />
+          )}
+          keyExtractor={item => `order-${item.order_id}`}
           numColumns={numColumns}
           key={numColumns} // Force re-render when columns change
           contentContainerStyle={[

@@ -12,8 +12,12 @@ import { getHeaderTitle } from '@react-navigation/elements';
 import CustomHeader from '../components/UI/CustomHeader';
 import { Utils } from '../constants/utils';
 import OrderList from '../pages/OrderList';
+import OrderDetailPage from '../pages/OrderDetailPage';
+import ToastComponent from '../components/UI/ToastComponent';
+
 export type OrderStackParamList = {
   [Utils.screens.ORDER_LIST]: undefined;
+  OrderDetail: { orderId: number };
 };
 const Stack = createStackNavigator<OrderStackParamList>();
 const OrderStackNavigator = () => {
@@ -45,7 +49,16 @@ const OrderStackNavigator = () => {
           component={OrderList}
           options={options}
         />
+        <Stack.Screen
+          name="OrderDetail"
+          component={OrderDetailPage}
+          options={{
+            ...options,
+            headerTitle: 'Detalle de Orden',
+          }}
+        />
       </Stack.Navigator>
+      <ToastComponent />
     </>
   );
 };

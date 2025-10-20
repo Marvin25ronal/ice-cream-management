@@ -398,7 +398,9 @@ const CashForm = ({
           <View style={styles.amount}>
             <Text style={styles.textAmount}>
               {watch('cash')
-                ? parseFloat(watch('cash')) + parseFloat(watch('card')) - total >=
+                ? parseFloat(watch('cash')) +
+                    parseFloat(watch('card')) -
+                    total >=
                   0
                   ? CURRENCY_SYMBOL +
                     (

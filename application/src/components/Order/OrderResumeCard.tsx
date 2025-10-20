@@ -288,7 +288,8 @@ const OrderResumeCard = ({ order, onPress }: OrderResumeCardProps) => {
     },
     price: {
       color: theme.SPLASH_SCREEN_BACKGROUND_COLOR,
-      fontSize: SCREEN_WIDTH >= 768 ? FontsSize.extraLarge + 4 : FontsSize.extraLarge,
+      fontSize:
+        SCREEN_WIDTH >= 768 ? FontsSize.extraLarge + 4 : FontsSize.extraLarge,
       fontFamily: Fonts.LatoBlack,
       letterSpacing: 0.5,
     },
@@ -306,6 +307,29 @@ const OrderResumeCard = ({ order, onPress }: OrderResumeCardProps) => {
       fontFamily: Fonts.LatoBold,
       marginTop: 4,
       textAlign: 'center',
+    },
+    printCounterContainer: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+      marginTop: 12,
+      paddingTop: 12,
+      borderTopWidth: 1,
+      borderTopColor: theme.DIVIDER_COLOR,
+      gap: 8,
+    },
+    printIconCircle: {
+      width: 28,
+      height: 28,
+      borderRadius: 14,
+      backgroundColor: '#F3E5F5',
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    printCounterText: {
+      fontSize: SCREEN_WIDTH >= 768 ? FontsSize.small : FontsSize.extraSmall,
+      fontFamily: Fonts.LatoRegular,
+      color: '#7209B7',
     },
   });
 
@@ -378,6 +402,22 @@ const OrderResumeCard = ({ order, onPress }: OrderResumeCardProps) => {
               />
               <Text style={styles.paymentLabel}>{paymentConfig.label}</Text>
             </View>
+          </View>
+
+          {/* Print Counter */}
+          <View style={styles.printCounterContainer}>
+            <View style={styles.printIconCircle}>
+              <IconSelector
+                icon_class={type_class_icon.FontAwesome5}
+                icon="print"
+                size={14}
+                color="#7209B7"
+              />
+            </View>
+            <Text style={styles.printCounterText}>
+              Impreso {order.print_number}{' '}
+              {order.print_number === 1 ? 'vez' : 'veces'}
+            </Text>
           </View>
         </View>
       </View>

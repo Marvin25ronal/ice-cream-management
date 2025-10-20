@@ -26,7 +26,9 @@ const OrderFilter = ({ getOrders }: { getOrders: any }) => {
   const theme = useSelector((state: RootState) => state.theme.value);
   const { control, handleSubmit, setValue } = useForm();
   const [orderService] = useState(new OrderService());
-  const [selectedFilter, setSelectedFilter] = useState<'today' | 'week' | 'month' | 'custom'>('today');
+  const [selectedFilter, setSelectedFilter] = useState<
+    'today' | 'week' | 'month' | 'custom'
+  >('today');
   const [displayDate, setDisplayDate] = useState<string>('Hoy');
 
   const isTablet = SCREEN_WIDTH >= 768;
@@ -181,19 +183,25 @@ const OrderFilter = ({ getOrders }: { getOrders: any }) => {
         const weekStart = new Date(today);
         weekStart.setDate(today.getDate() - 7);
         dateRange = {
-          date: `${weekStart.toLocaleDateString()}-${today.toLocaleDateString()}`
+          date: `${weekStart.toLocaleDateString()}-${today.toLocaleDateString()}`,
         };
         displayText = `Última Semana (${weekStart.toLocaleDateString()} - ${today.toLocaleDateString()})`;
-        setValue('date', `${weekStart.toLocaleDateString()}-${today.toLocaleDateString()}`);
+        setValue(
+          'date',
+          `${weekStart.toLocaleDateString()}-${today.toLocaleDateString()}`,
+        );
         break;
       case 'month':
         const monthStart = new Date(today);
         monthStart.setDate(today.getDate() - 30);
         dateRange = {
-          date: `${monthStart.toLocaleDateString()}-${today.toLocaleDateString()}`
+          date: `${monthStart.toLocaleDateString()}-${today.toLocaleDateString()}`,
         };
         displayText = `Último Mes (${monthStart.toLocaleDateString()} - ${today.toLocaleDateString()})`;
-        setValue('date', `${monthStart.toLocaleDateString()}-${today.toLocaleDateString()}`);
+        setValue(
+          'date',
+          `${monthStart.toLocaleDateString()}-${today.toLocaleDateString()}`,
+        );
         break;
       default:
         return;
@@ -207,7 +215,7 @@ const OrderFilter = ({ getOrders }: { getOrders: any }) => {
     label,
     icon,
     filter,
-    gradientColors
+    gradientColors,
   }: {
     label: string;
     icon: string;
@@ -232,7 +240,8 @@ const OrderFilter = ({ getOrders }: { getOrders: any }) => {
               size={14}
               color="#FFFFFF"
             />
-            <Text style={[styles.quickFilterText, styles.quickFilterTextActive]}>
+            <Text
+              style={[styles.quickFilterText, styles.quickFilterTextActive]}>
               {label}
             </Text>
           </LinearGradient>
@@ -280,7 +289,9 @@ const OrderFilter = ({ getOrders }: { getOrders: any }) => {
 
         {/* Quick Filters */}
         <View style={styles.quickFiltersContainer}>
-          {!isTablet && <Text style={styles.quickFiltersLabel}>Accesos Rápidos</Text>}
+          {!isTablet && (
+            <Text style={styles.quickFiltersLabel}>Accesos Rápidos</Text>
+          )}
           <View style={styles.quickFiltersRow}>
             <QuickFilterButton
               label="Hoy"
@@ -322,7 +333,7 @@ const OrderFilter = ({ getOrders }: { getOrders: any }) => {
             />
           </View>
           <TouchableOpacity
-            onPress={handleSubmit((data) => {
+            onPress={handleSubmit(data => {
               setSelectedFilter('custom');
               getOrders(data);
             })}
