@@ -291,7 +291,7 @@ const ResumeShopping = ({ elements }: { elements: AgrupatedProducts[] }) => {
                 size={24}
                 color={'white'}
               />
-              <Text style={styles.buttonText}>Proceed to Payment</Text>
+              <Text style={styles.buttonText}>Proceder al pago</Text>
             </TouchableOpacity>
           </View>
         </>
