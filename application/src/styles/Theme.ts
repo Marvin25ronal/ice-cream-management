@@ -49,4 +49,30 @@ export const darkTheme: themeInterface = {
   INPUT_BORDER_COLOR_FOCUSED: '#0288D1',
   INPUT_PLACEHOLDER_COLOR: '#90A4AE',
   INPUT_SHADOW_COLOR: '#03A9F4',
+  // Order status colors - Vibrant ice cream palette
+  ORDER_STATUS_PENDING_PRIMARY: '#FF6B35', // Vibrant orange - like orange sherbet
+  ORDER_STATUS_PENDING_SECONDARY: '#FFB700', // Golden amber
+  ORDER_STATUS_IN_PROGRESS_PRIMARY: '#00B4D8', // Bright cyan - like blue raspberry
+  ORDER_STATUS_IN_PROGRESS_SECONDARY: '#90E0EF', // Light cyan
+  ORDER_STATUS_COMPLETED_PRIMARY: '#06D6A0', // Vibrant mint green
+  ORDER_STATUS_COMPLETED_SECONDARY: '#52B788', // Fresh green
+  ORDER_STATUS_CANCELLED_PRIMARY: '#EF476F', // Vibrant pink-red - like strawberry
+  ORDER_STATUS_CANCELLED_SECONDARY: '#FF6D8F', // Light pink
+  // Payment method colors
+  PAYMENT_CASH_PRIMARY: '#06D6A0', // Mint green
+  PAYMENT_CASH_SECONDARY: '#90F0DC', // Light mint
+  PAYMENT_CARD_PRIMARY: '#7209B7', // Deep purple - like grape
+  PAYMENT_CARD_SECONDARY: '#B185DB', // Light purple
+  PAYMENT_MIXED_PRIMARY: '#FF8500', // Vibrant orange
+  PAYMENT_MIXED_SECONDARY: '#FFB347', // Peach
+  // Order card colors
+  ORDER_CARD_GRADIENT_START: '#FFFFFF',
+  ORDER_CARD_GRADIENT_END: '#F8F9FA',
+  ORDER_CARD_SHADOW: 'rgba(0, 0, 0, 0.15)',
+  ORDER_CARD_BORDER: '#E9ECEF',
+  ORDER_BADGE_BACKGROUND: 'rgba(255, 255, 255, 0.95)',
+  ORDER_BADGE_TEXT: '#FFFFFF',
+  ORDER_ACCENT_COLOR: '#FF006E', // Hot pink - like raspberry sorbet
+  ORDER_EMPTY_STATE_PRIMARY: '#FFD6FF', // Pastel pink
+  ORDER_EMPTY_STATE_SECONDARY: '#E7C6FF', // Pastel purple
 };
