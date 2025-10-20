@@ -1,4 +1,11 @@
-import { View, Text, useColorScheme, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
+import {
+  View,
+  Text,
+  useColorScheme,
+  StyleSheet,
+  TouchableOpacity,
+  ScrollView,
+} from 'react-native';
 import React, { useEffect } from 'react';
 import {
   DrawerNavigationOptions,
@@ -27,7 +34,11 @@ import MaterialDesignIcons from 'react-native-vector-icons/MaterialCommunityIcon
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import LinearGradient from 'react-native-linear-gradient';
-import { AppConfig, getVersionString, getCopyrightText } from '../constants/AppConfig';
+import {
+  AppConfig,
+  getVersionString,
+  getCopyrightText,
+} from '../constants/AppConfig';
 
 // Menu item interface
 interface MenuItemData {
@@ -46,7 +57,9 @@ const getMenuItemData = (routeName: string): MenuItemData => {
     case Utils.screens.HOME_STACK:
       return {
         routeName,
-        icon: <FontAwesome5 name="cash-register" size={iconSize} color="#FF6B9D" />,
+        icon: (
+          <FontAwesome5 name="cash-register" size={iconSize} color="#FF6B9D" />
+        ),
         label: 'Cobradora',
         iconColor: '#FF6B9D',
         iconBgColor: '#FFE5EC',
@@ -62,7 +75,13 @@ const getMenuItemData = (routeName: string): MenuItemData => {
     case Utils.screens.FEL:
       return {
         routeName,
-        icon: <MaterialDesignIcons name="book-check-outline" size={iconSize} color="#06B6D4" />,
+        icon: (
+          <MaterialDesignIcons
+            name="book-check-outline"
+            size={iconSize}
+            color="#06B6D4"
+          />
+        ),
         label: 'FEL',
         iconColor: '#06B6D4',
         iconBgColor: '#E0F7FA',
@@ -78,7 +97,13 @@ const getMenuItemData = (routeName: string): MenuItemData => {
     case Utils.screens.BACKUP:
       return {
         routeName,
-        icon: <MaterialDesignIcons name="backup-restore" size={iconSize} color="#10B981" />,
+        icon: (
+          <MaterialDesignIcons
+            name="backup-restore"
+            size={iconSize}
+            color="#10B981"
+          />
+        ),
         label: 'Backup',
         iconColor: '#10B981',
         iconBgColor: '#D1FAE5',
@@ -114,12 +139,16 @@ const CustomDrawerContent = (props: DrawerContentComponentProps) => {
         colors={['#FF6B9D', '#C44569', '#9D4EDD']}
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 1 }}
-        style={styles.headerGradient}
-      >
+        style={styles.headerGradient}>
         <View style={styles.headerContent}>
           <MaterialDesignIcons name="ice-cream" size={48} color="#FFF" />
-          <Text style={styles.headerTitle}>{AppConfig.APP_NAME.split(' ')[0]} {AppConfig.APP_NAME.split(' ')[1]}</Text>
-          <Text style={styles.headerSubtitle}>{AppConfig.APP_NAME.split(' ')[2]}</Text>
+          <Text style={styles.headerTitle}>
+            {AppConfig.APP_NAME.split(' ')[0]}{' '}
+            {AppConfig.APP_NAME.split(' ')[1]}
+          </Text>
+          <Text style={styles.headerSubtitle}>
+            {AppConfig.APP_NAME.split(' ')[2]}
+          </Text>
         </View>
       </LinearGradient>
 
@@ -127,8 +156,7 @@ const CustomDrawerContent = (props: DrawerContentComponentProps) => {
       <ScrollView
         style={styles.menuScrollView}
         contentContainerStyle={styles.menuContent}
-        showsVerticalScrollIndicator={false}
-      >
+        showsVerticalScrollIndicator={false}>
         {state.routes.map((route, index) => {
           const isFocused = state.index === index;
           const itemData = getMenuItemData(route.name);
@@ -150,18 +178,17 @@ const CustomDrawerContent = (props: DrawerContentComponentProps) => {
               key={route.key}
               onPress={onPress}
               activeOpacity={0.7}
-              style={[
-                styles.menuItem,
-                isFocused && styles.menuItemActive,
-              ]}
-            >
+              style={[styles.menuItem, isFocused && styles.menuItemActive]}>
               {/* Icon Container with Background */}
               <View
                 style={[
                   styles.iconContainer,
-                  { backgroundColor: isFocused ? itemData.iconColor : itemData.iconBgColor },
-                ]}
-              >
+                  {
+                    backgroundColor: isFocused
+                      ? itemData.iconColor
+                      : itemData.iconBgColor,
+                  },
+                ]}>
                 {React.cloneElement(itemData.icon as React.ReactElement, {
                   color: isFocused ? '#FFFFFF' : itemData.iconColor,
                 })}
@@ -169,16 +196,19 @@ const CustomDrawerContent = (props: DrawerContentComponentProps) => {
 
               {/* Label */}
               <Text
-                style={[
-                  styles.menuLabel,
-                  isFocused && styles.menuLabelActive,
-                ]}
-              >
+                style={[styles.menuLabel, isFocused && styles.menuLabelActive]}>
                 {itemData.label}
               </Text>
 
               {/* Active Indicator */}
-              {isFocused && <View style={[styles.activeIndicator, { backgroundColor: itemData.iconColor }]} />}
+              {isFocused && (
+                <View
+                  style={[
+                    styles.activeIndicator,
+                    { backgroundColor: itemData.iconColor },
+                  ]}
+                />
+              )}
             </TouchableOpacity>
           );
         })}
@@ -188,8 +218,14 @@ const CustomDrawerContent = (props: DrawerContentComponentProps) => {
       <View style={styles.footer}>
         <View style={styles.divider} />
         <View style={styles.versionContainer}>
-          <MaterialDesignIcons name="information-outline" size={16} color="#9CA3AF" />
-          <Text style={styles.versionText}>Version {getVersionString(false)}</Text>
+          <MaterialDesignIcons
+            name="information-outline"
+            size={16}
+            color="#9CA3AF"
+          />
+          <Text style={styles.versionText}>
+            Version {getVersionString(false)}
+          </Text>
         </View>
         <Text style={styles.copyrightText}>{getCopyrightText()}</Text>
       </View>
@@ -245,13 +281,12 @@ const DrawerNavigator = () => {
     <>
       <SplashScreen callback={setFalseLoading} />
       <Drawer.Navigator
-        drawerContent={(props) => <CustomDrawerContent {...props} />}
+        drawerContent={props => <CustomDrawerContent {...props} />}
         screenOptions={{
           drawerStyle: {
             width: 300,
           },
-        }}
-      >
+        }}>
         <Drawer.Screen
           name={Utils.screens.HOME_STACK}
           component={StackNavigator}

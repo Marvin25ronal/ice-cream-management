@@ -26,6 +26,8 @@ export class OrderService {
           },
         })
         .then(order => {
+          console.log('ORDER');
+          console.log(order);
           resolve(order);
         })
         .catch(error => {
