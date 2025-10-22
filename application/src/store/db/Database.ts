@@ -92,11 +92,62 @@ export const CreateBackup = async () => {
       'Copia de seguridad realizada',
       `La copia de seguridad de la base de datos se ha realizado con éxito en ${destinationPath}`,
     );
+    return destinationPath;
   } catch (error) {
     console.error(
       'Error al hacer la copia de seguridad de la base de datos',
       error,
     );
     Alert.alert('Error al hacer el backup');
+    throw error;
+  }
+};
+
+export const RestoreBackup = async (backupPath: string) => {
+  const packageName = 'com.application';
+  const databaseName = 'IceCreamDatabase.db';
+  const destinationPath = `/data/data/${packageName}/databases/${databaseName}`;
+  const tempBackupPath = `/data/data/${packageName}/databases/temp_backup_${new Date().getTime()}.db`;
+
+  try {
+    // Verificar que el archivo de backup existe
+    const exists = await RNFS.exists(backupPath);
+    if (!exists) {
+      throw new Error('El archivo de backup no existe');
+    }
+
+    // Crear backup temporal de la BD actual por seguridad
+    const currentDbExists = await RNFS.exists(destinationPath);
+    if (currentDbExists) {
+      await RNFS.copyFile(destinationPath, tempBackupPath);
+      console.log('Backup temporal creado');
+    }
+
+    // Copiar el backup seleccionado a la ubicación de la BD
+    await RNFS.copyFile(backupPath, destinationPath);
+
+    console.log('Backup restaurado exitosamente');
+
+    // Eliminar backup temporal si todo salió bien
+    if (await RNFS.exists(tempBackupPath)) {
+      await RNFS.unlink(tempBackupPath);
+    }
+
+    return true;
+  } catch (error) {
+    console.error('Error al restaurar backup:', error);
+
+    // Intentar restaurar el backup temporal si algo falló
+    if (await RNFS.exists(tempBackupPath)) {
+      try {
+        await RNFS.copyFile(tempBackupPath, destinationPath);
+        await RNFS.unlink(tempBackupPath);
+        console.log('Base de datos restaurada al estado anterior');
+      } catch (restoreError) {
+        console.error('Error al restaurar estado anterior:', restoreError);
+      }
+    }
+
+    throw error;
   }
 };
