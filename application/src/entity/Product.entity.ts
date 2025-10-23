@@ -30,6 +30,28 @@ export class Product {
   @Column()
   order: number;
 
+  // Day availability fields (added by migration 001)
+  @Column({ default: 1 })
+  monday: number;
+
+  @Column({ default: 1 })
+  tuesday: number;
+
+  @Column({ default: 1 })
+  wednesday: number;
+
+  @Column({ default: 1 })
+  thursday: number;
+
+  @Column({ default: 1 })
+  friday: number;
+
+  @Column({ default: 1 })
+  saturday: number;
+
+  @Column({ default: 1 })
+  sunday: number;
+
   @ManyToOne(() => Category, category => category.products)
   @JoinColumn({ name: 'category_id' })
   category: Category;
@@ -43,6 +65,13 @@ export class Product {
     last_update: Date,
     category: Category,
     order: number,
+    monday: number = 1,
+    tuesday: number = 1,
+    wednesday: number = 1,
+    thursday: number = 1,
+    friday: number = 1,
+    saturday: number = 1,
+    sunday: number = 1,
   ) {
     this.product_id = product_id;
     this.name = name;
@@ -52,5 +81,12 @@ export class Product {
     this.last_update = last_update;
     this.category = category;
     this.order = order;
+    this.monday = monday;
+    this.tuesday = tuesday;
+    this.wednesday = wednesday;
+    this.thursday = thursday;
+    this.friday = friday;
+    this.saturday = saturday;
+    this.sunday = sunday;
   }
 }

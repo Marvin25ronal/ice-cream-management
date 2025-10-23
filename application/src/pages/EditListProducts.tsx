@@ -19,11 +19,12 @@ interface CategoryWithProducts {
   type: 'category';
 }
 
-interface ProductItem extends Product {
-  type: 'product';
+interface ProductRow {
+  type: 'productRow';
+  products: Product[];
 }
 
-type ListItem = CategoryWithProducts | ProductItem;
+type ListItem = CategoryWithProducts | ProductRow;
 
 const styles = StyleSheet.create({
   container: {
@@ -43,7 +44,11 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   listContent: {
-    padding: 10,
+    padding: 4,
+  },
+  productRow: {
+    flexDirection: 'row',
+    width: '100%',
   },
 });
 
@@ -59,7 +64,7 @@ const EditListProducts = () => {
   const getTree = async () => {
     setIsLoading(true);
     homeService
-      .getCategoriesMenu()
+      .getCategoriesMenu(false) // Don't filter by day - show all products for editing
       .then((tree: TreeNode) => {
         setdata(tree);
         setActualNode(tree);
@@ -76,7 +81,7 @@ const EditListProducts = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Convertir el árbol en una lista plana
+  // Convertir el árbol en una lista plana agrupando productos en filas de 4
   const flattenTree = useCallback((node: TreeNode | undefined): ListItem[] => {
     if (!node) {
       return [];
@@ -84,26 +89,30 @@ const EditListProducts = () => {
 
     const items: ListItem[] = [];
 
+    // Agregar subcategorías (children)
     if (node.children && node.children.length > 0) {
       node.children.forEach((child: TreeNode) => {
-        // Agregar categoría
+        // Agregar categoría como divisor
         items.push({
           category_id: child.category_id,
           name: child.name,
           type: 'category',
         } as CategoryWithProducts);
 
-        // Agregar items hijos (recursivo)
+        // Agregar items hijos recursivamente
         items.push(...flattenTree(child));
       });
-    } else if (node.products && node.products.length > 0) {
-      // Agregar productos
-      node.products.forEach((product: Product) => {
+    }
+
+    // Agregar productos del nodo actual agrupados en filas de 4
+    if (node.products && node.products.length > 0) {
+      for (let i = 0; i < node.products.length; i += 4) {
+        const productsInRow = node.products.slice(i, i + 4);
         items.push({
-          ...product,
-          type: 'product',
-        } as ProductItem);
-      });
+          type: 'productRow',
+          products: productsInRow,
+        } as ProductRow);
+      }
     }
 
     return items;
@@ -136,18 +145,28 @@ const EditListProducts = () => {
   const renderItem = useCallback(({ item }: { item: ListItem }) => {
     if (item.type === 'category') {
       return <CategoryHeader name={item.name} />;
-    } else {
-      return <EditProductListItem product={item as Product} />;
+    } else if (item.type === 'productRow') {
+      const productRow = item as ProductRow;
+      return (
+        <View style={styles.productRow}>
+          {productRow.products.map((product, index) => (
+            <EditProductListItem key={product.product_id} product={product} />
+          ))}
+        </View>
+      );
     }
+    return null;
   }, []);
 
   // Key extractor
   const keyExtractor = useCallback((item: ListItem, index: number) => {
     if (item.type === 'category') {
       return `category-${item.category_id}-${index}`;
-    } else {
-      return `product-${(item as Product).product_id}-${index}`;
+    } else if (item.type === 'productRow') {
+      const productRow = item as ProductRow;
+      return `productRow-${productRow.products.map(p => p.product_id).join('-')}-${index}`;
     }
+    return `item-${index}`;
   }, []);
 
   // Renderizar footer (skeleton mientras carga más)

@@ -27,7 +27,17 @@ export class ProductService {
 
   updateProductPrice(
     productId: number,
-    data: { name: string; price: string },
+    data: {
+      name: string;
+      price: string;
+      monday?: number;
+      tuesday?: number;
+      wednesday?: number;
+      thursday?: number;
+      friday?: number;
+      saturday?: number;
+      sunday?: number;
+    },
   ): Promise<Product> {
     return new Promise(async (resolve, reject) => {
       let db = await this.getDatabase();
@@ -38,6 +48,16 @@ export class ProductService {
             product.price = data.price ? parseFloat(data.price) : 0; // Ensure price is a number
             product.name = data.name; // Update the name
             product.last_update = new Date(); // Update the last update date
+
+            // Update day availability
+            if (data.monday !== undefined) product.monday = data.monday;
+            if (data.tuesday !== undefined) product.tuesday = data.tuesday;
+            if (data.wednesday !== undefined) product.wednesday = data.wednesday;
+            if (data.thursday !== undefined) product.thursday = data.thursday;
+            if (data.friday !== undefined) product.friday = data.friday;
+            if (data.saturday !== undefined) product.saturday = data.saturday;
+            if (data.sunday !== undefined) product.sunday = data.sunday;
+
             db.manager
               .save(product)
               .then(updatedProduct => {

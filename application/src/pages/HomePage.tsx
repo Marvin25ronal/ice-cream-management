@@ -2,7 +2,7 @@ import { StyleSheet, Text, View, SafeAreaView, StatusBar } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { ScrollView } from 'react-native-gesture-handler';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { themeInterface } from '../interface/themeInterface';
 import { HomeServices } from '../services/HomeServices';
 import { TreeNode } from '../interface/TreeInterface';
@@ -19,6 +19,7 @@ import Animated, { useSharedValue, withSpring } from 'react-native-reanimated';
 
 // Modern Components
 import ModernProductCard from '../components/Home/ModernProductCard';
+import ModernCategoryCard from '../components/Home/ModernCategoryCard';
 import ModernActionButtons from '../components/Home/ModernActionButtons';
 import CartSummary from '../components/Home/CartSummary';
 import CategoryBreadcrumb from '../components/Home/CategoryBreadcrumb';
@@ -52,9 +53,16 @@ const HomePage = ({ route }: { route: any }) => {
     }
   }, [reload]);
 
+  // Reload tree when screen comes into focus (e.g., when returning from another screen or when day changes)
+  useFocusEffect(
+    React.useCallback(() => {
+      getTree();
+    }, [])
+  );
+
   const getTree = async () => {
     homeService
-      .getCategoriesMenu()
+      .getCategoriesMenu(true) // Filter products by current day
       .then((tree: TreeNode) => {
         setdata(tree);
         setActualNode(tree);
@@ -155,7 +163,7 @@ const HomePage = ({ route }: { route: any }) => {
             actualNode &&
             actualNode.children &&
             actualNode.children.map((node: TreeNode, index: number) => (
-              <ModernProductCard
+              <ModernCategoryCard
                 key={`category-${node.category_id}-${index}`}
                 id={node.category_id}
                 name={node.name}
@@ -164,7 +172,6 @@ const HomePage = ({ route }: { route: any }) => {
                 onPress={() => {
                   setActualNode(node);
                 }}
-                isProduct={false}
               />
             ))}
 
