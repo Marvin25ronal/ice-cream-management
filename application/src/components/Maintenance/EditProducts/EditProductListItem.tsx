@@ -43,38 +43,37 @@ const EditProductListItem = ({ product }: { product: Product }) => {
 
   const styles = StyleSheet.create({
     container: {
-      width: '100%',
-      paddingHorizontal: 10,
-      paddingVertical: 6,
+      width: '25%',
+      paddingHorizontal: 4,
+      paddingVertical: 4,
     },
     card: {
       backgroundColor: '#FFFFFF',
-      borderRadius: 16,
-      flexDirection: 'row',
+      borderRadius: 12,
+      flexDirection: 'column',
       overflow: 'hidden',
       shadowColor: '#000',
       shadowOffset: {
         width: 0,
-        height: 3,
+        height: 2,
       },
-      shadowOpacity: 0.12,
-      shadowRadius: 6,
-      elevation: 4,
+      shadowOpacity: 0.1,
+      shadowRadius: 4,
+      elevation: 3,
       borderWidth: 1,
       borderColor: '#F0F0F0',
     },
     imageContainer: {
-      width: 100,
-      height: 100,
+      width: '100%',
+      height: 80,
       backgroundColor: '#FFF5F5',
       justifyContent: 'center',
       alignItems: 'center',
       position: 'relative',
     },
     image: {
-      width: 80,
-      height: 80,
-      borderRadius: 12,
+      width: '100%',
+      height: '100%',
     },
     imageBadge: {
       position: 'absolute',
@@ -92,59 +91,61 @@ const EditProductListItem = ({ product }: { product: Product }) => {
     },
     contentContainer: {
       flex: 1,
-      padding: 12,
+      padding: 8,
       justifyContent: 'space-between',
     },
     topSection: {
       flex: 1,
     },
     productName: {
-      fontSize: 16,
+      fontSize: 12,
       fontWeight: '700',
       color: '#2C3E50',
-      marginBottom: 4,
-      letterSpacing: 0.2,
+      marginBottom: 3,
+      letterSpacing: 0.1,
+      lineHeight: 14,
     },
     priceContainer: {
       flexDirection: 'row',
       alignItems: 'center',
-      marginTop: 4,
+      marginTop: 3,
     },
     priceLabel: {
-      fontSize: 11,
+      fontSize: 9,
       color: '#7F8C8D',
-      marginRight: 4,
+      marginRight: 3,
       fontWeight: '500',
     },
     price: {
-      fontSize: 20,
+      fontSize: 14,
       fontWeight: '800',
       color: '#E31E24',
-      letterSpacing: 0.5,
+      letterSpacing: 0.3,
     },
     bottomSection: {
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'space-between',
-      marginTop: 8,
-      paddingTop: 8,
+      marginTop: 6,
+      paddingTop: 6,
       borderTopWidth: 1,
       borderTopColor: '#F0F0F0',
     },
     dateContainer: {
       flexDirection: 'row',
       alignItems: 'center',
+      flex: 1,
     },
     dateText: {
-      fontSize: 11,
+      fontSize: 8,
       color: '#95A5A6',
-      marginLeft: 4,
+      marginLeft: 2,
       fontWeight: '500',
     },
     arrowContainer: {
-      width: 28,
-      height: 28,
-      borderRadius: 14,
+      width: 20,
+      height: 20,
+      borderRadius: 10,
       backgroundColor: '#FFF5F5',
       justifyContent: 'center',
       alignItems: 'center',
@@ -196,16 +197,16 @@ const EditProductListItem = ({ product }: { product: Product }) => {
             <View style={styles.dateContainer}>
               <MaterialCommunityIcons
                 name="clock-outline"
-                size={14}
+                size={10}
                 color="#95A5A6"
               />
-              <Text style={styles.dateText}>
+              <Text style={styles.dateText} numberOfLines={1}>
                 {formatDate(product.last_update)}
               </Text>
             </View>
 
             <View style={styles.arrowContainer}>
-              <Ionicons name="chevron-forward" size={18} color="#E31E24" />
+              <Ionicons name="chevron-forward" size={14} color="#E31E24" />
             </View>
           </View>
         </View>

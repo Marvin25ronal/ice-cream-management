@@ -8,7 +8,7 @@ export class HomeServices {
   private async getDatabase() {
     return await connectToDatabase();
   }
-  getCategoriesMenu(): Promise<TreeNode> {
+  getCategoriesMenu(filterByDay: boolean = true): Promise<TreeNode> {
     return new Promise(async (resolve, reject) => {
       let db = await this.getDatabase();
       let tree: TreeNode;
@@ -21,7 +21,7 @@ export class HomeServices {
         .then(categories => {
           // console.log("Categorias")
           // console.log(categories)
-          tree = this.constructTree(categories, null);
+          tree = this.constructTree(categories, null, filterByDay);
           resolve(tree);
         })
         .catch((error: any) => {
@@ -33,6 +33,7 @@ export class HomeServices {
   private constructTree(
     categories: Category[],
     actual: Category | null,
+    filterByDay: boolean,
   ): TreeNode {
     let root: TreeNode = {
       name: 'Root',
@@ -44,7 +45,7 @@ export class HomeServices {
     };
     let childs = categories.filter(category => category.parent_id == null);
     for (let i = 0; i < childs.length; i++) {
-      root.children?.push(this.addChilds(categories, childs[i], root));
+      root.children?.push(this.addChilds(categories, childs[i], root, filterByDay));
     }
     return root;
   }
@@ -52,7 +53,37 @@ export class HomeServices {
     categories: Category[],
     actual: Category,
     parent: TreeNode,
+    filterByDay: boolean,
   ): TreeNode {
+    let productsToShow = actual.products;
+
+    // Filter products by current day availability only if filterByDay is true
+    if (filterByDay) {
+      // Get current day of week (0 = Sunday, 1 = Monday, ..., 6 = Saturday)
+      const today = new Date().getDay();
+
+      productsToShow = actual.products.filter(product => {
+        switch (today) {
+          case 0: // Sunday
+            return product.sunday === 1;
+          case 1: // Monday
+            return product.monday === 1;
+          case 2: // Tuesday
+            return product.tuesday === 1;
+          case 3: // Wednesday
+            return product.wednesday === 1;
+          case 4: // Thursday
+            return product.thursday === 1;
+          case 5: // Friday
+            return product.friday === 1;
+          case 6: // Saturday
+            return product.saturday === 1;
+          default:
+            return false;
+        }
+      });
+    }
+
     let node: TreeNode = {
       name: actual.name,
       category_id: actual.category_id,
@@ -61,7 +92,7 @@ export class HomeServices {
       image: actual.image,
       children: [],
       parent: parent,
-      products: actual.products.sort((a, b) => a.order - b.order),
+      products: productsToShow.sort((a, b) => a.order - b.order),
     };
 
     let childs = categories.filter(
@@ -71,7 +102,7 @@ export class HomeServices {
       return node;
     }
     for (let i = 0; i < childs.length; i++) {
-      node.children?.push(this.addChilds(categories, childs[i], node));
+      node.children?.push(this.addChilds(categories, childs[i], node, filterByDay));
     }
     return node;
   }
