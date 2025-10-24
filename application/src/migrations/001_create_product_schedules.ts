@@ -1,4 +1,4 @@
-import {Migration} from '../database/Migration.interface';
+import { Migration } from '../database/Migration.interface';
 
 /**
  * Migración 001: Agregar horarios de disponibilidad a productos
@@ -14,6 +14,7 @@ import {Migration} from '../database/Migration.interface';
 export const migration_001_create_product_schedules: Migration = {
   version: 1,
   name: 'add_product_schedules',
+  forceOnStartup: true,
 
   up: async (db: any): Promise<void> => {
     return new Promise((resolve, reject) => {

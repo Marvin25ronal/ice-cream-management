@@ -1,4 +1,4 @@
-import { FlatList, StyleSheet, View } from 'react-native';
+import { FlatList, StyleSheet, View, TouchableOpacity } from 'react-native';
 import React, { useEffect, useState, useCallback } from 'react';
 import CategoryProductsChooser from '../components/Maintenance/EditProducts/CategoryProductsChooser';
 import { HomeServices } from '../services/HomeServices';
@@ -8,6 +8,12 @@ import { Product } from '../entity/Product.entity';
 import ProductSkeleton from '../components/Maintenance/EditProducts/ProductSkeleton';
 import CategoryChooserSkeleton from '../components/Maintenance/EditProducts/CategoryChooserSkeleton';
 import CategoryHeader from '../components/Maintenance/EditProducts/CategoryHeader';
+import { useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { EditProductParamList } from '../routes/EditProductNavigator';
+import { Utils } from '../constants/utils';
+import LinearGradient from 'react-native-linear-gradient';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 // Constantes para la paginación
 const BATCH_SIZE = 5; // Número de elementos a cargar por lote
@@ -45,10 +51,31 @@ const styles = StyleSheet.create({
   },
   listContent: {
     padding: 4,
+    paddingBottom: 100,
   },
   productRow: {
     flexDirection: 'row',
     width: '100%',
+  },
+  fabButton: {
+    position: 'absolute',
+    bottom: 24,
+    right: 24,
+    width: 64,
+    height: 64,
+    borderRadius: 32,
+    elevation: 8,
+    shadowColor: '#FF006E',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.4,
+    shadowRadius: 8,
+  },
+  fabGradient: {
+    width: '100%',
+    height: '100%',
+    borderRadius: 32,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 
@@ -60,6 +87,7 @@ const EditListProducts = () => {
   const [displayedItems, setDisplayedItems] = useState<ListItem[]>([]);
   const [allItems, setAllItems] = useState<ListItem[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const navigation = useNavigation<StackNavigationProp<EditProductParamList>>();
 
   const getTree = async () => {
     setIsLoading(true);
@@ -222,6 +250,20 @@ const EditListProducts = () => {
           updateCellsBatchingPeriod={50}
         />
       )}
+
+      {/* Floating Action Button to Add Product */}
+      <TouchableOpacity
+        style={styles.fabButton}
+        onPress={() => navigation.navigate(Utils.screens.ADD_PRODUCT)}
+        activeOpacity={0.9}>
+        <LinearGradient
+          colors={['#FF006E', '#C9184A', '#7209B7']}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 1 }}
+          style={styles.fabGradient}>
+          <Icon name="plus" size={32} color="#FFFFFF" />
+        </LinearGradient>
+      </TouchableOpacity>
     </View>
   );
 };

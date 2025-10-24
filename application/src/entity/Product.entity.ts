@@ -19,7 +19,11 @@ export class Product {
   price: number;
 
   @Column()
-  image: string;
+  image: string; // Reutilizado: nombre para legacy, path completo para filesystem/url
+
+  // New image system field - added by automatic migration at app startup
+  @Column({ nullable: true, default: 'legacy' })
+  image_type?: string; // 'legacy' | 'filesystem' | 'url'
 
   @Column()
   creation_date: Date;

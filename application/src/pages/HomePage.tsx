@@ -186,6 +186,7 @@ const HomePage = ({ route }: { route: any }) => {
                 name={product.name}
                 image={product.image}
                 price={product.price}
+                product={product}
                 onPress={() => {
                   addProduct(product);
                 }}

@@ -1,4 +1,5 @@
 import {
+  Image,
   Keyboard,
   KeyboardAvoidingView,
   Platform,
@@ -8,17 +9,19 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   View,
-  Animated,
   Dimensions,
+  ActivityIndicator,
 } from 'react-native';
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import CustomInputComponent from '../components/UI/CustomInputComponent';
 import { useForm } from 'react-hook-form';
 import { type_class_icon } from '../components/UI/IconSelector';
 import { themeInterface } from '../interface/themeInterface';
 import { useSelector } from 'react-redux';
 import { ProductService } from '../services/ProductService';
-import { Product } from '../entity/Product.entity';
+import { ImageStorageService } from '../services/ImageStorageService';
+import { HomeServices } from '../services/HomeServices';
+import { Category } from '../entity/Category.entity';
 import { AlertFunctions } from '../shared/AlertsFunctions';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -27,10 +30,8 @@ import { Utils } from '../constants/utils';
 import { Fonts } from '../constants/Fonts';
 import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import ProductImage from '../components/UI/ProductImage';
-import ModalComponent from '../components/UI/ModalComponent';
-import GenericModal from '../components/UI/GenericModal';
-import { useSharedValue, withSpring } from 'react-native-reanimated';
+import Toast from 'react-native-toast-message';
+import { Picker } from '@react-native-picker/picker';
 
 const { width } = Dimensions.get('window');
 
@@ -54,17 +55,23 @@ const DAYS = [
   { key: 'sunday', label: 'Dom', fullName: 'Domingo' },
 ];
 
-const EditProduct = ({ route }: { route: any }) => {
-  const { productId } = route.params || -1;
+const AddProduct = () => {
   const { control, watch, handleSubmit, setValue } = useForm();
   const [productService] = useState(new ProductService());
-  const [product, setProduct] = useState<Product>();
+  const [homeServices] = useState(new HomeServices());
   const theme: themeInterface = useSelector((state: any) => state.theme.value);
   const navigation = useNavigation<StackNavigationProp<EditProductParamList>>();
 
-  // Modal state for delete confirmation
-  const [deleteModalVisible, setDeleteModalVisible] = useState(false);
-  const modalProgress = useSharedValue(0);
+  // State
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
+  const [selectedImage, setSelectedImage] = useState<{
+    uri: string;
+    path?: string;
+    type: string;
+  } | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [loadingCategories, setLoadingCategories] = useState(true);
 
   // Day availability state - default all enabled (1)
   const [dayAvailability, setDayAvailability] = useState<DayAvailability>({
@@ -82,46 +89,87 @@ const EditProduct = ({ route }: { route: any }) => {
   const nameLength = productName?.length || 0;
   const maxNameLength = 50;
 
+  // Load categories on mount
   useEffect(() => {
-    if (productId !== -1) {
-      productService.getProduct(productId).then(product => {
-        setValue('name', product.name);
-        setValue('price', product.price.toString());
-        setProduct(product);
+    loadCategories();
+  }, []);
 
-        // Load day availability from product (after migration 001 is executed)
-        const loadedDays = {
-          monday: product.monday === 1 || product.monday === undefined,
-          tuesday: product.tuesday === 1 || product.tuesday === undefined,
-          wednesday: product.wednesday === 1 || product.wednesday === undefined,
-          thursday: product.thursday === 1 || product.thursday === undefined,
-          friday: product.friday === 1 || product.friday === undefined,
-          saturday: product.saturday === 1 || product.saturday === undefined,
-          sunday: product.sunday === 1 || product.sunday === undefined,
-        };
+  const loadCategories = async () => {
+    try {
+      setLoadingCategories(true);
+      const treeData = await homeServices.getCategoriesMenu(false);
 
-        console.log('📥 Cargando producto:', product);
-        console.log('📅 Días cargados desde BD:', {
-          monday: product.monday,
-          tuesday: product.tuesday,
-          wednesday: product.wednesday,
-          thursday: product.thursday,
-          friday: product.friday,
-          saturday: product.saturday,
-          sunday: product.sunday,
-        });
-        console.log('📅 Estado de días interpretado:', loadedDays);
+      // Flatten tree to get all categories
+      const flatCategories: Category[] = [];
+      const flattenTree = (node: any) => {
+        if (node.category_id !== -1) {
+          flatCategories.push({
+            category_id: node.category_id,
+            name: node.name,
+            description: node.description,
+            order: 0,
+            parent_id: node.parent_id,
+            image: node.image,
+            products: [],
+          } as Category);
+        }
+        if (node.children) {
+          node.children.forEach(flattenTree);
+        }
+      };
+      flattenTree(treeData);
 
-        setDayAvailability(loadedDays);
+      setCategories(flatCategories);
+      if (flatCategories.length > 0) {
+        setSelectedCategory(flatCategories[0].category_id);
+      }
+    } catch (error) {
+      console.error('Error loading categories:', error);
+      Toast.show({
+        type: 'error',
+        text1: 'Error al cargar categorías',
+        text2: 'No se pudieron cargar las categorías disponibles',
       });
+    } finally {
+      setLoadingCategories(false);
     }
-  }, [productId]);
+  };
 
   const toggleDay = (day: keyof DayAvailability) => {
     setDayAvailability(prev => ({
       ...prev,
       [day]: !prev[day],
     }));
+  };
+
+  const handleImagePicker = async () => {
+    try {
+      const imageResult = await ImageStorageService.pickImage();
+
+      if (imageResult) {
+        // Save the image to filesystem
+        const savedPath = await ImageStorageService.saveImage(imageResult.uri);
+
+        setSelectedImage({
+          uri: imageResult.uri,
+          path: savedPath,
+          type: 'filesystem',
+        });
+
+        Toast.show({
+          type: 'success',
+          text1: 'Imagen seleccionada',
+          text2: 'La imagen ha sido cargada correctamente',
+        });
+      }
+    } catch (error) {
+      console.error('Error picking image:', error);
+      Toast.show({
+        type: 'error',
+        text1: 'Error al seleccionar imagen',
+        text2: 'No se pudo cargar la imagen seleccionada',
+      });
+    }
   };
 
   const styles = StyleSheet.create({
@@ -146,7 +194,8 @@ const EditProduct = ({ route }: { route: any }) => {
       fontFamily: Fonts.LatoRegular,
       color: '#7F8C8D',
     },
-    productImageCard: {
+    // Image Section
+    imageCard: {
       backgroundColor: theme.CARD_BACKGROUND_COLOR,
       borderRadius: 20,
       padding: 20,
@@ -160,13 +209,25 @@ const EditProduct = ({ route }: { route: any }) => {
     },
     imageContainer: {
       position: 'relative',
+      marginBottom: 16,
     },
-    productImage: {
+    imagePreview: {
       width: 160,
       height: 160,
       borderRadius: 80,
       borderWidth: 4,
       borderColor: '#FFD6FF',
+    },
+    imagePlaceholder: {
+      width: 160,
+      height: 160,
+      borderRadius: 80,
+      backgroundColor: '#F0F0F0',
+      justifyContent: 'center',
+      alignItems: 'center',
+      borderWidth: 3,
+      borderStyle: 'dashed',
+      borderColor: '#BDC3C7',
     },
     imageGradientBorder: {
       position: 'absolute',
@@ -192,6 +253,29 @@ const EditProduct = ({ route }: { route: any }) => {
       fontSize: 12,
       fontFamily: Fonts.LatoBold,
     },
+    imageButton: {
+      borderRadius: 12,
+      overflow: 'hidden',
+      shadowColor: '#7209B7',
+      shadowOffset: { width: 0, height: 4 },
+      shadowOpacity: 0.2,
+      shadowRadius: 8,
+      elevation: 5,
+    },
+    imageButtonGradient: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+      paddingVertical: 14,
+      paddingHorizontal: 24,
+    },
+    imageButtonText: {
+      fontSize: 15,
+      fontFamily: Fonts.LatoBold,
+      color: '#FFFFFF',
+      marginLeft: 8,
+    },
+    // Section Styles
     section: {
       backgroundColor: theme.CARD_BACKGROUND_COLOR,
       borderRadius: 20,
@@ -263,6 +347,55 @@ const EditProduct = ({ route }: { route: any }) => {
       color: '#95A5A6',
       marginTop: 4,
       marginLeft: 4,
+    },
+    // Category Picker Styles
+    pickerContainer: {
+      backgroundColor: theme.INPUT_BACKGROUND_COLOR,
+      borderRadius: 12,
+      borderWidth: 2,
+      borderColor: theme.INPUT_BORDER_COLOR,
+      overflow: 'hidden',
+      shadowColor: theme.INPUT_SHADOW_COLOR,
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.08,
+      shadowRadius: 4,
+      elevation: 3,
+    },
+    pickerWrapper: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      paddingLeft: 14,
+    },
+    pickerIconContainer: {
+      width: 40,
+      height: 40,
+      borderRadius: 20,
+      backgroundColor: theme.INPUT_ICON_BACKGROUND_COLOR,
+      justifyContent: 'center',
+      alignItems: 'center',
+      marginRight: 12,
+    },
+    picker: {
+      flex: 1,
+      color: '#2C3E50',
+      fontFamily: Fonts.LatoRegular,
+    },
+    pickerHelper: {
+      fontSize: 12,
+      fontFamily: Fonts.LatoRegular,
+      color: '#95A5A6',
+      marginTop: 4,
+      marginLeft: 4,
+    },
+    loadingContainer: {
+      paddingVertical: 20,
+      alignItems: 'center',
+    },
+    loadingText: {
+      marginTop: 12,
+      fontSize: 14,
+      fontFamily: Fonts.LatoRegular,
+      color: '#7F8C8D',
     },
     // Day Availability Styles
     daysGrid: {
@@ -362,101 +495,114 @@ const EditProduct = ({ route }: { route: any }) => {
       color: '#FFFFFF',
       letterSpacing: 0.5,
     },
-    // Delete Button
-    deleteButtonContainer: {
-      marginBottom: 24,
-      marginTop: 8,
+    requiredBadge: {
+      marginLeft: 6,
+      backgroundColor: '#E74C3C',
+      borderRadius: 8,
+      paddingHorizontal: 6,
+      paddingVertical: 2,
     },
-    deleteButton: {
-      borderRadius: 16,
-      overflow: 'hidden',
-      borderWidth: 2,
-      borderColor: '#E74C3C',
-    },
-    deleteButtonInner: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: 'center',
-      paddingVertical: 18,
-      paddingHorizontal: 32,
-      backgroundColor: 'rgba(231, 76, 60, 0.1)',
-    },
-    deleteButtonIcon: {
-      marginRight: 10,
-    },
-    deleteButtonText: {
-      fontSize: 18,
+    requiredText: {
+      color: 'white',
+      fontSize: 10,
       fontFamily: Fonts.LatoBold,
-      color: '#E74C3C',
-      letterSpacing: 0.5,
     },
   });
 
-  const updateProduct = async (data: any) => {
-    // Prepare data with day availability
-    const updateData = {
-      ...data,
-      // Convert boolean to 0/1 for database
-      monday: dayAvailability.monday ? 1 : 0,
-      tuesday: dayAvailability.tuesday ? 1 : 0,
-      wednesday: dayAvailability.wednesday ? 1 : 0,
-      thursday: dayAvailability.thursday ? 1 : 0,
-      friday: dayAvailability.friday ? 1 : 0,
-      saturday: dayAvailability.saturday ? 1 : 0,
-      sunday: dayAvailability.sunday ? 1 : 0,
-    };
-
-    console.log('🔄 Guardando producto con datos:', updateData);
-    console.log('📅 Estado de días:', dayAvailability);
-
-    await productService
-      .updateProductPrice(productId, updateData)
-      .then(() => {
-        console.log('✅ Product updated successfully', updateData);
-        AlertFunctions.updateProductSuccess();
-        navigation.reset({
-          index: 0,
-          routes: [{ name: Utils.screens.EDIT_LIST_PRODUCT }],
-        });
-      })
-      .catch(error => {
-        AlertFunctions.updateProductError();
+  const createProduct = async (data: any) => {
+    // Validation
+    if (!selectedCategory) {
+      Toast.show({
+        type: 'error',
+        text1: 'Categoría requerida',
+        text2: 'Por favor seleccione una categoría',
       });
-  };
+      return;
+    }
 
-  const handleDeletePress = () => {
-    modalProgress.value = withSpring(1);
-    setDeleteModalVisible(true);
-  };
+    if (!selectedImage) {
+      Toast.show({
+        type: 'error',
+        text1: 'Imagen requerida',
+        text2: 'Por favor seleccione una imagen para el producto',
+      });
+      return;
+    }
 
-  const handleDeleteConfirm = async () => {
+    if (!data.name || data.name.trim() === '') {
+      Toast.show({
+        type: 'error',
+        text1: 'Nombre requerido',
+        text2: 'Por favor ingrese el nombre del producto',
+      });
+      return;
+    }
+
+    if (!data.price || parseFloat(data.price) <= 0) {
+      Toast.show({
+        type: 'error',
+        text1: 'Precio inválido',
+        text2: 'Por favor ingrese un precio mayor a 0',
+      });
+      return;
+    }
+
+    setLoading(true);
+
     try {
-      await productService.deleteProduct(productId);
-      console.log('✅ Product deleted successfully');
+      // Prepare product data
+      const productData = {
+        name: data.name.trim(),
+        price: parseFloat(data.price),
+        category_id: selectedCategory,
+        image: selectedImage.path || '', // Full filesystem path
+        image_type: 'filesystem',
+        monday: dayAvailability.monday ? 1 : 0,
+        tuesday: dayAvailability.tuesday ? 1 : 0,
+        wednesday: dayAvailability.wednesday ? 1 : 0,
+        thursday: dayAvailability.thursday ? 1 : 0,
+        friday: dayAvailability.friday ? 1 : 0,
+        saturday: dayAvailability.saturday ? 1 : 0,
+        sunday: dayAvailability.sunday ? 1 : 0,
+      };
 
-      // Close modal
-      modalProgress.value = withSpring(0);
-      setDeleteModalVisible(false);
+      console.log('Creating product with data:', productData);
 
-      // Show success message
-      AlertFunctions.deleteProductSuccess();
+      await productService.createProduct(productData);
+
+      Toast.show({
+        type: 'success',
+        text1: 'Producto creado',
+        text2: 'El producto ha sido creado exitosamente',
+      });
 
       // Navigate back to product list
       navigation.reset({
         index: 0,
         routes: [{ name: Utils.screens.EDIT_LIST_PRODUCT }],
       });
-    } catch (error) {
-      console.error('❌ Error deleting product:', error);
-      modalProgress.value = withSpring(0);
-      setDeleteModalVisible(false);
-      AlertFunctions.deleteProductError();
-    }
-  };
+    } catch (error: any) {
+      console.error('Error creating product:', error);
 
-  const handleDeleteCancel = () => {
-    modalProgress.value = withSpring(0);
-    setDeleteModalVisible(false);
+      // Check if error is related to missing image_type column
+      const errorMessage = error?.message || error?.toString() || '';
+      if (errorMessage.includes('image_type') || errorMessage.includes('no such column')) {
+        Toast.show({
+          type: 'error',
+          text1: 'Migración requerida',
+          text2: 'Debe ejecutar la migración de base de datos primero',
+          visibilityTime: 5000,
+        });
+      } else {
+        Toast.show({
+          type: 'error',
+          text1: 'Error al crear producto',
+          text2: 'Ha ocurrido un error al crear el producto',
+        });
+      }
+    } finally {
+      setLoading(false);
+    }
   };
 
   // Day gradient colors
@@ -541,32 +687,66 @@ const EditProduct = ({ route }: { route: any }) => {
         >
           {/* Header */}
           <View style={styles.header}>
-            <Text style={styles.headerTitle}>
-              Editar Producto
-            </Text>
+            <Text style={styles.headerTitle}>Nuevo Producto</Text>
             <Text style={styles.headerSubtitle}>
-              {productId !== -1 ? `ID del producto: #${productId}` : 'Nuevo Producto'}
+              Añade un nuevo producto al inventario
             </Text>
           </View>
 
-          {/* Product Image Card */}
-          <View style={styles.productImageCard}>
+          {/* Image Section */}
+          <View style={styles.imageCard}>
             <View style={styles.imageContainer}>
-              <LinearGradient
-                colors={['#FF006E', '#C44569', '#8E44AD']}
-                start={{ x: 0, y: 0 }}
-                end={{ x: 1, y: 1 }}
-                style={styles.imageGradientBorder}
-              />
-              <ProductImage
-                product={product}
-                style={styles.productImage}
-                resizeMode="cover"
-              />
-              <View style={styles.imageBadge}>
-                <Text style={styles.imageBadgeText}>Producto</Text>
-              </View>
+              {selectedImage ? (
+                <>
+                  <LinearGradient
+                    colors={['#FF006E', '#C44569', '#8E44AD']}
+                    start={{ x: 0, y: 0 }}
+                    end={{ x: 1, y: 1 }}
+                    style={styles.imageGradientBorder}
+                  />
+                  <Image
+                    source={{ uri: selectedImage.uri }}
+                    style={styles.imagePreview}
+                    resizeMode="cover"
+                  />
+                  <View style={styles.imageBadge}>
+                    <Text style={styles.imageBadgeText}>Nuevo</Text>
+                  </View>
+                </>
+              ) : (
+                <View style={styles.imagePlaceholder}>
+                  <Icon name="image-plus" size={48} color="#BDC3C7" />
+                  <Text
+                    style={{
+                      marginTop: 8,
+                      fontSize: 12,
+                      fontFamily: Fonts.LatoRegular,
+                      color: '#95A5A6',
+                    }}
+                  >
+                    Sin imagen
+                  </Text>
+                </View>
+              )}
             </View>
+
+            <TouchableOpacity
+              style={styles.imageButton}
+              onPress={handleImagePicker}
+              activeOpacity={0.9}
+            >
+              <LinearGradient
+                colors={['#7209B7', '#8E44AD', '#9B59B6']}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 0 }}
+                style={styles.imageButtonGradient}
+              >
+                <Icon name="camera" size={20} color="#FFFFFF" />
+                <Text style={styles.imageButtonText}>
+                  {selectedImage ? 'Cambiar Imagen' : 'Seleccionar Imagen'}
+                </Text>
+              </LinearGradient>
+            </TouchableOpacity>
           </View>
 
           {/* Basic Information Section */}
@@ -579,7 +759,12 @@ const EditProduct = ({ route }: { route: any }) => {
             </View>
 
             <View style={styles.fieldContainer}>
-              <Text style={styles.fieldLabel}>Nombre del Producto</Text>
+              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <Text style={styles.fieldLabel}>Nombre del Producto</Text>
+                <View style={styles.requiredBadge}>
+                  <Text style={styles.requiredText}>REQUERIDO</Text>
+                </View>
+              </View>
               <CustomInputComponent
                 control={control}
                 name="name"
@@ -593,14 +778,15 @@ const EditProduct = ({ route }: { route: any }) => {
                   required: 'El nombre es requerido',
                   maxLength: {
                     value: maxNameLength,
-                    message: `El nombre no puede exceder ${maxNameLength} caracteres`
-                  }
+                    message: `El nombre no puede exceder ${maxNameLength} caracteres`,
+                  },
                 }}
               />
               <Text
                 style={[
                   styles.characterCount,
-                  nameLength > maxNameLength * 0.9 && styles.characterCountWarning
+                  nameLength > maxNameLength * 0.9 &&
+                    styles.characterCountWarning,
                 ]}
               >
                 {nameLength} / {maxNameLength} caracteres
@@ -608,10 +794,16 @@ const EditProduct = ({ route }: { route: any }) => {
             </View>
 
             <View style={styles.priceContainer}>
-              <Text style={styles.priceLabel}>Precio</Text>
+              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <Text style={styles.priceLabel}>Precio</Text>
+                <View style={styles.requiredBadge}>
+                  <Text style={styles.requiredText}>REQUERIDO</Text>
+                </View>
+              </View>
               <CustomInputComponent
                 control={control}
                 name="price"
+                type="number"
                 icon_class={type_class_icon.FontAwesome5}
                 icon_name="dollar-sign"
                 place_holder="0.00"
@@ -621,15 +813,68 @@ const EditProduct = ({ route }: { route: any }) => {
                 rules={{
                   required: 'El precio es requerido',
                   min: {
-                    value: 0,
-                    message: 'El precio debe ser mayor a 0'
-                  }
+                    value: 0.01,
+                    message: 'El precio debe ser mayor a 0',
+                  },
                 }}
               />
               <Text style={styles.priceHelper}>
                 Ingrese el precio en formato decimal (ej: 25.50)
               </Text>
             </View>
+          </View>
+
+          {/* Category Section */}
+          <View style={styles.section}>
+            <View style={styles.sectionHeader}>
+              <View style={styles.sectionIconContainer}>
+                <Icon name="folder-open" size={20} color="#7209B7" />
+              </View>
+              <Text style={styles.sectionTitle}>Categoría</Text>
+            </View>
+
+            {loadingCategories ? (
+              <View style={styles.loadingContainer}>
+                <ActivityIndicator size="large" color="#7209B7" />
+                <Text style={styles.loadingText}>Cargando categorías...</Text>
+              </View>
+            ) : (
+              <>
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                  <Text style={styles.fieldLabel}>Seleccionar Categoría</Text>
+                  <View style={styles.requiredBadge}>
+                    <Text style={styles.requiredText}>REQUERIDO</Text>
+                  </View>
+                </View>
+                <View style={styles.pickerContainer}>
+                  <View style={styles.pickerWrapper}>
+                    <View style={styles.pickerIconContainer}>
+                      <Icon
+                        name="format-list-bulleted"
+                        size={20}
+                        color={theme.INPUT_ICON_COLOR}
+                      />
+                    </View>
+                    <Picker
+                      selectedValue={selectedCategory}
+                      onValueChange={value => setSelectedCategory(value)}
+                      style={styles.picker}
+                    >
+                      {categories.map(category => (
+                        <Picker.Item
+                          key={category.category_id}
+                          label={category.name}
+                          value={category.category_id}
+                        />
+                      ))}
+                    </Picker>
+                  </View>
+                </View>
+                <Text style={styles.pickerHelper}>
+                  El producto se agregará a la categoría seleccionada
+                </Text>
+              </>
+            )}
           </View>
 
           {/* Availability Section */}
@@ -644,19 +889,23 @@ const EditProduct = ({ route }: { route: any }) => {
             <View style={styles.daysGrid}>
               {/* First Row: Monday - Thursday */}
               <View style={styles.daysRow}>
-                {DAYS.slice(0, 4).map((day, index) => renderDayButton(day, index))}
+                {DAYS.slice(0, 4).map((day, index) =>
+                  renderDayButton(day, index)
+                )}
               </View>
 
               {/* Second Row: Friday - Sunday */}
               <View style={styles.daysRow}>
-                {DAYS.slice(4, 7).map((day, index) => renderDayButton(day, index + 4))}
+                {DAYS.slice(4, 7).map((day, index) =>
+                  renderDayButton(day, index + 4)
+                )}
               </View>
             </View>
 
             <View style={styles.availabilityHint}>
               <Text style={styles.availabilityHintText}>
-                Toca cada día para activar o desactivar la disponibilidad del producto.
-                Los días seleccionados están resaltados con color.
+                Toca cada día para activar o desactivar la disponibilidad del
+                producto. Los días seleccionados están resaltados con color.
               </Text>
             </View>
           </View>
@@ -665,8 +914,9 @@ const EditProduct = ({ route }: { route: any }) => {
           <View style={styles.saveButtonContainer}>
             <TouchableOpacity
               style={styles.saveButton}
-              onPress={handleSubmit(updateProduct)}
+              onPress={handleSubmit(createProduct)}
               activeOpacity={0.9}
+              disabled={loading}
             >
               <LinearGradient
                 colors={['#FF006E', '#C44569', '#8E44AD']}
@@ -674,54 +924,26 @@ const EditProduct = ({ route }: { route: any }) => {
                 end={{ x: 1, y: 0 }}
                 style={styles.saveButtonGradient}
               >
-                <Icon
-                  name="content-save"
-                  size={24}
-                  color="#FFFFFF"
-                  style={styles.saveButtonIcon}
-                />
-                <Text style={styles.saveButtonText}>Guardar Cambios</Text>
+                {loading ? (
+                  <ActivityIndicator size="small" color="#FFFFFF" />
+                ) : (
+                  <>
+                    <Icon
+                      name="plus-circle"
+                      size={24}
+                      color="#FFFFFF"
+                      style={styles.saveButtonIcon}
+                    />
+                    <Text style={styles.saveButtonText}>Crear Producto</Text>
+                  </>
+                )}
               </LinearGradient>
-            </TouchableOpacity>
-          </View>
-
-          {/* Delete Button */}
-          <View style={styles.deleteButtonContainer}>
-            <TouchableOpacity
-              style={styles.deleteButton}
-              onPress={handleDeletePress}
-              activeOpacity={0.8}
-            >
-              <View style={styles.deleteButtonInner}>
-                <Icon
-                  name="delete-forever"
-                  size={24}
-                  color="#E74C3C"
-                  style={styles.deleteButtonIcon}
-                />
-                <Text style={styles.deleteButtonText}>Eliminar Producto</Text>
-              </View>
             </TouchableOpacity>
           </View>
         </ScrollView>
       </TouchableWithoutFeedback>
-
-      {/* Delete Confirmation Modal */}
-      <ModalComponent
-        visible={deleteModalVisible}
-        setVisible={setDeleteModalVisible}
-        progress={modalProgress}
-        width="85%"
-        height="auto"
-      >
-        <GenericModal
-          text={`¿Estás seguro de que deseas eliminar "${product?.name}"? Esta acción no se puede deshacer.`}
-          confirm={handleDeleteConfirm}
-          cancel={handleDeleteCancel}
-        />
-      </ModalComponent>
     </KeyboardAvoidingView>
   );
 };
 
-export default EditProduct;
+export default AddProduct;
