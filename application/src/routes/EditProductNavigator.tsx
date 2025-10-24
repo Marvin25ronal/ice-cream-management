@@ -12,11 +12,13 @@ import { getHeaderTitle } from '@react-navigation/elements';
 import CustomHeader from '../components/UI/CustomHeader';
 import EditListProducts from '../pages/EditListProducts';
 import EditProduct from '../pages/EditProduct';
+import AddProduct from '../pages/AddProduct';
 import ToastComponent from '../components/UI/ToastComponent';
 
 export type EditProductParamList = {
   [Utils.screens.EDIT_LIST_PRODUCT]: undefined;
   [Utils.screens.EDIT_PRODUCT]: { productId: number } | undefined;
+  [Utils.screens.ADD_PRODUCT]: undefined;
 };
 const Stack = createStackNavigator<EditProductParamList>();
 const EditProductNavigator = () => {
@@ -50,6 +52,11 @@ const EditProductNavigator = () => {
         <Stack.Screen
           name={Utils.screens.EDIT_PRODUCT}
           component={EditProduct}
+          options={options}
+        />
+        <Stack.Screen
+          name={Utils.screens.ADD_PRODUCT}
+          component={AddProduct}
           options={options}
         />
       </Stack.Navigator>

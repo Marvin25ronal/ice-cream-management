@@ -15,4 +15,5 @@ export enum SCREENS {
   EDIT_LIST_PRODUCT_STACK = 'Editar Lista de productos',
   EDIT_LIST_PRODUCT = 'Lista de productos',
   EDIT_PRODUCT = 'Editar producto',
+  ADD_PRODUCT = 'Agregar producto',
 }

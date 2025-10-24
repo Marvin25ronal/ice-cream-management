@@ -11,10 +11,11 @@ import {
 import { useSelector } from 'react-redux';
 import LinearGradient from 'react-native-linear-gradient';
 import { themeInterface } from '../../interface/themeInterface';
-import { ImagesDefinition } from '../../shared/ImagesConstants';
 import { Fonts } from '../../constants/Fonts';
 import NumberIndicator from './NumberIndicator';
 import { CURRENCY_SYMBOL } from '../../constants/utils';
+import { Product } from '../../entity/Product.entity';
+import { ImageStorageService } from '../../services/ImageStorageService';
 
 interface ModernProductCardProps {
   name: string;
@@ -25,6 +26,7 @@ interface ModernProductCardProps {
   onLongPress?: () => void;
   isProduct?: boolean;
   id: number;
+  product?: Product; // Optional: full product object for new image system
 }
 
 const ModernProductCard: React.FC<ModernProductCardProps> = ({
@@ -36,6 +38,7 @@ const ModernProductCard: React.FC<ModernProductCardProps> = ({
   onLongPress,
   isProduct = false,
   id,
+  product,
 }) => {
   const theme: themeInterface = useSelector((state: any) => state.theme.value);
   const shoppingCart: number[] = useSelector(
@@ -325,17 +328,24 @@ const ModernProductCard: React.FC<ModernProductCardProps> = ({
     },
   });
 
-  let backgroundImage = ImagesDefinition.find(img => img.name === image)?.image;
+  // Use the new ImageStorageService to get image source (supports both legacy and filesystem)
+  // Only pass imageName when product object is not available (backward compatibility)
+  const backgroundImage = ImageStorageService.getImageSource(
+    product,
+    product ? undefined : image
+  );
 
+  // Validate backgroundImage
   if (!backgroundImage) {
-    backgroundImage = require('../../../assets/images/products/defaultb.png');
+    console.error('❌ ModernProductCard: backgroundImage is null/undefined for product:', id);
+    return null;
   }
 
   // Render Product Card
   if (isProduct) {
     return (
       <Animated.View style={[styles.container, { transform: [{ scale: scaleAnim }] }]}>
-        {shoppingCart.find(item => item === id) && (
+        {shoppingCart.find(item => item === id) !== undefined && (
           <NumberIndicator
             elements={shoppingCart.filter(item => item === id).length}
           />

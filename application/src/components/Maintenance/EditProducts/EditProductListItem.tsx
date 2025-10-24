@@ -1,13 +1,13 @@
-import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import React from 'react';
 import { Product } from '../../../entity/Product.entity';
 import { CURRENCY_SYMBOL, Utils } from '../../../constants/utils';
-import { ImagesDefinition } from '../../../shared/ImagesConstants';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { useNavigation } from '@react-navigation/native';
 import { EditProductParamList } from '../../../routes/EditProductNavigator';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import ProductImage from '../../UI/ProductImage';
 
 const EditProductListItem = ({ product }: { product: Product }) => {
   const navigation = useNavigation<StackNavigationProp<EditProductParamList>>();
@@ -164,11 +164,8 @@ const EditProductListItem = ({ product }: { product: Product }) => {
         activeOpacity={0.7}>
         {/* Imagen del producto */}
         <View style={styles.imageContainer}>
-          <Image
-            source={
-              ImagesDefinition.find(img => img.name === product.image)?.image ||
-              ImagesDefinition[0].image
-            }
+          <ProductImage
+            product={product}
             style={styles.image}
             resizeMode="cover"
           />

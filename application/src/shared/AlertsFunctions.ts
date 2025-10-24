@@ -80,4 +80,18 @@ export class AlertFunctions {
       text2: 'Ha ocurrido un error al actualizar el producto',
     });
   }
+  static deleteProductSuccess() {
+    Toast.show({
+      type: 'success',
+      text1: 'Producto eliminado',
+      text2: 'El producto ha sido eliminado correctamente',
+    });
+  }
+  static deleteProductError() {
+    Toast.show({
+      type: 'error',
+      text1: 'Error al eliminar el producto',
+      text2: 'Ha ocurrido un error al eliminar el producto',
+    });
+  }
 }

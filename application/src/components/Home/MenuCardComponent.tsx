@@ -9,11 +9,11 @@ import {
 import React from 'react';
 import { themeInterface } from '../../interface/themeInterface';
 import { useSelector } from 'react-redux';
-import { ImagesDefinition } from '../../shared/ImagesConstants';
 
 import { Fonts, FontsSize } from '../../constants/Fonts';
 import { Product } from '../../entity/Product.entity';
 import NumberIndicator from './NumberIndicator';
+import { ImageStorageService } from '../../services/ImageStorageService';
 
 const MenuCardComponent = ({
   name,
@@ -23,6 +23,7 @@ const MenuCardComponent = ({
   onLongPress,
   isProduct = false,
   id,
+  product,
 }: {
   name: String;
   description: String;
@@ -31,6 +32,7 @@ const MenuCardComponent = ({
   onLongPress?: any;
   isProduct?: boolean;
   id: number;
+  product?: Product;
 }) => {
   const theme: themeInterface = useSelector((state: any) => state.theme.value);
   const shoppingCart: number[] = useSelector(
@@ -87,17 +89,18 @@ const MenuCardComponent = ({
       textAlign: 'center',
     },
   });
-  let backgroundImage = ImagesDefinition.find(img => img.name === image)?.image;
-
-  if (!backgroundImage) {
-    backgroundImage = require('../../../assets/images/products/defaultb.png');
-  }
+  // Use the new ImageStorageService to get image source (supports both legacy and filesystem)
+  // Only pass imageName when product object is not available (backward compatibility)
+  const backgroundImage = ImageStorageService.getImageSource(
+    product,
+    product ? undefined : image
+  );
 
   return (
     <View style={styles.container}>
       {isProduct === true &&
         shoppingCart.length > 0 &&
-        shoppingCart.find(item => item == id) && (
+        shoppingCart.find(item => item == id) !== undefined && (
           <NumberIndicator
             elements={shoppingCart.filter(item => item == id).length}
           />

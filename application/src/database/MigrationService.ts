@@ -192,6 +192,85 @@ export class MigrationService {
       throw error;
     }
   }
+
+  /**
+   * Ejecuta solo las migraciones marcadas con forceOnStartup=true
+   * Esta función se debe llamar al iniciar la app
+   */
+  async runStartupMigrations(migrations: Migration[]): Promise<{
+    success: boolean;
+    executed: number;
+    errors: string[];
+  }> {
+    try {
+      console.log('🚀 [APP STARTUP] Verificando migraciones críticas...');
+
+      // Crear tabla de migraciones si no existe
+      await this.createMigrationsTable();
+
+      // Obtener migraciones ya ejecutadas
+      const executedVersions = await this.getExecutedMigrations();
+
+      // Filtrar solo las migraciones forzadas que no han sido ejecutadas
+      const forcedMigrations = migrations
+        .filter(m => m.forceOnStartup === true && !executedVersions.includes(m.version))
+        .sort((a, b) => a.version - b.version);
+
+      if (forcedMigrations.length === 0) {
+        console.log('✅ [APP STARTUP] No hay migraciones críticas pendientes');
+        return {success: true, executed: 0, errors: []};
+      }
+
+      console.log(
+        `🔧 [APP STARTUP] Ejecutando ${forcedMigrations.length} migraciones críticas...`,
+      );
+
+      const db = await this.getDatabase();
+      const errors: string[] = [];
+      let executed = 0;
+
+      // Ejecutar migraciones forzadas una por una
+      for (const migration of forcedMigrations) {
+        try {
+          console.log(
+            `⚡ [CRITICAL] Ejecutando migración ${migration.version}: ${migration.name}`,
+          );
+          await migration.up(db);
+          await this.recordMigration(migration.version, migration.name);
+          executed++;
+          console.log(
+            `✅ [CRITICAL] Migración ${migration.version} ejecutada exitosamente`,
+          );
+        } catch (error: any) {
+          const errorMsg = `❌ Error en migración crítica ${migration.version} (${migration.name}): ${error.message}`;
+          console.error(errorMsg);
+          errors.push(errorMsg);
+          // Para migraciones críticas, continuamos con las siguientes
+          // pero registramos el error
+        }
+      }
+
+      if (errors.length > 0) {
+        console.warn('⚠️ [APP STARTUP] Algunas migraciones críticas fallaron');
+        console.warn('⚠️ La app puede no funcionar correctamente');
+      } else {
+        console.log('✅ [APP STARTUP] Todas las migraciones críticas completadas');
+      }
+
+      return {
+        success: errors.length === 0,
+        executed,
+        errors,
+      };
+    } catch (error: any) {
+      console.error('❌ [APP STARTUP] Error ejecutando migraciones críticas:', error);
+      return {
+        success: false,
+        executed: 0,
+        errors: [error.message],
+      };
+    }
+  }
 }
 
 export const migrationService = new MigrationService();
