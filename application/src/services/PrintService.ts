@@ -4,9 +4,11 @@ import {
   COMMANDS,
   ColumnAlignment,
 } from 'react-native-ect-thermal-receipt-printer';
-import { AlertFunctions } from '../shared/AlertsFunctions';
-import { Order } from '../entity/Order.entity';
-import { CURRENCY_SYMBOL } from '../constants/utils';
+import {AlertFunctions} from '../shared/AlertsFunctions';
+import {Order} from '../entity/Order.entity';
+import {Expense} from '../entity/Expense.entity';
+import {CURRENCY_SYMBOL} from '../constants/utils';
+import {AppConfig} from '../constants/AppConfig';
 const BOLD_ON = COMMANDS.TEXT_FORMAT.TXT_BOLD_ON;
 const PRINT_TIME = 300;
 export class PrintService {
@@ -147,4 +149,99 @@ export class PrintService {
   }
 
   printTicket(order: Order | null) {}
+
+  async printDailySummary(
+    date: string,
+    totalSales: number,
+    cash: number,
+    card: number,
+    expenses: Expense[],
+    totalExpenses: number,
+    netBalance: number,
+  ): Promise<void> {
+    if (!this.printer) {
+      AlertFunctions.showNoPrinter();
+      return;
+    }
+
+    const separator = '================================';
+    const thin = '--------------------------------';
+
+    await USBPrinter.printText(`<CM>${separator}<CM>`);
+    await USBPrinter.printText(`<CM>CIERRE DEL DÍA<CM>`);
+    await USBPrinter.printText(`<CM>${AppConfig.APP_NAME}<CM>`);
+    await USBPrinter.printText(`<CM>${separator}<CM>`);
+    await this.delay(PRINT_TIME);
+
+    await USBPrinter.printText(`<C>Fecha: ${date}<C>`);
+    await USBPrinter.printText(`<CM>${thin}<CM>`);
+    await this.delay(PRINT_TIME);
+
+    // Ventas
+    await USBPrinter.printText(`<B>-- VENTAS --<B>`);
+    const colWidths = [22, 10];
+    const colAlign = [ColumnAlignment.LEFT, ColumnAlignment.RIGHT];
+
+    await USBPrinter.printColumnsText(
+      ['Total Ventas:', `${CURRENCY_SYMBOL}${totalSales.toFixed(2)}`],
+      colWidths,
+      colAlign,
+      [`${BOLD_ON}`, ''],
+    );
+    await USBPrinter.printColumnsText(
+      ['  Efectivo:', `${CURRENCY_SYMBOL}${cash.toFixed(2)}`],
+      colWidths,
+      colAlign,
+      ['', ''],
+    );
+    await USBPrinter.printColumnsText(
+      ['  Tarjeta:', `${CURRENCY_SYMBOL}${card.toFixed(2)}`],
+      colWidths,
+      colAlign,
+      ['', ''],
+    );
+    await this.delay(PRINT_TIME);
+
+    // Gastos
+    await USBPrinter.printText(`<CM>${thin}<CM>`);
+    await USBPrinter.printText(`<B>-- GASTOS --<B>`);
+    if (expenses.length === 0) {
+      await USBPrinter.printText(`<C>Sin gastos registrados<C>`);
+    } else {
+      for (const expense of expenses) {
+        const label = expense.notes
+          ? `${expense.expenseType?.name} - ${expense.notes}`.slice(0, 20)
+          : (expense.expenseType?.name ?? 'Gasto').slice(0, 20);
+        await USBPrinter.printColumnsText(
+          [label, `${CURRENCY_SYMBOL}${expense.amount.toFixed(2)}`],
+          colWidths,
+          colAlign,
+          ['', ''],
+        );
+        await this.delay(PRINT_TIME / 3);
+      }
+    }
+    await USBPrinter.printColumnsText(
+      ['Total Gastos:', `${CURRENCY_SYMBOL}${totalExpenses.toFixed(2)}`],
+      colWidths,
+      colAlign,
+      [`${BOLD_ON}`, ''],
+    );
+    await this.delay(PRINT_TIME);
+
+    // Neto
+    await USBPrinter.printText(`<CM>${separator}<CM>`);
+    await USBPrinter.printColumnsText(
+      ['NETO DEL DÍA:', `${CURRENCY_SYMBOL}${netBalance.toFixed(2)}`],
+      colWidths,
+      colAlign,
+      [`${BOLD_ON}`, `${BOLD_ON}`],
+    );
+    await USBPrinter.printText(`<CM>${separator}<CM>`);
+    await this.delay(PRINT_TIME);
+
+    await USBPrinter.printText(`<C> <C>`);
+    await USBPrinter.printText(`<C>Firma: ____________________<C>`);
+    await USBPrinter.printBill(`<C> <C>`);
+  }
 }

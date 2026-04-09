@@ -1,7 +1,9 @@
-import { Dimensions, StyleSheet, Text, View } from 'react-native';
-import React, { useEffect, useState } from 'react';
-import { Order } from '../entity/Order.entity';
-import { OrderService } from '../services/OrderServices';
+import {Dimensions, Pressable, StyleSheet, Text, View} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {Order} from '../entity/Order.entity';
+import {Expense} from '../entity/Expense.entity';
+import {OrderService} from '../services/OrderServices';
+import {ExpenseService} from '../services/ExpenseService';
 import OrderFilter from '../components/Order/OrderFilter';
 import Animated from 'react-native-reanimated';
 import { Fonts, FontsSize } from '../constants/Fonts';
@@ -13,6 +15,10 @@ import { format } from '@formkit/tempo';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import LinearGradient from 'react-native-linear-gradient';
+import {PrintService} from '../services/PrintService';
+import Toast from 'react-native-toast-message';
+
+const printService = new PrintService();
 
 const hours = [
   '08:00',
@@ -32,6 +38,8 @@ const hours = [
   '22:00',
 ];
 
+const expenseServiceInstance = new ExpenseService();
+
 const DailyReport = () => {
   const theme = useSelector((state: RootState) => state.theme.value);
   const [orderService] = useState(new OrderService());
@@ -43,6 +51,10 @@ const DailyReport = () => {
   const [orderCard, setOrderCard] = useState(0);
   const [cash, setCash] = useState(0);
   const [loading, setLoading] = useState(false);
+  const [expenses, setExpenses] = useState<Expense[]>([]);
+  const [totalExpenses, setTotalExpenses] = useState(0);
+  const [netBalance, setNetBalance] = useState(0);
+  const [printing, setPrinting] = useState(false);
   const [ordersFrecuencyData, setOrdersFrecuencyData] = useState([]);
   const [topProducts, setTopProducts] = useState<
     { name: string; quantity: number; revenue: number }[]
@@ -183,6 +195,14 @@ const DailyReport = () => {
     }
   }, [orders, total]);
 
+  useEffect(() => {
+    setTotalExpenses(expenses.reduce((acc, e) => acc + e.amount, 0));
+  }, [expenses]);
+
+  useEffect(() => {
+    setNetBalance(total - totalExpenses);
+  }, [total, totalExpenses]);
+
   const getOrders = (data: any) => {
     let date: string = data?.date;
     if (date == null) {
@@ -207,6 +227,32 @@ const DailyReport = () => {
       .catch(error => {
         console.log(error);
       });
+    expenseServiceInstance
+      .getByDateRange(start, end)
+      .then(data => setExpenses(data))
+      .catch(error => console.log('Error gastos:', error));
+  };
+
+  const handlePrintClose = async () => {
+    setPrinting(true);
+    try {
+      await printService.initPrinter();
+      await printService.connectPrinter();
+      const dateStr = new Date().toLocaleDateString();
+      await printService.printDailySummary(
+        dateStr,
+        total,
+        cash,
+        totalCard,
+        expenses,
+        totalExpenses,
+        netBalance,
+      );
+    } catch (e) {
+      Toast.show({type: 'error', text1: 'Error al imprimir cierre'});
+    } finally {
+      setPrinting(false);
+    }
   };
 
   const MetricCard = ({
@@ -510,6 +556,55 @@ const DailyReport = () => {
     blueDot: {
       backgroundColor: '#3498db',
     },
+    expenseItem: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      backgroundColor: '#fff5f2',
+      padding: 12,
+      borderRadius: 12,
+      borderLeftWidth: 4,
+      borderLeftColor: '#FF6348',
+      marginBottom: 8,
+      gap: 10,
+    },
+    expenseDot: {
+      width: 10,
+      height: 10,
+      borderRadius: 5,
+    },
+    expenseAmount: {
+      fontFamily: Fonts.LatoBold,
+      fontSize: FontsSize.medium,
+      color: '#E74C3C',
+    },
+    printSection: {
+      paddingHorizontal: 16,
+      paddingVertical: 20,
+    },
+    printBtn: {
+      borderRadius: 16,
+      overflow: 'hidden',
+      elevation: 4,
+      shadowColor: '#FF6348',
+      shadowOffset: {width: 0, height: 3},
+      shadowOpacity: 0.35,
+      shadowRadius: 6,
+    },
+    printBtnPressed: {
+      opacity: 0.85,
+    },
+    printBtnGradient: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+      gap: 10,
+      paddingVertical: 16,
+    },
+    printBtnText: {
+      fontFamily: Fonts.LatoBold,
+      fontSize: FontsSize.large,
+      color: '#FFF',
+    },
   });
 
   return (
@@ -581,6 +676,104 @@ const DailyReport = () => {
             iconColor="#f59e0b"
           />
         </View>
+
+        {/* Gastos del Día */}
+        <Text style={styles.sectionTitle}>Gastos del Día</Text>
+        <View style={styles.revenueSection}>
+          <RevenueCard
+            icon="cash-minus"
+            value={totalExpenses}
+            label="Total Gastos"
+            gradientColors={['#fce4e4', '#fdd5d5']}
+            iconColor="#E74C3C"
+          />
+        </View>
+
+        {/* Balance Neto */}
+        <Text style={styles.sectionTitle}>Balance del Día</Text>
+        <View style={styles.revenueSection}>
+          <View style={styles.revenueCard}>
+            <LinearGradient
+              colors={
+                netBalance >= 0 ? ['#d4f4dd', '#c7f0d8'] : ['#fce4e4', '#fdd5d5']
+              }
+              start={{x: 0, y: 0}}
+              end={{x: 1, y: 1}}
+              style={styles.revenueGradient}>
+              <View style={styles.revenueHeader}>
+                <View
+                  style={[
+                    styles.revenueIconBadge,
+                    {
+                      backgroundColor:
+                        netBalance >= 0 ? '#27ae60' : '#E74C3C',
+                    },
+                  ]}>
+                  <Icon
+                    name={netBalance >= 0 ? 'trending-up' : 'trending-down'}
+                    size={24}
+                    color="white"
+                  />
+                </View>
+                <Text style={styles.revenueLabel}>Neto (Ventas − Gastos)</Text>
+              </View>
+              <Text
+                style={[
+                  styles.revenueValue,
+                  {color: netBalance >= 0 ? '#27ae60' : '#E74C3C'},
+                ]}>
+                {CURRENCY_SYMBOL} {Math.abs(netBalance).toFixed(2)}
+                {netBalance < 0 ? ' ▼' : ''}
+              </Text>
+            </LinearGradient>
+          </View>
+        </View>
+
+        {/* Detalle gastos */}
+        {expenses.length > 0 && (
+          <>
+            <Text style={styles.sectionTitle}>Detalle de Gastos</Text>
+            <View style={styles.chartContainer}>
+              <View style={styles.chartCard}>
+                <View style={styles.chartHeader}>
+                  <View
+                    style={[
+                      styles.chartIconBadge,
+                      {backgroundColor: '#E74C3C'},
+                    ]}>
+                    <Icon name="format-list-bulleted" size={24} color="white" />
+                  </View>
+                  <Text style={styles.chartTitle}>Gastos registrados</Text>
+                </View>
+                <View style={styles.productList}>
+                  {expenses.map((expense, index) => (
+                    <View key={expense.expense_id} style={styles.expenseItem}>
+                      <View
+                        style={[
+                          styles.expenseDot,
+                          {backgroundColor: '#FF6348'},
+                        ]}
+                      />
+                      <View style={styles.productInfo}>
+                        <Text style={styles.productName}>
+                          {expense.expenseType?.name ?? 'Gasto'}
+                        </Text>
+                        {!!expense.notes && (
+                          <Text style={styles.productStats}>
+                            {expense.notes}
+                          </Text>
+                        )}
+                      </View>
+                      <Text style={styles.expenseAmount}>
+                        {CURRENCY_SYMBOL} {expense.amount.toFixed(2)}
+                      </Text>
+                    </View>
+                  ))}
+                </View>
+              </View>
+            </View>
+          </>
+        )}
 
         {/* KPIs Section */}
         <Text style={styles.sectionTitle}>
@@ -823,8 +1016,30 @@ const DailyReport = () => {
           </>
         )}
 
+        {/* Botón imprimir cierre */}
+        <View style={styles.printSection}>
+          <Pressable
+            style={({pressed}) => [
+              styles.printBtn,
+              pressed && styles.printBtnPressed,
+            ]}
+            onPress={handlePrintClose}
+            disabled={printing}>
+            <LinearGradient
+              colors={['#FF6348', '#FF8C42']}
+              start={{x: 0, y: 0}}
+              end={{x: 1, y: 0}}
+              style={styles.printBtnGradient}>
+              <Icon name="printer" size={22} color="#FFF" />
+              <Text style={styles.printBtnText}>
+                {printing ? 'Imprimiendo...' : 'Imprimir Cierre del Día'}
+              </Text>
+            </LinearGradient>
+          </Pressable>
+        </View>
+
         {/* Bottom Spacing */}
-        <View style={{ height: 24 }} />
+        <View style={{height: 24}} />
       </Animated.ScrollView>
     </View>
   );

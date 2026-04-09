@@ -28,6 +28,7 @@ import FelPage from '../pages/FelPage';
 import MaintenanceStack from './MaintenanceStack';
 import DailyReportNavigator from './DailyReportNavigator';
 import EditProductNavigator from './EditProductNavigator';
+import GastosNavigator from './GastosNavigator';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import Entypo from 'react-native-vector-icons/Entypo';
 import MaterialDesignIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -115,6 +116,20 @@ const getMenuItemData = (routeName: string): MenuItemData => {
         label: 'Editar Productos',
         iconColor: '#EC4899',
         iconBgColor: '#FCE7F3',
+      };
+    case Utils.screens.GASTOS_STACK:
+      return {
+        routeName,
+        icon: (
+          <MaterialDesignIcons
+            name="cash-minus"
+            size={iconSize}
+            color="#FF6348"
+          />
+        ),
+        label: 'Gastos',
+        iconColor: '#FF6348',
+        iconBgColor: '#FFF0ED',
       };
     default:
       return {
@@ -315,6 +330,11 @@ const DrawerNavigator = () => {
         <Drawer.Screen
           name={Utils.screens.EDIT_LIST_PRODUCT_STACK}
           component={EditProductNavigator}
+          options={options}
+        />
+        <Drawer.Screen
+          name={Utils.screens.GASTOS_STACK}
+          component={GastosNavigator}
           options={options}
         />
       </Drawer.Navigator>

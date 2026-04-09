@@ -7,6 +7,8 @@ import { Product } from '../../entity/Product.entity';
 import { Order } from '../../entity/Order.entity';
 import { OrderDetail } from '../../entity/OrderDetail.entity';
 import { OrderPayment } from '../../entity/OrderPayment';
+import { ExpenseType } from '../../entity/ExpenseType.entity';
+import { Expense } from '../../entity/Expense.entity';
 enablePromise(true);
 
 export const connectToDatabase = async () => {
@@ -15,7 +17,7 @@ export const connectToDatabase = async () => {
     database: 'IceCreamDatabase.db',
     location: 'default',
     logging: ['query', 'error', 'schema'],
-    entities: [Category, Product, Order, OrderDetail, OrderPayment],
+    entities: [Category, Product, Order, OrderDetail, OrderPayment, ExpenseType, Expense],
     synchronize: false,
   });
   // ;(await AppDataSource.initialize()).manager.find(Category).then((categories) => {
