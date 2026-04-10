@@ -20,4 +20,11 @@ export enum SCREENS {
   GASTOS_STACK = 'Gastos',
   GASTOS = 'Registro de Gastos',
   EXPENSE_TYPE_MAINTENANCE = 'Tipos de Gasto',
+  // Reportes
+  REPORTES_STACK = 'Reportes',
+  REPORTES_HUB = 'Hub de Reportes',
+  REPORTE_VENTAS = 'Reporte de Ventas',
+  REPORTE_PRODUCTOS = 'Productos más Vendidos',
+  REPORTE_CATEGORIAS = 'Ventas por Categoría',
+  REPORTE_GASTOS = 'Gastos y Cierre',
 }

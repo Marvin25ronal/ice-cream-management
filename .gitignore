@@ -132,6 +132,6 @@ dist
 
 
 application/.
-application/docs
-application/.claude
-application/.agents
+# application/docs
+# application/.claude
+# application/.agents
