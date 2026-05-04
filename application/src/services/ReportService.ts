@@ -1,6 +1,7 @@
-import {connectToDatabase} from '../store/db/Database';
-import {OrderService} from './OrderServices';
-import {ExpenseService} from './ExpenseService';
+import { connectToDatabase } from '../store/db/Database';
+import { OrderService } from './OrderServices';
+import { ExpenseService } from './ExpenseService';
+import { Product } from '../entity/Product.entity';
 
 export interface SalesSummary {
   totalRevenue: number;
@@ -44,26 +45,6 @@ const _orderService = new OrderService();
 const _expenseService = new ExpenseService();
 
 export class ReportService {
-  private parseStringToDate(dateString: string): Date {
-    const parts = dateString.split('/');
-    return new Date(
-      parseInt(parts[2], 10),
-      parseInt(parts[1], 10) - 1,
-      parseInt(parts[0], 10),
-    );
-  }
-
-  private toSqlDate(dateStr: string): string {
-    const parts = dateStr.split('/');
-    return `${parts[2]}-${parts[1].padStart(2, '0')}-${parts[0].padStart(2, '0')} 00:00:00`;
-  }
-
-  private toSqlEndDate(dateStr: string): string {
-    const date = this.parseStringToDate(dateStr);
-    date.setDate(date.getDate() + 1);
-    return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')} 00:00:00`;
-  }
-
   async getSalesSummary(start: string, end: string): Promise<SalesSummary> {
     const orders = await _orderService.getAllOrders(start, end);
 
@@ -145,71 +126,81 @@ export class ReportService {
   async getProductRanking(
     start: string,
     end: string,
-    limit = 20,
+    limit?: number,
   ): Promise<ProductRanking[]> {
-    const db = await connectToDatabase();
-    const startSql = this.toSqlDate(start);
-    const endSql = this.toSqlEndDate(end);
-    const rows: any[] = await db.query(
-      `SELECT od.product_id, od.product_name,
-              SUM(od.quantity)            AS total_qty,
-              SUM(od.quantity * od.price) AS total_revenue
-       FROM OrderDetail od
-       JOIN "order" o ON od.order_id = o.order_id
-       WHERE o.payment_date IS NOT NULL
-         AND o.creation_date >= ? AND o.creation_date < ?
-       GROUP BY od.product_id, od.product_name
-       ORDER BY total_qty DESC
-       LIMIT ?`,
-      [startSql, endSql, limit],
-    );
-    return rows.map(r => ({
-      product_id: Number(r.product_id),
-      product_name: String(r.product_name ?? ''),
-      total_qty: Number(r.total_qty ?? 0),
-      total_revenue: Number(r.total_revenue ?? 0),
-    }));
+    const orders = await _orderService.getAllOrders(start, end) ?? [];
+    const completed = orders.filter((o: any) => o.payment_date != null);
+
+    const map = new Map<number, ProductRanking>();
+    for (const order of completed) {
+      for (const detail of (order.orderDetails ?? [])) {
+        const existing = map.get(detail.product_id);
+        if (existing) {
+          existing.total_qty += detail.quantity;
+          existing.total_revenue += detail.quantity * detail.price;
+        } else {
+          map.set(detail.product_id, {
+            product_id: detail.product_id,
+            product_name: detail.product_name,
+            total_qty: detail.quantity,
+            total_revenue: detail.quantity * detail.price,
+          });
+        }
+      }
+    }
+    const sorted = [...map.values()].sort((a, b) => b.total_qty - a.total_qty);
+    if (limit) return sorted.slice(0, limit);
+    return sorted;
   }
 
   async getCategorySales(
     start: string,
     end: string,
   ): Promise<CategorySales[]> {
-    const db = await connectToDatabase();
-    const startSql = this.toSqlDate(start);
-    const endSql = this.toSqlEndDate(end);
-    const rows: any[] = await db.query(
-      `SELECT
-         COALESCE(c.category_id, 0)       AS category_id,
-         COALESCE(c.name, 'Sin categoría') AS category_name,
-         SUM(od.quantity)                 AS total_qty,
-         SUM(od.quantity * od.price)      AS total_revenue
-       FROM OrderDetail od
-       JOIN "order" o ON od.order_id     = o.order_id
-       LEFT JOIN product p  ON od.product_id = p.product_id
-       LEFT JOIN category c ON p.category_id = c.category_id
-       WHERE o.payment_date IS NOT NULL
-         AND o.creation_date >= ? AND o.creation_date < ?
-       GROUP BY COALESCE(c.category_id, 0), COALESCE(c.name, 'Sin categoría')
-       ORDER BY total_revenue DESC`,
-      [startSql, endSql],
-    );
+    const [orders, db] = await Promise.all([
+      _orderService.getAllOrders(start, end),
+      connectToDatabase(),
+    ]);
+    const completed = (orders ?? []).filter((o: any) => o.payment_date != null);
 
-    const grandTotal = rows.reduce(
-      (acc: number, r: any) => acc + Number(r.total_revenue ?? 0),
-      0,
-    );
+    const products = await db.manager.find(Product, { relations: { category: true } });
+    const productCatMap = new Map<number, { id: number; name: string }>();
+    for (const p of products) {
+      productCatMap.set(p.product_id, {
+        id: p.category?.category_id ?? 0,
+        name: p.category?.name ?? 'Sin categoría',
+      });
+    }
 
-    return rows.map(r => {
-      const rev = Number(r.total_revenue ?? 0);
-      return {
-        category_id: Number(r.category_id),
-        category_name: String(r.category_name),
-        total_qty: Number(r.total_qty ?? 0),
-        total_revenue: rev,
-        percentage: grandTotal > 0 ? (rev / grandTotal) * 100 : 0,
-      };
-    });
+    const map = new Map<number, { name: string; qty: number; revenue: number }>();
+    for (const order of completed) {
+      for (const detail of (order.orderDetails ?? [])) {
+        const cat = productCatMap.get(detail.product_id) ?? { id: 0, name: 'Sin categoría' };
+        const existing = map.get(cat.id);
+        if (existing) {
+          existing.qty += detail.quantity;
+          existing.revenue += detail.quantity * detail.price;
+        } else {
+          map.set(cat.id, {
+            name: cat.name,
+            qty: detail.quantity,
+            revenue: detail.quantity * detail.price,
+          });
+        }
+      }
+    }
+
+    const grandTotal = [...map.values()].reduce((acc, v) => acc + v.revenue, 0);
+
+    return [...map.entries()]
+      .map(([id, v]) => ({
+        category_id: id,
+        category_name: v.name,
+        total_qty: v.qty,
+        total_revenue: v.revenue,
+        percentage: grandTotal > 0 ? (v.revenue / grandTotal) * 100 : 0,
+      }))
+      .sort((a, b) => b.total_revenue - a.total_revenue);
   }
 
   async getHubKPIs(start: string, end: string): Promise<HubKPIs> {

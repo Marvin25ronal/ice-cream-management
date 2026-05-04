@@ -36,9 +36,9 @@ const OrderFilter = ({ getOrders }: { getOrders: any }) => {
   // Inicializar con la fecha de hoy
   useEffect(() => {
     const today = new Date();
-    const todayStr = `Hoy - ${today.toLocaleDateString()}`;
-    setDisplayDate(todayStr);
-    setValue('date', today.toLocaleDateString());
+    const todayFmt = today.toLocaleDateString('es-GT', {day: '2-digit', month: '2-digit', year: 'numeric'});
+    setDisplayDate(`Hoy - ${todayFmt}`);
+    setValue('date', todayFmt);
   }, [setValue]);
 
   const styles = StyleSheet.create({
@@ -173,35 +173,28 @@ const OrderFilter = ({ getOrders }: { getOrders: any }) => {
     let dateRange;
     let displayText = '';
 
+    const fmt = (d: Date) =>
+      d.toLocaleDateString('es-GT', {day: '2-digit', month: '2-digit', year: 'numeric'});
+
     switch (filter) {
       case 'today':
-        dateRange = { date: today.toLocaleDateString() };
-        displayText = `Hoy - ${today.toLocaleDateString()}`;
-        setValue('date', today.toLocaleDateString());
+        dateRange = {date: fmt(today)};
+        displayText = `Hoy - ${fmt(today)}`;
+        setValue('date', fmt(today));
         break;
       case 'week':
         const weekStart = new Date(today);
         weekStart.setDate(today.getDate() - 7);
-        dateRange = {
-          date: `${weekStart.toLocaleDateString()}-${today.toLocaleDateString()}`,
-        };
-        displayText = `Última Semana (${weekStart.toLocaleDateString()} - ${today.toLocaleDateString()})`;
-        setValue(
-          'date',
-          `${weekStart.toLocaleDateString()}-${today.toLocaleDateString()}`,
-        );
+        dateRange = {date: `${fmt(weekStart)}-${fmt(today)}`};
+        displayText = `Última Semana (${fmt(weekStart)} - ${fmt(today)})`;
+        setValue('date', `${fmt(weekStart)}-${fmt(today)}`);
         break;
       case 'month':
         const monthStart = new Date(today);
         monthStart.setDate(today.getDate() - 30);
-        dateRange = {
-          date: `${monthStart.toLocaleDateString()}-${today.toLocaleDateString()}`,
-        };
-        displayText = `Último Mes (${monthStart.toLocaleDateString()} - ${today.toLocaleDateString()})`;
-        setValue(
-          'date',
-          `${monthStart.toLocaleDateString()}-${today.toLocaleDateString()}`,
-        );
+        dateRange = {date: `${fmt(monthStart)}-${fmt(today)}`};
+        displayText = `Último Mes (${fmt(monthStart)} - ${fmt(today)})`;
+        setValue('date', `${fmt(monthStart)}-${fmt(today)}`);
         break;
       default:
         return;
