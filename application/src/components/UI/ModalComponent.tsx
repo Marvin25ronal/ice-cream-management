@@ -36,10 +36,11 @@ const ModalComponent = ({
       backgroundColor: theme.MODAL_BACKGROUND_COLOR,
       width: width || '80%',
       height: height || 'auto',
-      maxWidth: '90%',
-      maxHeight: '90%',
+      maxWidth: '92%',
+      maxHeight: '88%',
       borderRadius: 15,
-      zIndex: 1,
+      zIndex: 10,
+      elevation: 24,
       padding: 20,
       shadowColor: '#000',
       shadowOffset: {
@@ -75,7 +76,12 @@ const ModalComponent = ({
   });
   return (
     <>
-      <Modal transparent visible={visible} style={{ zIndex: 0 }}>
+      <Modal
+        transparent
+        visible={visible}
+        statusBarTranslucent
+        animationType="fade"
+        style={{zIndex: 0}}>
         <BackDrop
           open={progress}
           extraFunction={() => {
@@ -83,9 +89,9 @@ const ModalComponent = ({
             setVisible(false);
           }}
           notclose={notCloseWithBackdrop}
-          zindex={1}
+          zindex={0}
         />
-        <View style={styles.container}>
+        <View style={styles.container} pointerEvents="box-none">
           <Animated.View style={[styles.modal, reanimatedStyle]}>
             <>
               {notCloseButton == undefined ? (
