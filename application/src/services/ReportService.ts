@@ -2,6 +2,7 @@ import { connectToDatabase } from '../store/db/Database';
 import { OrderService } from './OrderServices';
 import { ExpenseService } from './ExpenseService';
 import { Product } from '../entity/Product.entity';
+import { Category } from '../entity/Category.entity';
 
 export interface SalesSummary {
   totalRevenue: number;
@@ -20,6 +21,10 @@ export interface SalesSummary {
 export interface ProductRanking {
   product_id: number;
   product_name: string;
+  category_id: number;
+  category_name: string;
+  /** Desde raíz hasta categoría del producto, ej. "Conos › Capuchinos" */
+  category_path: string;
   total_qty: number;
   total_revenue: number;
 }
@@ -128,12 +133,66 @@ export class ReportService {
     end: string,
     limit?: number,
   ): Promise<ProductRanking[]> {
-    const orders = await _orderService.getAllOrders(start, end) ?? [];
-    const completed = orders.filter((o: any) => o.payment_date != null);
+    const [orders, db] = await Promise.all([
+      _orderService.getAllOrders(start, end),
+      connectToDatabase(),
+    ]);
+    const completed = (orders ?? []).filter((o: any) => o.payment_date != null);
+
+    const [catalog, allCategories] = await Promise.all([
+      db.manager.find(Product, {relations: {category: true}}),
+      db.manager.find(Category),
+    ]);
+
+    const catById = new Map(allCategories.map(c => [c.category_id, c]));
+
+    const buildCategoryPath = (leafId: number): string => {
+      if (!leafId) {
+        return 'Sin categoría';
+      }
+      const names: string[] = [];
+      let id: number | null = leafId;
+      const seen = new Set<number>();
+      while (id != null && id > 0) {
+        if (seen.has(id)) {
+          break;
+        }
+        seen.add(id);
+        const c = catById.get(id);
+        if (!c) {
+          break;
+        }
+        names.push(c.name);
+        id = c.parent_id;
+      }
+      if (names.length === 0) {
+        return 'Sin categoría';
+      }
+      return names.reverse().join(' › ');
+    };
+
+    const productCatMap = new Map<
+      number,
+      {id: number; name: string; path: string}
+    >();
+    for (const p of catalog) {
+      const leafId = p.category?.category_id ?? 0;
+      const leafName = p.category?.name ?? 'Sin categoría';
+      productCatMap.set(p.product_id, {
+        id: leafId,
+        name: leafName,
+        path: buildCategoryPath(leafId),
+      });
+    }
 
     const map = new Map<number, ProductRanking>();
     for (const order of completed) {
-      for (const detail of (order.orderDetails ?? [])) {
+      for (const detail of order.orderDetails ?? []) {
+        const cat = productCatMap.get(detail.product_id) ?? {
+          id: 0,
+          name: 'Sin categoría',
+          path: 'Sin categoría',
+        };
         const existing = map.get(detail.product_id);
         if (existing) {
           existing.total_qty += detail.quantity;
@@ -142,6 +201,9 @@ export class ReportService {
           map.set(detail.product_id, {
             product_id: detail.product_id,
             product_name: detail.product_name,
+            category_id: cat.id,
+            category_name: cat.name,
+            category_path: cat.path,
             total_qty: detail.quantity,
             total_revenue: detail.quantity * detail.price,
           });
@@ -149,7 +211,9 @@ export class ReportService {
       }
     }
     const sorted = [...map.values()].sort((a, b) => b.total_qty - a.total_qty);
-    if (limit) return sorted.slice(0, limit);
+    if (limit !== undefined) {
+      return sorted.slice(0, limit);
+    }
     return sorted;
   }
 

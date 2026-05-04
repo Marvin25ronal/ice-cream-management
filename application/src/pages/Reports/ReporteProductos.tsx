@@ -1,17 +1,20 @@
-import React, {memo, useCallback, useState} from 'react';
+import React, {memo, useCallback, useEffect, useMemo, useState} from 'react';
 import {
   ActivityIndicator,
   Dimensions,
   FlatList,
+  Modal,
   Pressable,
   StyleSheet,
   Text,
+  TextInput,
   View,
 } from 'react-native';
 import {useFocusEffect} from '@react-navigation/native';
 import {BarChart} from 'react-native-chart-kit';
 import Animated, {FadeInDown} from 'react-native-reanimated';
 import LinearGradient from 'react-native-linear-gradient';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {ReportService, ProductRanking} from '../../services/ReportService';
 import ReportDateFilter, {
   DateRange,
@@ -42,9 +45,6 @@ const chartConfig = {
   style: {borderRadius: 16},
 };
 
-// ---------------------------------------------------------------------------
-// Memoized list item
-// ---------------------------------------------------------------------------
 interface ItemProps {
   item: ProductRanking;
   index: number;
@@ -72,6 +72,9 @@ const ProductRankingItem = memo(({item, index, sortBy}: ItemProps) => (
       <Text style={styles.rankName} numberOfLines={1}>
         {item.product_name}
       </Text>
+      <Text style={styles.rankCategory} numberOfLines={2}>
+        {item.category_path}
+      </Text>
       <Text style={styles.rankSub}>
         {item.total_qty} uds · {CURRENCY_SYMBOL} {item.total_revenue.toFixed(2)}
       </Text>
@@ -85,9 +88,6 @@ const ProductRankingItem = memo(({item, index, sortBy}: ItemProps) => (
 ));
 ProductRankingItem.displayName = 'ProductRankingItem';
 
-// ---------------------------------------------------------------------------
-// Page
-// ---------------------------------------------------------------------------
 const ReporteProductos = ({route}: {route: any}) => {
   const initialStart = route?.params?.start ?? todayStr();
   const initialEnd = route?.params?.end ?? todayStr();
@@ -99,6 +99,20 @@ const ReporteProductos = ({route}: {route: any}) => {
     start: initialStart,
     end: initialEnd,
   });
+  const [searchQuery, setSearchQuery] = useState('');
+  const [categoryFilterId, setCategoryFilterId] = useState<number | null>(null);
+  const [categoryModalVisible, setCategoryModalVisible] = useState(false);
+
+  useEffect(() => {
+    const start = route?.params?.start;
+    const end = route?.params?.end;
+    if (!start || !end) {
+      return;
+    }
+    setRange(prev =>
+      prev.start === start && prev.end === end ? prev : {start, end},
+    );
+  }, [route?.params?.start, route?.params?.end]);
 
   const load = useCallback(async (r: DateRange) => {
     setLoading(true);
@@ -126,23 +140,70 @@ const ReporteProductos = ({route}: {route: any}) => {
     [load],
   );
 
-  const sorted =
-    sortBy === 'qty'
-      ? [...products].sort((a, b) => b.total_qty - a.total_qty)
-      : [...products].sort((a, b) => b.total_revenue - a.total_revenue);
+  const sorted = useMemo(
+    () =>
+      sortBy === 'qty'
+        ? [...products].sort((a, b) => b.total_qty - a.total_qty)
+        : [...products].sort((a, b) => b.total_revenue - a.total_revenue),
+    [products, sortBy],
+  );
 
-  const top10 = sorted.slice(0, 10);
+  const categoryOptions = useMemo(() => {
+    const map = new Map<number, string>();
+    for (const p of products) {
+      if (!map.has(p.category_id)) {
+        map.set(p.category_id, p.category_path);
+      }
+    }
+    return [...map.entries()].sort((a, b) =>
+      a[1].localeCompare(b[1], 'es', {sensitivity: 'base'}),
+    );
+  }, [products]);
 
-  const chartData = {
-    labels: top10.map((_, i) => `#${i + 1}`),
-    datasets: [
-      {
-        data: top10.map(p =>
-          sortBy === 'qty' ? p.total_qty : p.total_revenue,
-        ),
-      },
-    ],
-  };
+  const filtered = useMemo(() => {
+    const q = searchQuery.trim().toLowerCase();
+    return sorted.filter(p => {
+      if (
+        categoryFilterId !== null &&
+        p.category_id !== categoryFilterId
+      ) {
+        return false;
+      }
+      if (
+        q &&
+        !p.product_name.toLowerCase().includes(q) &&
+        !p.category_path.toLowerCase().includes(q)
+      ) {
+        return false;
+      }
+      return true;
+    });
+  }, [sorted, searchQuery, categoryFilterId]);
+
+  const filtersActive =
+    searchQuery.trim().length > 0 || categoryFilterId !== null;
+
+  const selectedCategoryLabel =
+    categoryFilterId === null
+      ? 'Todas'
+      : categoryOptions.find(([id]) => id === categoryFilterId)?.[1] ??
+        'Categoría';
+
+  const top10 = filtered.slice(0, 10);
+
+  const chartData = useMemo(
+    () => ({
+      labels: top10.map((_, i) => `#${i + 1}`),
+      datasets: [
+        {
+          data: top10.map(p =>
+            sortBy === 'qty' ? p.total_qty : p.total_revenue,
+          ),
+        },
+      ],
+    }),
+    [top10, sortBy],
+  );
 
   const renderItem = useCallback(
     ({item, index}: {item: ProductRanking; index: number}) => (
@@ -156,17 +217,66 @@ const ReporteProductos = ({route}: {route: any}) => {
     [],
   );
 
-  const totalProducts = products.length;
+  const totalFiltered = filtered.length;
   const avgPrice =
-    totalProducts > 0
-      ? products.reduce((acc, p) => acc + p.total_revenue, 0) /
-        products.reduce((acc, p) => acc + p.total_qty, 0)
+    totalFiltered > 0
+      ? filtered.reduce((acc, p) => acc + p.total_revenue, 0) /
+        filtered.reduce((acc, p) => acc + p.total_qty, 0)
       : 0;
+
+  const clearFilters = useCallback(() => {
+    setSearchQuery('');
+    setCategoryFilterId(null);
+  }, []);
 
   const ListHeader = useCallback(
     () => (
       <>
-        {/* Toggle */}
+        <View style={styles.filterCard}>
+          <View style={styles.searchRow}>
+            <Icon name="magnify" size={20} color="#636E72" />
+            <TextInput
+              style={styles.searchInput}
+              value={searchQuery}
+              onChangeText={setSearchQuery}
+              placeholder="Buscar por producto o ruta de categoría…"
+              placeholderTextColor="#B2BEC3"
+              autoCorrect={false}
+              autoCapitalize="none"
+            />
+          </View>
+          <View style={styles.filterActions}>
+            <Pressable
+              style={({pressed}) => [
+                styles.categoryButton,
+                pressed && {opacity: 0.85},
+              ]}
+              onPress={() => setCategoryModalVisible(true)}>
+              <Icon name="shape-outline" size={18} color="#8B5CF6" />
+              <Text style={styles.categoryButtonText} numberOfLines={1}>
+                {selectedCategoryLabel}
+              </Text>
+              <Icon name="chevron-down" size={20} color="#636E72" />
+            </Pressable>
+            {filtersActive ? (
+              <Pressable
+                style={({pressed}) => [
+                  styles.clearChip,
+                  pressed && {opacity: 0.85},
+                ]}
+                onPress={clearFilters}>
+                <Icon name="filter-off-outline" size={16} color="#636E72" />
+                <Text style={styles.clearChipText}>Limpiar</Text>
+              </Pressable>
+            ) : null}
+          </View>
+          {filtersActive && products.length > 0 ? (
+            <Text style={styles.filterHint}>
+              Mostrando {totalFiltered} de {products.length} productos con ventas
+            </Text>
+          ) : null}
+        </View>
+
         <View style={styles.toggleRow}>
           <Pressable
             style={sortBy === 'qty' ? styles.toggleActive : styles.toggleInactive}
@@ -202,7 +312,6 @@ const ReporteProductos = ({route}: {route: any}) => {
           </Pressable>
         </View>
 
-        {/* Chart */}
         {top10.length > 0 && (
           <Animated.View
             entering={FadeInDown.delay(80).springify()}
@@ -221,13 +330,14 @@ const ReporteProductos = ({route}: {route: any}) => {
           </Animated.View>
         )}
 
-        {/* Stats row */}
         <Animated.View
           entering={FadeInDown.delay(160).springify()}
           style={styles.statsRow}>
           <View style={styles.statItem}>
-            <Text style={styles.statValue}>{totalProducts}</Text>
-            <Text style={styles.statLabel}>Productos distintos</Text>
+            <Text style={styles.statValue}>{totalFiltered}</Text>
+            <Text style={styles.statLabel}>
+              {filtersActive ? 'En vista' : 'Productos distintos'}
+            </Text>
           </View>
           <View style={styles.statDivider} />
           <View style={styles.statItem}>
@@ -241,16 +351,66 @@ const ReporteProductos = ({route}: {route: any}) => {
         <ReportSectionTitle title="Ranking" accentColor="#8B5CF6" />
       </>
     ),
-    [sortBy, top10, chartData, totalProducts, avgPrice],
+    [
+      searchQuery,
+      selectedCategoryLabel,
+      filtersActive,
+      products.length,
+      totalFiltered,
+      clearFilters,
+      sortBy,
+      top10,
+      chartData,
+      avgPrice,
+    ],
   );
 
-  const ListEmpty = useCallback(
-    () => (
+  const ListEmpty = useCallback(() => {
+    if (products.length === 0) {
+      return (
+        <View style={styles.emptyContainer}>
+          <Text style={styles.emptyText}>Sin ventas en este período</Text>
+        </View>
+      );
+    }
+    return (
       <View style={styles.emptyContainer}>
-        <Text style={styles.emptyText}>Sin ventas en este período</Text>
+        <Icon name="filter-variant-remove" size={40} color="#B2BEC3" />
+        <Text style={styles.emptyTitle}>Sin coincidencias</Text>
+        <Text style={styles.emptyText}>
+          Prueba otro nombre, otra categoría o limpia los filtros.
+        </Text>
       </View>
-    ),
-    [],
+    );
+  }, [products.length]);
+
+  const renderCategoryRow = useCallback(
+    ({item}: {item: [number, string]}) => {
+      const [id, name] = item;
+      const selected = categoryFilterId === id;
+      return (
+        <Pressable
+          style={({pressed}) => [
+            styles.modalRow,
+            selected && styles.modalRowSelected,
+            pressed && {opacity: 0.85},
+          ]}
+          onPress={() => {
+            setCategoryFilterId(id);
+            setCategoryModalVisible(false);
+          }}>
+          <Text
+            style={[styles.modalRowText, selected && styles.modalRowTextSelected]}
+            numberOfLines={3}>
+            {name}
+          </Text>
+          {selected ? (
+            <Icon name="check" size={20} color="#8B5CF6" />
+          ) : null}
+        </Pressable>
+      );
+    },
+    [categoryFilterId],
   );
 
   return (
@@ -266,7 +426,7 @@ const ReporteProductos = ({route}: {route: any}) => {
         </View>
       ) : (
         <FlatList
-          data={sorted}
+          data={filtered}
           keyExtractor={keyExtractor}
           renderItem={renderItem}
           ListHeaderComponent={ListHeader}
@@ -275,6 +435,58 @@ const ReporteProductos = ({route}: {route: any}) => {
           showsVerticalScrollIndicator={false}
         />
       )}
+
+      <Modal
+        visible={categoryModalVisible}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setCategoryModalVisible(false)}>
+        <View style={styles.modalRoot}>
+          <Pressable
+            style={styles.modalBackdrop}
+            onPress={() => setCategoryModalVisible(false)}
+          />
+          <View style={styles.modalSheet}>
+            <Text style={styles.modalTitle}>Filtrar por categoría</Text>
+            <Pressable
+              style={({pressed}) => [
+                styles.modalRow,
+                categoryFilterId === null && styles.modalRowSelected,
+                pressed && {opacity: 0.85},
+              ]}
+              onPress={() => {
+                setCategoryFilterId(null);
+                setCategoryModalVisible(false);
+              }}>
+              <Text
+                style={[
+                  styles.modalRowText,
+                  categoryFilterId === null && styles.modalRowTextSelected,
+                ]}>
+                Todas las categorías
+              </Text>
+              {categoryFilterId === null ? (
+                <Icon name="check" size={20} color="#8B5CF6" />
+              ) : null}
+            </Pressable>
+            <FlatList
+              data={categoryOptions}
+              keyExtractor={([id]) => String(id)}
+              renderItem={renderCategoryRow}
+              style={styles.modalList}
+              keyboardShouldPersistTaps="handled"
+            />
+            <Pressable
+              style={({pressed}) => [
+                styles.modalClose,
+                pressed && {opacity: 0.85},
+              ]}
+              onPress={() => setCategoryModalVisible(false)}>
+              <Text style={styles.modalCloseText}>Cerrar</Text>
+            </Pressable>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 };
@@ -293,6 +505,82 @@ const styles = StyleSheet.create({
   },
   listContent: {
     paddingBottom: 32,
+  },
+  filterCard: {
+    backgroundColor: '#FFF',
+    marginHorizontal: 16,
+    marginTop: 12,
+    borderRadius: 16,
+    padding: 14,
+    elevation: 2,
+    shadowColor: '#000',
+    shadowOffset: {width: 0, height: 1},
+    shadowOpacity: 0.06,
+    shadowRadius: 4,
+  },
+  searchRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    backgroundColor: '#F8F9FA',
+    borderRadius: 12,
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+    borderWidth: 1,
+    borderColor: '#E8E8E8',
+  },
+  searchInput: {
+    flex: 1,
+    fontFamily: Fonts.LatoRegular,
+    fontSize: FontsSize.medium,
+    color: '#2D3436',
+    paddingVertical: 0,
+  },
+  filterActions: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    marginTop: 12,
+  },
+  categoryButton: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    paddingVertical: 12,
+    paddingHorizontal: 12,
+    borderRadius: 12,
+    backgroundColor: '#F5F3FF',
+    borderWidth: 1,
+    borderColor: '#DDD6FE',
+  },
+  categoryButtonText: {
+    flex: 1,
+    fontFamily: Fonts.LatoBold,
+    fontSize: FontsSize.small,
+    color: '#2D3436',
+  },
+  clearChip: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    paddingVertical: 12,
+    paddingHorizontal: 12,
+    borderRadius: 12,
+    backgroundColor: '#F8F9FA',
+    borderWidth: 1,
+    borderColor: '#DFE6E9',
+  },
+  clearChipText: {
+    fontFamily: Fonts.LatoBold,
+    fontSize: FontsSize.small,
+    color: '#636E72',
+  },
+  filterHint: {
+    marginTop: 10,
+    fontFamily: Fonts.LatoRegular,
+    fontSize: FontsSize.small,
+    color: '#636E72',
   },
   toggleRow: {
     flexDirection: 'row',
@@ -379,7 +667,6 @@ const styles = StyleSheet.create({
     color: '#636E72',
     textAlign: 'center',
   },
-  // Rank items
   rankItem: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -414,12 +701,17 @@ const styles = StyleSheet.create({
   rankNumTop: {color: '#2D3436'},
   rankInfo: {
     flex: 1,
-    gap: 3,
+    gap: 2,
   },
   rankName: {
     fontFamily: Fonts.LatoBold,
     fontSize: FontsSize.medium,
     color: '#2D3436',
+  },
+  rankCategory: {
+    fontFamily: Fonts.LatoRegular,
+    fontSize: FontsSize.small,
+    color: '#8B5CF6',
   },
   rankSub: {
     fontFamily: Fonts.LatoRegular,
@@ -434,10 +726,82 @@ const styles = StyleSheet.create({
   emptyContainer: {
     alignItems: 'center',
     paddingTop: 48,
+    paddingHorizontal: 24,
+  },
+  emptyTitle: {
+    marginTop: 12,
+    fontFamily: Fonts.LatoBold,
+    fontSize: FontsSize.medium,
+    color: '#636E72',
   },
   emptyText: {
+    marginTop: 8,
     fontFamily: Fonts.LatoRegular,
     fontSize: FontsSize.medium,
     color: '#B2BEC3',
+    textAlign: 'center',
+  },
+  modalRoot: {
+    flex: 1,
+    justifyContent: 'flex-end',
+  },
+  modalBackdrop: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'rgba(0,0,0,0.45)',
+  },
+  modalSheet: {
+    backgroundColor: '#FFF',
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    paddingHorizontal: 20,
+    paddingTop: 20,
+    paddingBottom: 28,
+    maxHeight: '72%',
+  },
+  modalTitle: {
+    fontFamily: Fonts.LatoBlack,
+    fontSize: FontsSize.large,
+    color: '#2D3436',
+    marginBottom: 12,
+  },
+  modalList: {
+    maxHeight: 360,
+  },
+  modalRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingVertical: 14,
+    paddingHorizontal: 4,
+    borderBottomWidth: 1,
+    borderBottomColor: '#F0F0F0',
+  },
+  modalRowSelected: {
+    backgroundColor: '#F5F3FF',
+    marginHorizontal: -8,
+    paddingHorizontal: 12,
+    borderRadius: 10,
+    borderBottomWidth: 0,
+  },
+  modalRowText: {
+    flex: 1,
+    fontFamily: Fonts.LatoRegular,
+    fontSize: FontsSize.medium,
+    color: '#2D3436',
+    marginRight: 8,
+  },
+  modalRowTextSelected: {
+    fontFamily: Fonts.LatoBold,
+    color: '#5B21B6',
+  },
+  modalClose: {
+    marginTop: 16,
+    alignItems: 'center',
+    paddingVertical: 14,
+  },
+  modalCloseText: {
+    fontFamily: Fonts.LatoBold,
+    fontSize: FontsSize.medium,
+    color: '#8B5CF6',
   },
 });
