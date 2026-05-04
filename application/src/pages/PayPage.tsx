@@ -81,7 +81,8 @@ const PayPage = () => {
   ];
 
   const { width, height } = dimensions;
-  const isLandscapeTablet = width >= 900 && width > height;
+  /** Tablets en apaisado: más ancho que alto y pantalla suficiente (incluye ~10" en landscape) */
+  const isLandscapeTablet = width >= 600 && width > height;
 
   const styles = StyleSheet.create({
     container: {
@@ -89,21 +90,29 @@ const PayPage = () => {
       backgroundColor: theme.PAGE_BACKGROUND_COLOR,
     },
     scrollContent: {
+      flex: isLandscapeTablet ? 1 : undefined,
+      minHeight: isLandscapeTablet ? 0 : undefined,
       padding: isLandscapeTablet ? 20 : 16,
       paddingBottom: 40,
     },
     landscapeContainer: {
+      flex: 1,
       flexDirection: 'row',
       gap: 24,
-      alignItems: 'flex-start',
+      alignItems: 'stretch',
+      minHeight: 0,
     },
     leftColumn: {
       flex: 0.35,
+      minWidth: 0,
       gap: 16,
     },
     rightColumn: {
-      flex: 0.65,
+      flex: 1,
+      minWidth: 0,
+      minHeight: 0,
       gap: 16,
+      padding: 10,
     },
     portraitContainer: {
       gap: 24,
@@ -211,6 +220,8 @@ const PayPage = () => {
     },
     // Form Section
     formContainer: {
+      flex: isLandscapeTablet ? 1 : undefined,
+      minHeight: isLandscapeTablet ? 0 : undefined,
       backgroundColor: theme.CARD_BACKGROUND_COLOR,
       borderRadius: 20,
       padding: isLandscapeTablet ? 20 : 20,
@@ -224,7 +235,7 @@ const PayPage = () => {
       elevation: 8,
       borderWidth: 1,
       borderColor: '#f0f0f0',
-      overflow: 'visible',
+      overflow: 'hidden',
     },
     helpText: {
       fontSize: FontsSize.small,
@@ -267,23 +278,27 @@ const PayPage = () => {
               </View>
             </View>
 
-            {/* Right Column: Total + Form */}
-            <View style={styles.rightColumn}>
-              {/* Total Display */}
-              <View style={styles.totalContainer}>
-                <Text style={styles.totalLabel}>Total</Text>
-                <Text style={styles.totalAmount}>
-                  {CURRENCY_SYMBOL} {total.toFixed(2)}
-                </Text>
-              </View>
+            {/* Right Column: scroll para que mixto/efectivo no pierdan el botón Cobrar */}
+            <ScrollView
+              style={{flex: 1, minHeight: 0}}
+              contentContainerStyle={{flexGrow: 1, paddingBottom: 16}}
+              keyboardShouldPersistTaps="handled"
+              showsVerticalScrollIndicator>
+              <View style={styles.rightColumn}>
+                <View style={styles.totalContainer}>
+                  <Text style={styles.totalLabel}>Total</Text>
+                  <Text style={styles.totalAmount}>
+                    {CURRENCY_SYMBOL} {total.toFixed(2)}
+                  </Text>
+                </View>
 
-              {/* Payment Form */}
-              <View style={styles.formContainer}>
-                {selectedMethod === 'cash' && <CashForm hideTotal />}
-                {selectedMethod === 'card' && <CashForm card hideTotal />}
-                {selectedMethod === 'mix' && <CashForm mix hideTotal />}
+                <View style={styles.formContainer}>
+                  {selectedMethod === 'cash' && <CashForm hideTotal />}
+                  {selectedMethod === 'card' && <CashForm card hideTotal />}
+                  {selectedMethod === 'mix' && <CashForm mix hideTotal />}
+                </View>
               </View>
-            </View>
+            </ScrollView>
           </View>
         </View>
       );
@@ -335,7 +350,11 @@ const PayPage = () => {
     }
   };
 
-  return <View style={styles.container}>{renderContent()}</View>;
+  return (
+    <View style={[styles.container, isLandscapeTablet && {flex: 1}]}>
+      {renderContent()}
+    </View>
+  );
 };
 
 // Payment Method Card Component
