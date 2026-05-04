@@ -26,12 +26,12 @@ import ToastComponent from '../components/UI/ToastComponent';
 import OrderStackNavigator from './OrderStackNavigator';
 import FelPage from '../pages/FelPage';
 import MaintenanceStack from './MaintenanceStack';
-import DailyReportNavigator from './DailyReportNavigator';
+import ReportesNavigator from './ReportesNavigator';
 import EditProductNavigator from './EditProductNavigator';
+import GastosNavigator from './GastosNavigator';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import Entypo from 'react-native-vector-icons/Entypo';
 import MaterialDesignIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import Ionicons from 'react-native-vector-icons/Ionicons';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import LinearGradient from 'react-native-linear-gradient';
 import {
@@ -86,11 +86,17 @@ const getMenuItemData = (routeName: string): MenuItemData => {
         iconColor: '#06B6D4',
         iconBgColor: '#E0F7FA',
       };
-    case Utils.screens.DAILY_REPORT_STACK:
+    case Utils.screens.REPORTES_STACK:
       return {
         routeName,
-        icon: <Ionicons name="analytics" size={iconSize} color="#F59E0B" />,
-        label: 'Reportes Diarios',
+        icon: (
+          <MaterialDesignIcons
+            name="chart-box"
+            size={iconSize}
+            color="#F59E0B"
+          />
+        ),
+        label: 'Reportes',
         iconColor: '#F59E0B',
         iconBgColor: '#FEF3C7',
       };
@@ -115,6 +121,20 @@ const getMenuItemData = (routeName: string): MenuItemData => {
         label: 'Editar Productos',
         iconColor: '#EC4899',
         iconBgColor: '#FCE7F3',
+      };
+    case Utils.screens.GASTOS_STACK:
+      return {
+        routeName,
+        icon: (
+          <MaterialDesignIcons
+            name="cash-minus"
+            size={iconSize}
+            color="#FF6348"
+          />
+        ),
+        label: 'Gastos',
+        iconColor: '#FF6348',
+        iconBgColor: '#FFF0ED',
       };
     default:
       return {
@@ -303,8 +323,8 @@ const DrawerNavigator = () => {
           options={felOptions}
         />
         <Drawer.Screen
-          name={Utils.screens.DAILY_REPORT_STACK}
-          component={DailyReportNavigator}
+          name={Utils.screens.REPORTES_STACK}
+          component={ReportesNavigator}
           options={options}
         />
         <Drawer.Screen
@@ -315,6 +335,11 @@ const DrawerNavigator = () => {
         <Drawer.Screen
           name={Utils.screens.EDIT_LIST_PRODUCT_STACK}
           component={EditProductNavigator}
+          options={options}
+        />
+        <Drawer.Screen
+          name={Utils.screens.GASTOS_STACK}
+          component={GastosNavigator}
           options={options}
         />
       </Drawer.Navigator>
