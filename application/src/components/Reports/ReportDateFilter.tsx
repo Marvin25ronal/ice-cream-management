@@ -2,18 +2,20 @@ import React, {memo, useCallback, useState} from 'react';
 import {
   Modal,
   Pressable,
+  ScrollView,
   StyleSheet,
   Text,
-  TextInput,
+  useWindowDimensions,
   View,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import LinearGradient from 'react-native-linear-gradient';
+import CalendarPicker from 'react-native-calendar-picker';
 import {Fonts, FontsSize} from '../../constants/Fonts';
 
 export interface DateRange {
   start: string; // DD/MM/YYYY
-  end: string;   // DD/MM/YYYY
+  end: string; // DD/MM/YYYY
 }
 
 type FilterType = 'today' | 'week' | 'month' | 'custom';
@@ -30,6 +32,17 @@ const formatDate = (d: Date): string =>
     month: '2-digit',
     year: 'numeric',
   });
+
+const toJsDate = (date: unknown): Date => {
+  if (!date) {
+    return new Date();
+  }
+  const m = date as {toDate?: () => Date; valueOf?: () => number};
+  if (typeof m.toDate === 'function') {
+    return m.toDate();
+  }
+  return new Date(m.valueOf?.() ?? (date as number));
+};
 
 const todayRange = (): DateRange => {
   const t = formatDate(new Date());
@@ -57,20 +70,39 @@ const CHIPS: {key: FilterType; label: string; icon: string}[] = [
   {key: 'custom', label: 'Personalizado', icon: 'calendar-edit'},
 ];
 
+const MONTHS_ES = [
+  'Enero',
+  'Febrero',
+  'Marzo',
+  'Abril',
+  'Mayo',
+  'Junio',
+  'Julio',
+  'Agosto',
+  'Septiembre',
+  'Octubre',
+  'Noviembre',
+  'Diciembre',
+];
+
 const ReportDateFilter = memo(
   ({onChange, accentColor = '#27AE60', accentGradient}: Props) => {
     const gradient = accentGradient ?? [accentColor, accentColor];
+    const {width: windowWidth} = useWindowDimensions();
+    const calendarWidth = Math.min(windowWidth - 32, 380);
+    const calendarHeight = Math.min(340, Math.round(windowWidth * 0.85));
+
     const [active, setActive] = useState<FilterType>('today');
     const [customVisible, setCustomVisible] = useState(false);
-    const [customStart, setCustomStart] = useState('');
-    const [customEnd, setCustomEnd] = useState('');
+    const [rangeStart, setRangeStart] = useState<Date>(new Date());
+    const [rangeEnd, setRangeEnd] = useState<Date | null>(new Date());
 
     const handleChip = useCallback(
       (key: FilterType) => {
         if (key === 'custom') {
-          const today = formatDate(new Date());
-          setCustomStart(today);
-          setCustomEnd(today);
+          const t = new Date();
+          setRangeStart(t);
+          setRangeEnd(t);
           setCustomVisible(true);
           return;
         }
@@ -79,25 +111,49 @@ const ReportDateFilter = memo(
           key === 'today'
             ? todayRange()
             : key === 'week'
-            ? weekRange()
-            : monthRange();
+              ? weekRange()
+              : monthRange();
         onChange(range);
       },
       [onChange],
     );
 
-    const handleApplyCustom = useCallback(() => {
-      if (!customStart || !customEnd) {
+    const onCalendarDateChange = useCallback((date: unknown, type: string) => {
+      if (type === 'START_DATE') {
+        const d = toJsDate(date);
+        setRangeStart(d);
+        setRangeEnd(null);
         return;
+      }
+      if (type === 'END_DATE') {
+        if (date == null) {
+          setRangeEnd(null);
+          return;
+        }
+        setRangeEnd(toJsDate(date));
+      }
+    }, []);
+
+    const handleApplyCustom = useCallback(() => {
+      let start = rangeStart;
+      let end = rangeEnd ?? rangeStart;
+      if (start.getTime() > end.getTime()) {
+        const tmp = start;
+        start = end;
+        end = tmp;
       }
       setActive('custom');
       setCustomVisible(false);
-      onChange({start: customStart, end: customEnd});
-    }, [customStart, customEnd, onChange]);
+      onChange({start: formatDate(start), end: formatDate(end)});
+    }, [rangeStart, rangeEnd, onChange]);
 
     const handleCloseCustom = useCallback(() => {
       setCustomVisible(false);
     }, []);
+
+    const rangeSummary = `${formatDate(rangeStart)} — ${
+      rangeEnd ? formatDate(rangeEnd) : '…'
+    }`;
 
     return (
       <>
@@ -130,37 +186,47 @@ const ReportDateFilter = memo(
           })}
         </View>
 
-        {/* Custom date range modal */}
         <Modal
           visible={customVisible}
           transparent
           animationType="fade"
           onRequestClose={handleCloseCustom}>
-          <Pressable style={styles.overlay} onPress={handleCloseCustom}>
+          <View style={styles.modalRoot}>
+            <Pressable
+              style={styles.modalBackdrop}
+              onPress={handleCloseCustom}
+            />
             <View style={styles.customSheet}>
               <Text style={styles.customTitle}>Rango personalizado</Text>
+              <Text style={styles.rangeHint}>
+                Toca el día de inicio y luego el de fin (puede ser el mismo día).
+              </Text>
+              <Text style={styles.rangeSummary}>{rangeSummary}</Text>
 
-              <Text style={styles.customLabel}>Fecha inicio (DD/MM/AAAA)</Text>
-              <TextInput
-                style={styles.customInput}
-                value={customStart}
-                onChangeText={setCustomStart}
-                placeholder="08/04/2026"
-                placeholderTextColor="#B2BEC3"
-                keyboardType="numeric"
-                maxLength={10}
-              />
-
-              <Text style={styles.customLabel}>Fecha fin (DD/MM/AAAA)</Text>
-              <TextInput
-                style={styles.customInput}
-                value={customEnd}
-                onChangeText={setCustomEnd}
-                placeholder="08/04/2026"
-                placeholderTextColor="#B2BEC3"
-                keyboardType="numeric"
-                maxLength={10}
-              />
+              <ScrollView
+                keyboardShouldPersistTaps="handled"
+                showsVerticalScrollIndicator={false}
+                contentContainerStyle={styles.calendarScroll}>
+                <CalendarPicker
+                  width={calendarWidth}
+                  height={calendarHeight}
+                  allowRangeSelection
+                  selectedStartDate={rangeStart}
+                  selectedEndDate={rangeEnd ?? undefined}
+                  initialDate={rangeStart}
+                  months={MONTHS_ES}
+                  weekdays={['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb']}
+                  previousTitle="Anterior"
+                  nextTitle="Siguiente"
+                  previousTitleStyle={{color: accentColor}}
+                  nextTitleStyle={{color: accentColor}}
+                  textStyle={{fontFamily: Fonts.LatoRegular, color: '#2D3436'}}
+                  selectedDayColor={accentColor}
+                  selectedDayTextColor="#FFF"
+                  todayTextStyle={{color: accentColor}}
+                  onDateChange={onCalendarDateChange}
+                />
+              </ScrollView>
 
               <View style={styles.customActions}>
                 <Pressable
@@ -169,16 +235,13 @@ const ReportDateFilter = memo(
                   <Text style={styles.customCancelText}>Cancelar</Text>
                 </Pressable>
                 <Pressable
-                  style={[
-                    styles.customApply,
-                    {backgroundColor: accentColor},
-                  ]}
+                  style={[styles.customApply, {backgroundColor: accentColor}]}
                   onPress={handleApplyCustom}>
                   <Text style={styles.customApplyText}>Aplicar</Text>
                 </Pressable>
               </View>
             </View>
-          </Pressable>
+          </View>
         </Modal>
       </>
     );
@@ -223,55 +286,52 @@ const styles = StyleSheet.create({
     fontSize: FontsSize.small,
     color: '#FFF',
   },
-  // Custom modal
-  overlay: {
+  modalRoot: {
     flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.4)',
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 24,
+    justifyContent: 'flex-end',
+  },
+  modalBackdrop: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'rgba(0,0,0,0.45)',
   },
   customSheet: {
     backgroundColor: '#FFF',
-    borderRadius: 20,
-    padding: 24,
-    width: '100%',
-    elevation: 8,
-    shadowColor: '#000',
-    shadowOffset: {width: 0, height: 4},
-    shadowOpacity: 0.15,
-    shadowRadius: 12,
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    paddingHorizontal: 16,
+    paddingTop: 20,
+    paddingBottom: 24,
+    maxHeight: '92%',
   },
   customTitle: {
     fontFamily: Fonts.LatoBlack,
     fontSize: FontsSize.large,
     color: '#2D3436',
-    marginBottom: 20,
+    marginBottom: 8,
   },
-  customLabel: {
-    fontFamily: Fonts.LatoBold,
+  rangeHint: {
+    fontFamily: Fonts.LatoRegular,
     fontSize: FontsSize.small,
     color: '#636E72',
-    textTransform: 'uppercase',
-    letterSpacing: 0.5,
     marginBottom: 6,
-    marginTop: 12,
   },
-  customInput: {
-    backgroundColor: '#F8F9FA',
-    borderRadius: 12,
-    paddingHorizontal: 14,
-    paddingVertical: 12,
-    fontFamily: Fonts.LatoRegular,
+  rangeSummary: {
+    fontFamily: Fonts.LatoBold,
     fontSize: FontsSize.medium,
     color: '#2D3436',
-    borderWidth: 1,
-    borderColor: '#DFE6E9',
+    marginBottom: 8,
+  },
+  calendarScroll: {
+    alignItems: 'center',
+    paddingVertical: 8,
   },
   customActions: {
     flexDirection: 'row',
     gap: 12,
-    marginTop: 24,
+    marginTop: 8,
+    paddingTop: 12,
+    borderTopWidth: 1,
+    borderTopColor: '#F0F0F0',
   },
   customCancel: {
     flex: 1,
