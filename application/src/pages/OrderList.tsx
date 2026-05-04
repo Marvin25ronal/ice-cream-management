@@ -46,7 +46,7 @@ const OrderList = () => {
       setIsLoading(true);
       let date: string = data?.date;
       if (date == null) {
-        date = new Date().toLocaleDateString();
+        date = new Date().toLocaleDateString('es-GT', {day: '2-digit', month: '2-digit', year: 'numeric'});
       }
       let start = '';
       let end = '';

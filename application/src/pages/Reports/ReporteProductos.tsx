@@ -103,7 +103,7 @@ const ReporteProductos = ({route}: {route: any}) => {
   const load = useCallback(async (r: DateRange) => {
     setLoading(true);
     try {
-      const data = await reportService.getProductRanking(r.start, r.end, 20);
+      const data = await reportService.getProductRanking(r.start, r.end);
       setProducts(data);
     } catch (e) {
       console.error('Error reporte productos:', e);
@@ -166,12 +166,6 @@ const ReporteProductos = ({route}: {route: any}) => {
   const ListHeader = useCallback(
     () => (
       <>
-        <ReportDateFilter
-          onChange={handleDateChange}
-          accentColor="#8B5CF6"
-          accentGradient={['#8B5CF6', '#A78BFA']}
-        />
-
         {/* Toggle */}
         <View style={styles.toggleRow}>
           <Pressable
@@ -247,14 +241,7 @@ const ReporteProductos = ({route}: {route: any}) => {
         <ReportSectionTitle title="Ranking" accentColor="#8B5CF6" />
       </>
     ),
-    [
-      handleDateChange,
-      sortBy,
-      top10,
-      chartData,
-      totalProducts,
-      avgPrice,
-    ],
+    [sortBy, top10, chartData, totalProducts, avgPrice],
   );
 
   const ListEmpty = useCallback(
@@ -266,32 +253,28 @@ const ReporteProductos = ({route}: {route: any}) => {
     [],
   );
 
-  if (loading) {
-    return (
-      <View style={styles.container}>
-        <ReportDateFilter
-          onChange={handleDateChange}
-          accentColor="#8B5CF6"
-          accentGradient={['#8B5CF6', '#A78BFA']}
-        />
+  return (
+    <View style={styles.container}>
+      <ReportDateFilter
+        onChange={handleDateChange}
+        accentColor="#8B5CF6"
+        accentGradient={['#8B5CF6', '#A78BFA']}
+      />
+      {loading ? (
         <View style={styles.centered}>
           <ActivityIndicator size="large" color="#8B5CF6" />
         </View>
-      </View>
-    );
-  }
-
-  return (
-    <View style={styles.container}>
-      <FlatList
-        data={sorted}
-        keyExtractor={keyExtractor}
-        renderItem={renderItem}
-        ListHeaderComponent={ListHeader}
-        ListEmptyComponent={ListEmpty}
-        contentContainerStyle={styles.listContent}
-        showsVerticalScrollIndicator={false}
-      />
+      ) : (
+        <FlatList
+          data={sorted}
+          keyExtractor={keyExtractor}
+          renderItem={renderItem}
+          ListHeaderComponent={ListHeader}
+          ListEmptyComponent={ListEmpty}
+          contentContainerStyle={styles.listContent}
+          showsVerticalScrollIndicator={false}
+        />
+      )}
     </View>
   );
 };
