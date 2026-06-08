@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<network-security-config>
+    <!-- Metro bundler (debug): allow cleartext http to the dev server.
+         Without this the app can't load the JS bundle ("Unable to load script"). -->
+    <domain-config cleartextTrafficPermitted="true">
+        <domain includeSubdomains="true">localhost</domain>
+        <domain includeSubdomains="true">10.0.2.2</domain>
+        <domain includeSubdomains="true">127.0.0.1</domain>
+    </domain-config>
+
+    <!-- Trust the Sectigo R46 root ONLY for SAT domains.
+         SAT servers send an incomplete chain (no root); R46 is missing on
+         older Android trust stores -> "CA not trusted". Scoped here so it
+         does NOT weaken validation for any other host. -->
+    <domain-config>
+        <domain includeSubdomains="true">sat.gob.gt</domain>
+        <trust-anchors>
+            <certificates src="system" />
+            <certificates src="@raw/sectigo_root_r46" />
+        </trust-anchors>
+    </domain-config>
+
+    <!-- Everything else: system CAs, no cleartext. -->
+    <base-config cleartextTrafficPermitted="false">
+        <trust-anchors>
+            <certificates src="system" />
+        </trust-anchors>
+    </base-config>
+</network-security-config>

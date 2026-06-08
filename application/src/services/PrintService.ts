@@ -168,17 +168,22 @@ export class PrintService {
     const thin = '--------------------------------';
 
     await USBPrinter.printText(`<CM>${separator}<CM>`);
+    await this.delay(PRINT_TIME);
     await USBPrinter.printText(`<CM>CIERRE DEL DÍA<CM>`);
+    await this.delay(PRINT_TIME);
     await USBPrinter.printText(`<CM>${AppConfig.APP_NAME}<CM>`);
+    await this.delay(PRINT_TIME);
     await USBPrinter.printText(`<CM>${separator}<CM>`);
     await this.delay(PRINT_TIME);
 
     await USBPrinter.printText(`<C>Fecha: ${date}<C>`);
+    await this.delay(PRINT_TIME);
     await USBPrinter.printText(`<CM>${thin}<CM>`);
     await this.delay(PRINT_TIME);
 
     // Ventas
     await USBPrinter.printText(`<B>-- VENTAS --<B>`);
+    await this.delay(PRINT_TIME);
     const colWidths = [22, 10];
     const colAlign = [ColumnAlignment.LEFT, ColumnAlignment.RIGHT];
 
@@ -188,12 +193,14 @@ export class PrintService {
       colAlign,
       [`${BOLD_ON}`, ''],
     );
+    await this.delay(PRINT_TIME);
     await USBPrinter.printColumnsText(
       ['  Efectivo:', `${CURRENCY_SYMBOL}${cash.toFixed(2)}`],
       colWidths,
       colAlign,
       ['', ''],
     );
+    await this.delay(PRINT_TIME);
     await USBPrinter.printColumnsText(
       ['  Tarjeta:', `${CURRENCY_SYMBOL}${card.toFixed(2)}`],
       colWidths,
@@ -204,9 +211,12 @@ export class PrintService {
 
     // Gastos
     await USBPrinter.printText(`<CM>${thin}<CM>`);
+    await this.delay(PRINT_TIME);
     await USBPrinter.printText(`<B>-- GASTOS --<B>`);
+    await this.delay(PRINT_TIME);
     if (expenses.length === 0) {
       await USBPrinter.printText(`<C>Sin gastos registrados<C>`);
+      await this.delay(PRINT_TIME);
     } else {
       for (const expense of expenses) {
         const label = expense.notes
@@ -218,7 +228,7 @@ export class PrintService {
           colAlign,
           ['', ''],
         );
-        await this.delay(PRINT_TIME / 3);
+        await this.delay(PRINT_TIME);
       }
     }
     await USBPrinter.printColumnsText(
@@ -231,17 +241,21 @@ export class PrintService {
 
     // Neto
     await USBPrinter.printText(`<CM>${separator}<CM>`);
+    await this.delay(PRINT_TIME);
     await USBPrinter.printColumnsText(
       ['NETO DEL DÍA:', `${CURRENCY_SYMBOL}${netBalance.toFixed(2)}`],
       colWidths,
       colAlign,
       [`${BOLD_ON}`, `${BOLD_ON}`],
     );
+    await this.delay(PRINT_TIME);
     await USBPrinter.printText(`<CM>${separator}<CM>`);
     await this.delay(PRINT_TIME);
 
     await USBPrinter.printText(`<C> <C>`);
+    await this.delay(PRINT_TIME);
     await USBPrinter.printText(`<C>Firma: ____________________<C>`);
+    await this.delay(PRINT_TIME);
     await USBPrinter.printBill(`<C> <C>`);
   }
 }
