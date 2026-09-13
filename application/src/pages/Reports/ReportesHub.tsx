@@ -1,4 +1,4 @@
-import React, {useCallback, useState} from 'react';
+import React, { useCallback, useState } from 'react';
 import {
   ActivityIndicator,
   Pressable,
@@ -7,16 +7,16 @@ import {
   Text,
   View,
 } from 'react-native';
-import {useFocusEffect} from '@react-navigation/native';
+import { useFocusEffect } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import LinearGradient from 'react-native-linear-gradient';
-import Animated, {FadeInDown} from 'react-native-reanimated';
-import {ReportService, HubKPIs} from '../../services/ReportService';
+import Animated, { FadeInDown } from 'react-native-reanimated';
+import { ReportService, HubKPIs } from '../../services/ReportService';
 import ReportDateFilter, {
   DateRange,
 } from '../../components/Reports/ReportDateFilter';
-import {Fonts, FontsSize} from '../../constants/Fonts';
-import {CURRENCY_SYMBOL, Utils} from '../../constants/utils';
+import { Fonts, FontsSize } from '../../constants/Fonts';
+import { CURRENCY_SYMBOL, Utils } from '../../constants/utils';
 
 const reportService = new ReportService();
 
@@ -48,12 +48,12 @@ const HubCard = ({
 }: HubCardProps) => (
   <Animated.View entering={FadeInDown.delay(delay).springify()}>
     <Pressable
-      style={({pressed}) => [styles.card, pressed && {opacity: 0.85}]}
+      style={({ pressed }) => [styles.card, pressed && { opacity: 0.85 }]}
       onPress={onPress}>
       <LinearGradient
         colors={gradientColors}
-        start={{x: 0, y: 0}}
-        end={{x: 1, y: 1}}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
         style={styles.cardGradient}>
         <View style={styles.cardLeft}>
           <View style={styles.cardIconBadge}>
@@ -73,7 +73,7 @@ const HubCard = ({
   </Animated.View>
 );
 
-const ReportesHub = ({navigation}: {navigation: any}) => {
+const ReportesHub = ({ navigation }: { navigation: any }) => {
   const [kpis, setKpis] = useState<HubKPIs | null>(null);
   const [loading, setLoading] = useState(true);
   const [range, setRange] = useState<DateRange>({
@@ -81,20 +81,17 @@ const ReportesHub = ({navigation}: {navigation: any}) => {
     end: todayStr(),
   });
 
-  const loadKPIs = useCallback(
-    async (r: DateRange) => {
-      setLoading(true);
-      try {
-        const data = await reportService.getHubKPIs(r.start, r.end);
-        setKpis(data);
-      } catch (e) {
-        console.error('Error cargando KPIs del hub:', e);
-      } finally {
-        setLoading(false);
-      }
-    },
-    [],
-  );
+  const loadKPIs = useCallback(async (r: DateRange) => {
+    setLoading(true);
+    try {
+      const data = await reportService.getHubKPIs(r.start, r.end);
+      setKpis(data);
+    } catch (e) {
+      console.error('Error cargando KPIs del hub:', e);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
   useFocusEffect(
     useCallback(() => {
@@ -176,7 +173,9 @@ const ReportesHub = ({navigation}: {navigation: any}) => {
           <HubCard
             icon="cash-minus"
             title="Gastos & Cierre"
-            subtitle={`Neto: ${CURRENCY_SYMBOL} ${(kpis?.neto ?? 0).toFixed(2)}`}
+            subtitle={`Neto: ${CURRENCY_SYMBOL} ${(kpis?.neto ?? 0).toFixed(
+              2,
+            )}`}
             value={`${CURRENCY_SYMBOL} ${(kpis?.totalGastos ?? 0).toFixed(2)}`}
             gradientColors={['#FF6348', '#FF8C42']}
             onPress={() =>
@@ -188,18 +187,60 @@ const ReportesHub = ({navigation}: {navigation: any}) => {
             delay={240}
           />
 
+          <HubCard
+            icon="calendar-week"
+            title="Ventas por Día"
+            subtitle="Días más rentables"
+            value="Ver análisis"
+            gradientColors={['#0984E3', '#74B9FF']}
+            onPress={() =>
+              navigation.navigate(Utils.screens.REPORTE_DIAS, {
+                start: range.start,
+                end: range.end,
+              })
+            }
+            delay={320}
+          />
+
+          <HubCard
+            icon="swap-horizontal"
+            title="Comparativo"
+            subtitle="Semana vs semana anterior"
+            value="Ver tendencias"
+            gradientColors={['#6C5CE7', '#A29BFE']}
+            onPress={() =>
+              navigation.navigate(Utils.screens.REPORTE_COMPARATIVO)
+            }
+            delay={400}
+          />
+
+          <HubCard
+            icon="clipboard-list-outline"
+            title="Estado de Órdenes"
+            subtitle="Conversión y cancelaciones"
+            value="Ver análisis"
+            gradientColors={['#E17055', '#FDCB6E']}
+            onPress={() =>
+              navigation.navigate(Utils.screens.REPORTE_ORDENES, {
+                start: range.start,
+                end: range.end,
+              })
+            }
+            delay={480}
+          />
+
           {/* Neto resumen */}
           <Animated.View
-            entering={FadeInDown.delay(320).springify()}
+            entering={FadeInDown.delay(560).springify()}
             style={[
               styles.netoCard,
-              {borderLeftColor: netoPositive ? '#27AE60' : '#E74C3C'},
+              { borderLeftColor: netoPositive ? '#27AE60' : '#E74C3C' },
             ]}>
             <Text style={styles.netoLabel}>Balance neto del período</Text>
             <Text
               style={[
                 styles.netoValue,
-                {color: netoPositive ? '#27AE60' : '#E74C3C'},
+                { color: netoPositive ? '#27AE60' : '#E74C3C' },
               ]}>
               {CURRENCY_SYMBOL} {(kpis?.neto ?? 0).toFixed(2)}
             </Text>
@@ -238,7 +279,7 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     elevation: 5,
     shadowColor: '#000',
-    shadowOffset: {width: 0, height: 3},
+    shadowOffset: { width: 0, height: 3 },
     shadowOpacity: 0.12,
     shadowRadius: 8,
   },
@@ -291,7 +332,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     elevation: 3,
     shadowColor: '#000',
-    shadowOffset: {width: 0, height: 1},
+    shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.08,
     shadowRadius: 4,
   },

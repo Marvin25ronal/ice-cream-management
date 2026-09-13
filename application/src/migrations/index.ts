@@ -4,6 +4,7 @@ import {migration_002_add_images} from './002_add_images';
 import {migration_003_create_expense_types} from './003_create_expense_types';
 import {migration_004_create_expenses} from './004_create_expenses';
 import {migration_005_add_icon_to_expense_type} from './005_add_icon_to_expense_type';
+import {migration_006_create_cash_register} from './006_create_cash_register';
 
 /**
  * Lista de todas las migraciones disponibles
@@ -16,4 +17,5 @@ export const allMigrations: Migration[] = [
   migration_003_create_expense_types,
   migration_004_create_expenses,
   migration_005_add_icon_to_expense_type,
+  migration_006_create_cash_register,
 ];

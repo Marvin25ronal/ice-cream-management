@@ -46,6 +46,33 @@ export interface HubKPIs {
   neto: number;
 }
 
+export interface DayOfWeekSales {
+  dayName: string;
+  totalRevenue: number;
+  totalOrders: number;
+}
+
+export interface PeriodComparison {
+  currentRevenue: number;
+  prevRevenue: number;
+  revenueChange: number;
+  currentOrders: number;
+  prevOrders: number;
+  ordersChange: number;
+  currentNet: number;
+  prevNet: number;
+  netChange: number;
+}
+
+export interface OrderStatusReport {
+  totalOrders: number;
+  completedOrders: number;
+  cancelledOrders: number;
+  conversionRate: number;
+  completedByHour: number[]; // 15 values: 08:00-22:00
+  cancelledByHour: number[]; // 15 values: 08:00-22:00
+}
+
 const _orderService = new OrderService();
 const _expenseService = new ExpenseService();
 
@@ -95,16 +122,13 @@ export class ReportService {
     const maxQty = ordersByHour.length > 0 ? Math.max(...ordersByHour) : 0;
     const peakHourKey =
       maxQty > 0
-        ? (Object.keys(hourSlots).find(k => hourSlots[k] === maxQty) ?? '')
+        ? Object.keys(hourSlots).find(k => hourSlots[k] === maxQty) ?? ''
         : '';
 
     const totalProducts = completed.reduce((acc: number, o: any) => {
       return (
         acc +
-        (o.orderDetails ?? []).reduce(
-          (s: number, d: any) => s + d.quantity,
-          0,
-        )
+        (o.orderDetails ?? []).reduce((s: number, d: any) => s + d.quantity, 0)
       );
     }, 0);
 
@@ -113,15 +137,12 @@ export class ReportService {
       totalOrders: orders.length,
       completedOrders: completed.length,
       cancelledOrders: orders.length - completed.length,
-      avgTicket:
-        completed.length > 0 ? totalRevenue / completed.length : 0,
+      avgTicket: completed.length > 0 ? totalRevenue / completed.length : 0,
       cash,
       card,
       peakHour: peakHourKey,
       conversionRate:
-        orders.length > 0
-          ? (completed.length / orders.length) * 100
-          : 0,
+        orders.length > 0 ? (completed.length / orders.length) * 100 : 0,
       avgProductsPerOrder:
         completed.length > 0 ? totalProducts / completed.length : 0,
       ordersByHour,
@@ -140,7 +161,7 @@ export class ReportService {
     const completed = (orders ?? []).filter((o: any) => o.payment_date != null);
 
     const [catalog, allCategories] = await Promise.all([
-      db.manager.find(Product, {relations: {category: true}}),
+      db.manager.find(Product, { relations: { category: true } }),
       db.manager.find(Category),
     ]);
 
@@ -173,7 +194,7 @@ export class ReportService {
 
     const productCatMap = new Map<
       number,
-      {id: number; name: string; path: string}
+      { id: number; name: string; path: string }
     >();
     for (const p of catalog) {
       const leafId = p.category?.category_id ?? 0;
@@ -217,17 +238,16 @@ export class ReportService {
     return sorted;
   }
 
-  async getCategorySales(
-    start: string,
-    end: string,
-  ): Promise<CategorySales[]> {
+  async getCategorySales(start: string, end: string): Promise<CategorySales[]> {
     const [orders, db] = await Promise.all([
       _orderService.getAllOrders(start, end),
       connectToDatabase(),
     ]);
     const completed = (orders ?? []).filter((o: any) => o.payment_date != null);
 
-    const products = await db.manager.find(Product, { relations: { category: true } });
+    const products = await db.manager.find(Product, {
+      relations: { category: true },
+    });
     const productCatMap = new Map<number, { id: number; name: string }>();
     for (const p of products) {
       productCatMap.set(p.product_id, {
@@ -236,10 +256,16 @@ export class ReportService {
       });
     }
 
-    const map = new Map<number, { name: string; qty: number; revenue: number }>();
+    const map = new Map<
+      number,
+      { name: string; qty: number; revenue: number }
+    >();
     for (const order of completed) {
-      for (const detail of (order.orderDetails ?? [])) {
-        const cat = productCatMap.get(detail.product_id) ?? { id: 0, name: 'Sin categoría' };
+      for (const detail of order.orderDetails ?? []) {
+        const cat = productCatMap.get(detail.product_id) ?? {
+          id: 0,
+          name: 'Sin categoría',
+        };
         const existing = map.get(cat.id);
         if (existing) {
           existing.qty += detail.quantity;
@@ -287,6 +313,146 @@ export class ReportService {
       topCategory: categories[0]?.category_name ?? '—',
       totalGastos,
       neto: summary.totalRevenue - totalGastos,
+    };
+  }
+
+  /** Ventas agrupadas por día de la semana (Dom-Sáb) dentro del rango. */
+  async getSalesByDayOfWeek(
+    start: string,
+    end: string,
+  ): Promise<DayOfWeekSales[]> {
+    const orders = (await _orderService.getAllOrders(start, end)) ?? [];
+    const completed = orders.filter((o: any) => o.payment_date != null);
+
+    const dayNames = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
+    const buckets: DayOfWeekSales[] = dayNames.map(dayName => ({
+      dayName,
+      totalRevenue: 0,
+      totalOrders: 0,
+    }));
+
+    completed.forEach((o: any) => {
+      const dayIndex = new Date(o.creation_date).getDay();
+      buckets[dayIndex].totalRevenue += o.total;
+      buckets[dayIndex].totalOrders += 1;
+    });
+
+    return buckets;
+  }
+
+  private formatDateDMY(date: Date): string {
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    return `${day}/${month}/${date.getFullYear()}`;
+  }
+
+  private percentChange(current: number, prev: number): number {
+    if (prev !== 0) {
+      return ((current - prev) / Math.abs(prev)) * 100;
+    }
+    return current !== 0 ? 100 : 0;
+  }
+
+  /** Compara el período actual (última semana o mes) contra el inmediato anterior. */
+  async getPeriodComparison(mode: 'week' | 'month'): Promise<PeriodComparison> {
+    const days = mode === 'week' ? 7 : 30;
+    const now = new Date();
+
+    const currentEnd = new Date(now);
+    const currentStart = new Date(now);
+    currentStart.setDate(currentStart.getDate() - (days - 1));
+
+    const prevEnd = new Date(currentStart);
+    prevEnd.setDate(prevEnd.getDate() - 1);
+    const prevStart = new Date(prevEnd);
+    prevStart.setDate(prevStart.getDate() - (days - 1));
+
+    const currentStartStr = this.formatDateDMY(currentStart);
+    const currentEndStr = this.formatDateDMY(currentEnd);
+    const prevStartStr = this.formatDateDMY(prevStart);
+    const prevEndStr = this.formatDateDMY(prevEnd);
+
+    const [currentSummary, prevSummary, currentExpenses, prevExpenses] =
+      await Promise.all([
+        this.getSalesSummary(currentStartStr, currentEndStr),
+        this.getSalesSummary(prevStartStr, prevEndStr),
+        _expenseService.getByDateRange(currentStartStr, currentEndStr),
+        _expenseService.getByDateRange(prevStartStr, prevEndStr),
+      ]);
+
+    const currentGastos = currentExpenses.reduce(
+      (acc: number, e: any) => acc + e.amount,
+      0,
+    );
+    const prevGastos = prevExpenses.reduce(
+      (acc: number, e: any) => acc + e.amount,
+      0,
+    );
+    const currentNet = currentSummary.totalRevenue - currentGastos;
+    const prevNet = prevSummary.totalRevenue - prevGastos;
+
+    return {
+      currentRevenue: currentSummary.totalRevenue,
+      prevRevenue: prevSummary.totalRevenue,
+      revenueChange: this.percentChange(
+        currentSummary.totalRevenue,
+        prevSummary.totalRevenue,
+      ),
+      currentOrders: currentSummary.completedOrders,
+      prevOrders: prevSummary.completedOrders,
+      ordersChange: this.percentChange(
+        currentSummary.completedOrders,
+        prevSummary.completedOrders,
+      ),
+      currentNet,
+      prevNet,
+      netChange: this.percentChange(currentNet, prevNet),
+    };
+  }
+
+  /** Estado de órdenes (completadas/canceladas) con distribución por hora. */
+  async getOrderStatusReport(
+    start: string,
+    end: string,
+  ): Promise<OrderStatusReport> {
+    const orders = (await _orderService.getAllOrders(start, end)) ?? [];
+    const completed = orders.filter((o: any) => o.payment_date != null);
+    const cancelled = orders.filter((o: any) => o.payment_date == null);
+
+    const emptyHourSlots = (): Record<string, number> => {
+      const slots: Record<string, number> = {};
+      for (let h = 8; h <= 22; h++) {
+        slots[`${h < 10 ? '0' : ''}${h}:00`] = 0;
+      }
+      return slots;
+    };
+    const hourKey = (order: any) =>
+      `${String(new Date(order.creation_date).getHours()).padStart(2, '0')}:00`;
+
+    const completedSlots = emptyHourSlots();
+    completed.forEach((o: any) => {
+      const key = hourKey(o);
+      if (completedSlots[key] !== undefined) {
+        completedSlots[key]++;
+      }
+    });
+
+    const cancelledSlots = emptyHourSlots();
+    cancelled.forEach((o: any) => {
+      const key = hourKey(o);
+      if (cancelledSlots[key] !== undefined) {
+        cancelledSlots[key]++;
+      }
+    });
+
+    return {
+      totalOrders: orders.length,
+      completedOrders: completed.length,
+      cancelledOrders: cancelled.length,
+      conversionRate:
+        orders.length > 0 ? (completed.length / orders.length) * 100 : 0,
+      completedByHour: Object.values(completedSlots),
+      cancelledByHour: Object.values(cancelledSlots),
     };
   }
 }

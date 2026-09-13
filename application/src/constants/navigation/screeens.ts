@@ -27,4 +27,10 @@ export enum SCREENS {
   REPORTE_PRODUCTOS = 'Productos más Vendidos',
   REPORTE_CATEGORIAS = 'Ventas por Categoría',
   REPORTE_GASTOS = 'Gastos y Cierre',
+  REPORTE_DIAS = 'Ventas por Día',
+  REPORTE_COMPARATIVO = 'Comparativo de Períodos',
+  REPORTE_ORDENES = 'Estado de Órdenes',
+  // Caja
+  CAJA_STACK = 'Caja',
+  CAJA = 'Control de Caja',
 }
