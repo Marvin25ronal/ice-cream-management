@@ -29,6 +29,7 @@ import MaintenanceStack from './MaintenanceStack';
 import ReportesNavigator from './ReportesNavigator';
 import EditProductNavigator from './EditProductNavigator';
 import GastosNavigator from './GastosNavigator';
+import CajaNavigator from './CajaNavigator';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import Entypo from 'react-native-vector-icons/Entypo';
 import MaterialDesignIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -135,6 +136,20 @@ const getMenuItemData = (routeName: string): MenuItemData => {
         label: 'Gastos',
         iconColor: '#FF6348',
         iconBgColor: '#FFF0ED',
+      };
+    case Utils.screens.CAJA_STACK:
+      return {
+        routeName,
+        icon: (
+          <MaterialDesignIcons
+            name="safe-square-outline"
+            size={iconSize}
+            color="#27AE60"
+          />
+        ),
+        label: 'Caja',
+        iconColor: '#27AE60',
+        iconBgColor: '#E8F5E9',
       };
     default:
       return {
@@ -340,6 +355,11 @@ const DrawerNavigator = () => {
         <Drawer.Screen
           name={Utils.screens.GASTOS_STACK}
           component={GastosNavigator}
+          options={options}
+        />
+        <Drawer.Screen
+          name={Utils.screens.CAJA_STACK}
+          component={CajaNavigator}
           options={options}
         />
       </Drawer.Navigator>
