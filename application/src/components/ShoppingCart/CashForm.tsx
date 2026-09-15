@@ -43,6 +43,7 @@ const CashForm = ({
 }) => {
   const theme: themeInterface = useSelector((state: any) => state.theme.value);
   const orderId: number = useSelector((state: any) => state.order.value);
+  const activeUser = useSelector((state: any) => state.user.activeUser);
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
   const [total, setTotal] = useState(0);
   const [orderService] = useState(new OrderService());
@@ -247,7 +248,7 @@ const CashForm = ({
     if (order) {
       if (card) {
         orderService
-          .payOrder(orderId, PaymentMethod.CARD, 0, total)
+          .payOrder(orderId, PaymentMethod.CARD, 0, total, activeUser?.user_id)
           .then(() => {
             if (shouldPrint) {
               printService.printOrder(order);
@@ -265,6 +266,7 @@ const CashForm = ({
             PaymentMethod.MIX,
             parseFloat(data.cash),
             parseFloat(data.card),
+            activeUser?.user_id,
           )
           .then(() => {
             if (shouldPrint) {
@@ -278,7 +280,7 @@ const CashForm = ({
           });
       } else {
         orderService
-          .payOrder(orderId, PaymentMethod.CASH, total, 0)
+          .payOrder(orderId, PaymentMethod.CASH, total, 0, activeUser?.user_id)
           .then(() => {
             if (shouldPrint) {
               printService.printOrder(order);
@@ -347,7 +349,9 @@ const CashForm = ({
                 }}>
                 <Text style={styles.buttonTextColor}>Cancelar</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.button} onPress={handleSubmit(pay)}>
+              <TouchableOpacity
+                style={styles.button}
+                onPress={handleSubmit(pay)}>
                 <Text style={styles.buttonTextColor}>Cobrar</Text>
               </TouchableOpacity>
             </View>
@@ -483,7 +487,9 @@ const CashForm = ({
                 }}>
                 <Text style={styles.buttonTextColor}>Cancelar</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.button} onPress={handleSubmit(pay)}>
+              <TouchableOpacity
+                style={styles.button}
+                onPress={handleSubmit(pay)}>
                 <Text style={styles.buttonTextColor}>Cobrar</Text>
               </TouchableOpacity>
             </View>

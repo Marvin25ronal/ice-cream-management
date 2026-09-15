@@ -5,8 +5,9 @@ import {
   StyleSheet,
   TouchableOpacity,
   ScrollView,
+  Modal,
 } from 'react-native';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   DrawerNavigationOptions,
   createDrawerNavigator,
@@ -40,6 +41,7 @@ import {
   getVersionString,
   getCopyrightText,
 } from '../constants/AppConfig';
+import UserSelectPage from '../pages/UserSelectPage';
 
 // Menu item interface
 interface MenuItemData {
@@ -166,6 +168,8 @@ const getMenuItemData = (routeName: string): MenuItemData => {
 const CustomDrawerContent = (props: DrawerContentComponentProps) => {
   const { state, navigation } = props;
   const theme: themeInterface = useSelector((state: any) => state.theme.value);
+  const activeUser = useSelector((s: any) => s.user.activeUser);
+  const [userSwitcherVisible, setUserSwitcherVisible] = useState(false);
 
   return (
     <View style={styles.drawerContainer}>
@@ -252,6 +256,24 @@ const CustomDrawerContent = (props: DrawerContentComponentProps) => {
       {/* Footer Section with Version */}
       <View style={styles.footer}>
         <View style={styles.divider} />
+        <TouchableOpacity
+          style={styles.activeUserRow}
+          activeOpacity={0.7}
+          onPress={() => setUserSwitcherVisible(true)}>
+          <MaterialDesignIcons
+            name="account-circle"
+            size={20}
+            color="#6C5CE7"
+          />
+          <Text style={styles.activeUserText} numberOfLines={1}>
+            {activeUser?.name ?? 'Seleccionar usuario'}
+          </Text>
+          <MaterialDesignIcons
+            name="swap-horizontal"
+            size={16}
+            color="#9CA3AF"
+          />
+        </TouchableOpacity>
         <View style={styles.versionContainer}>
           <MaterialDesignIcons
             name="information-outline"
@@ -264,6 +286,19 @@ const CustomDrawerContent = (props: DrawerContentComponentProps) => {
         </View>
         <Text style={styles.copyrightText}>{getCopyrightText()}</Text>
       </View>
+
+      <Modal
+        visible={userSwitcherVisible}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setUserSwitcherVisible(false)}>
+        <View style={styles.userSwitcherOverlay}>
+          <UserSelectPage
+            onCancel={() => setUserSwitcherVisible(false)}
+            onSelected={() => setUserSwitcherVisible(false)}
+          />
+        </View>
+      </Modal>
     </View>
   );
 };
@@ -468,6 +503,26 @@ const styles = StyleSheet.create({
     height: 1,
     backgroundColor: '#E5E7EB',
     marginBottom: 16,
+  },
+  activeUserRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    backgroundColor: '#F3F1FE',
+    borderRadius: 12,
+    paddingVertical: 10,
+    paddingHorizontal: 12,
+    marginBottom: 12,
+  },
+  activeUserText: {
+    flex: 1,
+    fontSize: 14,
+    fontFamily: Fonts.LatoBold,
+    color: '#4834B0',
+  },
+  userSwitcherOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.45)',
   },
   versionContainer: {
     flexDirection: 'row',

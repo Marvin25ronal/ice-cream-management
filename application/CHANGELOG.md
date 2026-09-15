@@ -5,6 +5,68 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.5.3] - 2026-09-14
+
+### Fixed
+- **Control de Caja**: el texto que se escribe en los campos de monto y motivo
+  al rectificar/configurar caja no tenía color definido y se veía en blanco
+  (invisible sobre la tarjeta blanca del formulario)
+
+## [1.5.2] - 2026-09-14
+
+### Added
+- **Gastos y Cierre**: al confirmar "Imprimir cierre del día" ahora, además de
+  imprimir, se cierra la caja automáticamente — se registra un ajuste con el
+  saldo físico esperado (saldo anterior + efectivo de ventas − gastos
+  pagados), igual que en la app original. El saldo de caja para el día
+  siguiente queda actualizado, con toast de confirmación ("Caja actualizada al
+  cierre" / nuevo saldo)
+
+## [1.5.1] - 2026-09-14
+
+### Fixed
+- **Cierre del Día**: el segmento de "Caja" (saldo físico, efectivo de ventas,
+  gastos pagados, físico esperado en caja ahora, tarjeta) que ya se mostraba en
+  Reporte de Gastos ahora también sale en la impresión térmica del cierre y en
+  el PDF/visor de reportes — antes solo aparecía en pantalla en un reporte
+
+## [1.5.0] - 2026-09-14
+
+### Added
+- **Mantenimiento de Usuarios**: eliminación definitiva de usuarios sin historial
+  (órdenes, movimientos de caja o sesiones); si el usuario tiene historial, se
+  ofrece desactivarlo en su lugar para no perder la trazabilidad
+- **Visor de Reportes** (Mantenimiento → Ver Reporte): pantalla para consultar el
+  cierre del día en pantalla (ventas, efectivo, tarjeta, gastos, neto) sin
+  necesidad de la impresora, con filtro de rango de fechas
+  - Botón "Imprimir / Guardar como PDF" que abre el diálogo nativo de impresión
+    de Android, permitiendo guardar el reporte como PDF y compartirlo
+    (WhatsApp, correo, etc.) cuando no se puede imprimir en la térmica
+
+### Changed
+- Impresora térmica: se incrementó el tiempo de espera entre impresiones para
+  reducir errores de orden/alineación en tickets con varios bloques
+
+## [1.4.0] - 2026-09-13
+
+### Added
+- **Módulo de Caja**: control de apertura de turno y rectificaciones de efectivo físico
+  - `CajaPage` con tarjeta de saldo actual e historial de movimientos
+  - `CashRegisterService` sobre la nueva tabla `cash_register`
+- **Módulo de Reportes ampliado**:
+  - `ReporteDias`: ventas por día de la semana, ranking y mejor/peor día
+  - `ReporteComparativo`: semana/mes actual vs. período anterior
+  - `ReporteOrdenes`: completadas/canceladas por hora y tasa de conversión
+  - 3 tarjetas nuevas en el Hub de Reportes
+- **Módulo de Usuarios**: selección de usuario sin contraseña
+  - Selector obligatorio una vez al día (registra hora de llegada) al abrir la app
+  - Cambio de usuario libre durante el día desde el pie del menú lateral
+  - Pantalla de administración (Mantenimiento → Usuarios): crear, renombrar, (des)activar
+  - Órdenes y movimientos de caja quedan etiquetados con el usuario que los hizo
+- **Eliminar orden** (borrado suave): la orden deja de aparecer en el listado y en todos
+  los reportes, con doble confirmación y selección de quién la elimina; se conserva
+  el historial completo (quién y cuándo) para auditoría
+
 ## [1.3.0] - 2025-10-24
 
 ### Added

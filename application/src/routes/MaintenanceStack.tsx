@@ -10,9 +10,13 @@ import { Fonts, FontsSize } from '../constants/Fonts';
 import CustomHeader from '../components/UI/CustomHeader';
 import { Utils } from '../constants/utils';
 import MaintenancePage from '../pages/MaintenancePage';
+import UserMaintenancePage from '../pages/UserMaintenancePage';
+import ReporteVisorPage from '../pages/ReporteVisorPage';
 import { getHeaderTitle } from '@react-navigation/elements';
 export type MaintenanceParamList = {
   [Utils.screens.MAINTENANCE]: undefined;
+  [Utils.screens.USER_MAINTENANCE]: undefined;
+  [Utils.screens.REPORTE_VISOR]: undefined;
 };
 const Stack = createStackNavigator<MaintenanceParamList>();
 const MaintenanceStack = () => {
@@ -42,6 +46,16 @@ const MaintenanceStack = () => {
         <Stack.Screen
           name={Utils.screens.MAINTENANCE}
           component={MaintenancePage}
+          options={options}
+        />
+        <Stack.Screen
+          name={Utils.screens.USER_MAINTENANCE}
+          component={UserMaintenancePage}
+          options={options}
+        />
+        <Stack.Screen
+          name={Utils.screens.REPORTE_VISOR}
+          component={ReporteVisorPage}
           options={options}
         />
       </Stack.Navigator>

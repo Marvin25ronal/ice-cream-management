@@ -10,7 +10,7 @@ import {Expense} from '../entity/Expense.entity';
 import {CURRENCY_SYMBOL} from '../constants/utils';
 import {AppConfig} from '../constants/AppConfig';
 const BOLD_ON = COMMANDS.TEXT_FORMAT.TXT_BOLD_ON;
-const PRINT_TIME = 300;
+const PRINT_TIME = 600;
 export class PrintService {
   printer: IUSBPrinter | null = null;
   constructor() {}
@@ -158,6 +158,7 @@ export class PrintService {
     expenses: Expense[],
     totalExpenses: number,
     netBalance: number,
+    physicalCash: number = 0,
   ): Promise<void> {
     if (!this.printer) {
       AlertFunctions.showNoPrinter();
@@ -236,6 +237,49 @@ export class PrintService {
       colWidths,
       colAlign,
       [`${BOLD_ON}`, ''],
+    );
+    await this.delay(PRINT_TIME);
+
+    // Caja: conciliación de efectivo físico. Lo que ya había + efectivo de
+    // ventas - gastos pagados = lo que debería haber en caja ahora.
+    const expectedCash = physicalCash + cash - totalExpenses;
+    await USBPrinter.printText(`<CM>${thin}<CM>`);
+    await this.delay(PRINT_TIME);
+    await USBPrinter.printText(`<B>-- CAJA --<B>`);
+    await this.delay(PRINT_TIME);
+    await USBPrinter.printColumnsText(
+      ['Saldo en caja:', `${CURRENCY_SYMBOL}${physicalCash.toFixed(2)}`],
+      colWidths,
+      colAlign,
+      ['', ''],
+    );
+    await this.delay(PRINT_TIME);
+    await USBPrinter.printColumnsText(
+      ['+ Efectivo ventas:', `${CURRENCY_SYMBOL}${cash.toFixed(2)}`],
+      colWidths,
+      colAlign,
+      ['', ''],
+    );
+    await this.delay(PRINT_TIME);
+    await USBPrinter.printColumnsText(
+      ['- Gastos pagados:', `${CURRENCY_SYMBOL}${totalExpenses.toFixed(2)}`],
+      colWidths,
+      colAlign,
+      ['', ''],
+    );
+    await this.delay(PRINT_TIME);
+    await USBPrinter.printColumnsText(
+      ['Físico en caja ahora:', `${CURRENCY_SYMBOL}${expectedCash.toFixed(2)}`],
+      colWidths,
+      colAlign,
+      [`${BOLD_ON}`, `${BOLD_ON}`],
+    );
+    await this.delay(PRINT_TIME);
+    await USBPrinter.printColumnsText(
+      ['Tarjeta (al banco):', `${CURRENCY_SYMBOL}${card.toFixed(2)}`],
+      colWidths,
+      colAlign,
+      ['', ''],
     );
     await this.delay(PRINT_TIME);
 

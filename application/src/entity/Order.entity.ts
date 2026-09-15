@@ -31,6 +31,24 @@ export class Order {
   @Column()
   print_number: number;
 
+  /** Usuario que cobró la orden (agregado en migración 010). */
+  @Column({ nullable: true })
+  user_id?: number;
+
+  /**
+   * Borrado suave (migración 011): en vez de borrar la fila, se marca como
+   * eliminada para que deje de aparecer en el listado y en los reportes,
+   * conservando quién la eliminó y cuándo.
+   */
+  @Column({ default: 0 })
+  deleted?: number;
+
+  @Column({ nullable: true })
+  deleted_at?: Date;
+
+  @Column({ nullable: true })
+  deleted_by_user_id?: number;
+
   @OneToMany(() => OrderDetail, orderDetail => orderDetail.order, {
     cascade: true,
   })

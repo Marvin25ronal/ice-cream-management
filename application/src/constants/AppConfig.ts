@@ -10,7 +10,7 @@ export const AppConfig = {
    * Application version
    * Update this when releasing new versions
    */
-  VERSION: '1.2.0',
+  VERSION: '1.5.3',
 
   /**
    * Application name

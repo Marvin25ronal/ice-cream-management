@@ -40,6 +40,7 @@ export class OrderService {
     paymentMethod: PaymentMethod,
     cash: number,
     card: number,
+    userId?: number,
   ) {
     return new Promise<Order | null>(async (resolve, reject) => {
       let db = await this.getDatabase();
@@ -54,6 +55,9 @@ export class OrderService {
             order.status = paymentMethod;
             order.payment_date = new Date();
             order.payment_method = paymentMethod;
+            if (userId != null) {
+              order.user_id = userId;
+            }
             let orderPayment = new OrderPayment();
             orderPayment.payment_method = paymentMethod;
             orderPayment.cash = cash;
@@ -111,6 +115,43 @@ export class OrderService {
         });
     });
   }
+  /**
+   * Borrado suave: la orden deja de aparecer en el listado y en los
+   * reportes (ver getAllOrders), pero se conserva en la base de datos
+   * junto con quién la eliminó y cuándo.
+   */
+  deleteOrder(orderId: number, deletedByUserId: number) {
+    return new Promise<Order | null>(async (resolve, reject) => {
+      let db = await this.getDatabase();
+      db?.manager
+        .findOne(Order, {
+          where: {
+            order_id: orderId,
+          },
+        })
+        .then(order => {
+          if (order) {
+            order.deleted = 1;
+            order.deleted_at = new Date();
+            order.deleted_by_user_id = deletedByUserId;
+
+            db?.manager
+              .save(order)
+              .then(order => {
+                resolve(order);
+              })
+              .catch(error => {
+                reject(error);
+              });
+          } else {
+            reject('Order not found');
+          }
+        })
+        .catch(error => {
+          reject(error);
+        });
+    });
+  }
   getAllOrders(start_date: string, end_date: string) {
     //string start_date format 'DD/MM/YYYY
     let start = this.parseStringToDate(start_date);
@@ -131,6 +172,7 @@ export class OrderService {
           },
           where: {
             creation_date: Between(start, end),
+            deleted: 0,
           },
         })
         .then(orders => {

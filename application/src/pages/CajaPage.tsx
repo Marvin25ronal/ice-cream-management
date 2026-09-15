@@ -84,6 +84,7 @@ const HistoryItem = ({
 
 const CajaPage = () => {
   const theme: themeInterface = useSelector((state: any) => state.theme.value);
+  const activeUser = useSelector((state: any) => state.user.activeUser);
   const [cashRegisterService] = useState(new CashRegisterService());
   const [current, setCurrent] = useState<CashRegister | null>(null);
   const [history, setHistory] = useState<CashRegister[]>([]);
@@ -150,6 +151,7 @@ const CajaPage = () => {
         await cashRegisterService.registerAdjustment(
           amount,
           reasonInput.trim(),
+          activeUser?.user_id,
         );
         Toast.show({
           type: 'success',
@@ -157,7 +159,7 @@ const CajaPage = () => {
           text2: `Nuevo saldo: ${CURRENCY_SYMBOL} ${amount.toFixed(2)}`,
         });
       } else {
-        await cashRegisterService.registerOpening(amount);
+        await cashRegisterService.registerOpening(amount, activeUser?.user_id);
         Toast.show({
           type: 'success',
           text1: 'Caja configurada',
@@ -179,6 +181,7 @@ const CajaPage = () => {
     cashRegisterService,
     cancelEditing,
     loadData,
+    activeUser,
   ]);
 
   const isConfigured = !!current;
@@ -424,6 +427,7 @@ const styles = StyleSheet.create({
     padding: 12,
     fontSize: FontsSize.medium,
     fontFamily: Fonts.LatoRegular,
+    color: '#2D3436',
   },
   reasonInput: {
     borderWidth: 1,
@@ -433,6 +437,7 @@ const styles = StyleSheet.create({
     fontSize: FontsSize.medium,
     fontFamily: Fonts.LatoRegular,
     minHeight: 80,
+    color: '#2D3436',
   },
   formButtonRow: {
     flexDirection: 'row',

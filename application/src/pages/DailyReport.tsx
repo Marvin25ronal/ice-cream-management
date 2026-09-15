@@ -16,9 +16,11 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import LinearGradient from 'react-native-linear-gradient';
 import {PrintService} from '../services/PrintService';
+import {CashRegisterService} from '../services/CashRegisterService';
 import Toast from 'react-native-toast-message';
 
 const printService = new PrintService();
+const cashRegisterService = new CashRegisterService();
 
 const hours = [
   '08:00',
@@ -42,6 +44,7 @@ const expenseServiceInstance = new ExpenseService();
 
 const DailyReport = () => {
   const theme = useSelector((state: RootState) => state.theme.value);
+  const activeUser = useSelector((state: RootState) => state.user.activeUser);
   const [orderService] = useState(new OrderService());
   const [orders, setOrders] = useState<Order[]>([]);
   const [orderProduced, setOrderProduced] = useState(0);
@@ -54,6 +57,7 @@ const DailyReport = () => {
   const [expenses, setExpenses] = useState<Expense[]>([]);
   const [totalExpenses, setTotalExpenses] = useState(0);
   const [netBalance, setNetBalance] = useState(0);
+  const [physicalCash, setPhysicalCash] = useState(0);
   const [printing, setPrinting] = useState(false);
   const [ordersFrecuencyData, setOrdersFrecuencyData] = useState([]);
   const [topProducts, setTopProducts] = useState<
@@ -231,6 +235,10 @@ const DailyReport = () => {
       .getByDateRange(start, end)
       .then(data => setExpenses(data))
       .catch(error => console.log('Error gastos:', error));
+    cashRegisterService
+      .getCurrent()
+      .then(currentCash => setPhysicalCash(currentCash?.amount ?? 0))
+      .catch(error => console.log('Error saldo de caja:', error));
   };
 
   const handlePrintClose = async () => {
@@ -247,6 +255,7 @@ const DailyReport = () => {
         expenses,
         totalExpenses,
         netBalance,
+        physicalCash,
       );
     } catch (e) {
       Toast.show({type: 'error', text1: 'Error al imprimir cierre'});

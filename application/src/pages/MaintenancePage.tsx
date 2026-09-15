@@ -18,6 +18,7 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import { migrationService } from '../database/MigrationService';
 import { allMigrations } from '../migrations';
 import LinearGradient from 'react-native-linear-gradient';
+import { Utils } from '../constants/utils';
 
 const { width } = Dimensions.get('window');
 const isTablet = width >= 768;
@@ -48,7 +49,10 @@ const ActionCard: React.FC<ActionCardProps> = ({
       onPress={onPress}
       disabled={disabled || isProcessing}
       activeOpacity={0.8}
-      style={[styles.cardTouchable, (disabled || isProcessing) && styles.cardDisabled]}>
+      style={[
+        styles.cardTouchable,
+        (disabled || isProcessing) && styles.cardDisabled,
+      ]}>
       <LinearGradient
         colors={gradientColors}
         start={{ x: 0, y: 0 }}
@@ -98,7 +102,7 @@ const ActionCard: React.FC<ActionCardProps> = ({
   );
 };
 
-const MaintenancePage = () => {
+const MaintenancePage = ({ navigation }: { navigation: any }) => {
   const theme = useSelector((state: RootState) => state.theme.value);
   const [selectedFile, setSelectedFile] = useState<string | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
@@ -219,12 +223,16 @@ const MaintenancePage = () => {
           onPress: async () => {
             setIsProcessing(true);
             try {
-              const result = await migrationService.runMigrations(allMigrations);
+              const result = await migrationService.runMigrations(
+                allMigrations,
+              );
 
               if (result.success) {
                 Alert.alert(
                   'Migraciones Completadas',
-                  `Se ejecutaron ${result.executed} migración(es) exitosamente.${
+                  `Se ejecutaron ${
+                    result.executed
+                  } migración(es) exitosamente.${
                     result.executed === 0
                       ? '\n\nNo había migraciones pendientes.'
                       : '\n\nLos cambios se han aplicado a la base de datos.'
@@ -234,7 +242,11 @@ const MaintenancePage = () => {
               } else {
                 Alert.alert(
                   'Error en Migraciones',
-                  `Se ejecutaron ${result.executed} migración(es) antes del error.\n\nErrores:\n${result.errors.join('\n')}`,
+                  `Se ejecutaron ${
+                    result.executed
+                  } migración(es) antes del error.\n\nErrores:\n${result.errors.join(
+                    '\n',
+                  )}`,
                   [{ text: 'OK' }],
                 );
               }
@@ -258,7 +270,6 @@ const MaintenancePage = () => {
       style={styles.scrollView}
       contentContainerStyle={styles.container}
       showsVerticalScrollIndicator={false}>
-
       {/* Header Section */}
       <View style={styles.header}>
         <View style={styles.headerIconContainer}>
@@ -287,6 +298,51 @@ const MaintenancePage = () => {
           gradientColors={['#7209B7', '#9C27B0', '#B185DB']}
           onPress={handleRunMigrations}
           isProcessing={isProcessing}
+        />
+      </View>
+
+      {/* Divider */}
+      <View style={styles.divider} />
+
+      {/* Users Section */}
+      <View style={styles.section}>
+        <View style={styles.sectionHeader}>
+          <Icon name="people" size={24} color="#6C5CE7" />
+          <Text style={styles.sectionTitle}>Usuarios</Text>
+        </View>
+        <Text style={styles.sectionDescription}>
+          Administra quién puede seleccionarse al usar la app
+        </Text>
+
+        <ActionCard
+          icon="people"
+          title="Usuarios"
+          description="Agregar, renombrar o desactivar usuarios"
+          gradientColors={['#6C5CE7', '#A29BFE', '#D6CCFB']}
+          onPress={() => navigation.navigate(Utils.screens.USER_MAINTENANCE)}
+        />
+      </View>
+
+      {/* Divider */}
+      <View style={styles.divider} />
+
+      {/* Reports Viewer Section */}
+      <View style={styles.section}>
+        <View style={styles.sectionHeader}>
+          <Icon name="picture-as-pdf" size={24} color="#7209B7" />
+          <Text style={styles.sectionTitle}>Reportes</Text>
+        </View>
+        <Text style={styles.sectionDescription}>
+          Consulta el cierre del día y generalo en PDF para enviarlo cuando no
+          puedas imprimir
+        </Text>
+
+        <ActionCard
+          icon="picture-as-pdf"
+          title="Ver Reporte"
+          description="Ver el cierre en pantalla y generar/enviar PDF"
+          gradientColors={['#7209B7', '#9C27B0', '#B185DB']}
+          onPress={() => navigation.navigate(Utils.screens.REPORTE_VISOR)}
         />
       </View>
 
@@ -340,8 +396,8 @@ const MaintenancePage = () => {
       <View style={styles.warningContainer}>
         <Icon name="info" size={20} color="#FF8500" />
         <Text style={styles.warningText}>
-          Importante: La restauración creará un backup automático antes de proceder.
-          Reinicia la aplicación después de restaurar.
+          Importante: La restauración creará un backup automático antes de
+          proceder. Reinicia la aplicación después de restaurar.
         </Text>
       </View>
     </ScrollView>

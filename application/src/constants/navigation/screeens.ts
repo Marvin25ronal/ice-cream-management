@@ -33,4 +33,8 @@ export enum SCREENS {
   // Caja
   CAJA_STACK = 'Caja',
   CAJA = 'Control de Caja',
+  // Usuarios
+  USER_MAINTENANCE = 'Usuarios',
+  // Visor de reportes (PDF)
+  REPORTE_VISOR = 'Ver Reporte',
 }

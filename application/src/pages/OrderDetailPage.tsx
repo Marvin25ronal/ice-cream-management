@@ -1,4 +1,5 @@
 import {
+  Alert,
   StyleSheet,
   Text,
   View,
@@ -18,6 +19,10 @@ import LinearGradient from 'react-native-linear-gradient';
 import { OrderService } from '../services/OrderServices';
 import { Order } from '../entity/Order.entity';
 import { PrintService } from '../services/PrintService';
+import { UserService } from '../services/UserService';
+import { User } from '../entity/User.entity';
+import UserPickerModal from '../components/Order/UserPickerModal';
+import Toast from 'react-native-toast-message';
 import { RouteProp, useRoute, useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../routes/StackNavigator';
@@ -37,13 +42,18 @@ const OrderDetailPage = () => {
   const [order, setOrder] = useState<Order | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isPrinting, setIsPrinting] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [userPickerVisible, setUserPickerVisible] = useState(false);
+  const [users, setUsers] = useState<User[]>([]);
   const [orderService] = useState(new OrderService());
   const [printService] = useState(new PrintService());
+  const [userService] = useState(new UserService());
 
   const orderId = route.params?.orderId;
 
   useEffect(() => {
     loadOrderDetails();
+    userService.getAll().then(setUsers);
     printService.initPrinter().then(() => {
       printService.connectPrinter().then(() => {
         console.log('printer connected');
@@ -81,6 +91,62 @@ const OrderDetailPage = () => {
       setIsPrinting(false);
     }
   };
+
+  const handleDeletePress = () => {
+    if (!order) return;
+    Alert.alert(
+      'Eliminar orden',
+      `¿Seguro que deseas eliminar la orden #${order.order_id}? Ya no aparecerá en el listado de órdenes ni en los reportes.`,
+      [
+        { text: 'Cancelar', style: 'cancel' },
+        {
+          text: 'Continuar',
+          style: 'destructive',
+          onPress: () => setUserPickerVisible(true),
+        },
+      ],
+    );
+  };
+
+  const handleUserSelected = (user: User) => {
+    setUserPickerVisible(false);
+    if (!order) return;
+    Alert.alert(
+      'Confirmar eliminación',
+      `Vas a eliminar la orden #${order.order_id} como "${user.name}". Esta acción no se puede deshacer desde la app.`,
+      [
+        { text: 'Cancelar', style: 'cancel' },
+        {
+          text: 'Eliminar',
+          style: 'destructive',
+          onPress: async () => {
+            setIsDeleting(true);
+            try {
+              await orderService.deleteOrder(order.order_id, user.user_id);
+              Toast.show({
+                type: 'success',
+                text1: 'Orden eliminada',
+                text2: `Eliminada por ${user.name}`,
+              });
+              navigation.goBack();
+            } catch (error) {
+              console.error('Error al eliminar orden:', error);
+              Toast.show({
+                type: 'error',
+                text1: 'No se pudo eliminar la orden',
+              });
+            } finally {
+              setIsDeleting(false);
+            }
+          },
+        },
+      ],
+    );
+  };
+
+  const deletedByName = order?.deleted_by_user_id
+    ? users.find(u => u.user_id === order.deleted_by_user_id)?.name
+    : undefined;
 
   const getStatusConfig = () => {
     if (!order) return { label: '', gradientColors: [] };
@@ -351,6 +417,38 @@ const OrderDetailPage = () => {
       fontSize: FontsSize.small,
       fontFamily: Fonts.LatoBold,
     },
+    // Delete
+    deletedBanner: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      gap: 10,
+      backgroundColor: '#FDECEA',
+      borderRadius: 14,
+      padding: 14,
+      marginTop: 16,
+    },
+    deletedBannerText: {
+      flex: 1,
+      fontSize: FontsSize.small,
+      fontFamily: Fonts.LatoBold,
+      color: '#C0392B',
+    },
+    deleteButton: {
+      marginTop: 12,
+      borderRadius: 16,
+      borderWidth: 1.5,
+      borderColor: '#EF476F',
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+      gap: 10,
+      paddingVertical: 14,
+    },
+    deleteButtonText: {
+      color: '#EF476F',
+      fontSize: FontsSize.medium,
+      fontFamily: Fonts.LatoBold,
+    },
   });
 
   if (isLoading) {
@@ -496,7 +594,55 @@ const OrderDetailPage = () => {
             )}
           </LinearGradient>
         </TouchableOpacity>
+
+        {/* Deleted banner */}
+        {!!order.deleted && (
+          <View style={styles.deletedBanner}>
+            <IconSelector
+              icon_class={type_class_icon.FontAwesome5}
+              icon="trash-alt"
+              size={16}
+              color="#EF476F"
+            />
+            <Text style={styles.deletedBannerText}>
+              Esta orden fue eliminada
+              {deletedByName ? ` por ${deletedByName}` : ''}
+              {order.deleted_at ? ` el ${formatDate(order.deleted_at)}` : ''}
+            </Text>
+          </View>
+        )}
+
+        {/* Delete Button */}
+        {!order.deleted && (
+          <TouchableOpacity
+            style={styles.deleteButton}
+            onPress={handleDeletePress}
+            disabled={isDeleting}
+            activeOpacity={0.8}>
+            {isDeleting ? (
+              <ActivityIndicator size="small" color="#EF476F" />
+            ) : (
+              <>
+                <IconSelector
+                  icon_class={type_class_icon.FontAwesome5}
+                  icon="trash-alt"
+                  size={16}
+                  color="#EF476F"
+                />
+                <Text style={styles.deleteButtonText}>Eliminar orden</Text>
+              </>
+            )}
+          </TouchableOpacity>
+        )}
       </ScrollView>
+
+      <UserPickerModal
+        visible={userPickerVisible}
+        title="¿Quién está eliminando esta orden?"
+        subtitle={order ? `Orden #${order.order_id}` : undefined}
+        onSelect={handleUserSelected}
+        onCancel={() => setUserPickerVisible(false)}
+      />
     </View>
   );
 };

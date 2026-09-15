@@ -28,6 +28,7 @@ export class CashRegisterService {
     record.type = row.type;
     record.reason = row.reason != null ? row.reason : '';
     record.date = new Date(row.date);
+    record.user_id = row.user_id != null ? row.user_id : null;
     return record;
   }
 
@@ -74,14 +75,14 @@ export class CashRegisterService {
   }
 
   /** Configura el saldo inicial de caja (apertura de turno). */
-  registerOpening(amount: number): Promise<void> {
+  registerOpening(amount: number, userId?: number | null): Promise<void> {
     return new Promise(async (resolve, reject) => {
       const db = await this.getDatabase();
       const date = new Date().toISOString();
       db.transaction((tx: any) => {
         tx.executeSql(
-          "INSERT INTO cash_register (amount, type, reason, date) VALUES (?, 'opening', '', ?)",
-          [amount, date],
+          "INSERT INTO cash_register (amount, type, reason, date, user_id) VALUES (?, 'opening', '', ?, ?)",
+          [amount, date, userId ?? null],
           () => resolve(),
           (_: any, error: any) => reject(error),
         );
@@ -90,14 +91,18 @@ export class CashRegisterService {
   }
 
   /** Rectifica el saldo de caja indicando el motivo del ajuste. */
-  registerAdjustment(amount: number, reason: string): Promise<void> {
+  registerAdjustment(
+    amount: number,
+    reason: string,
+    userId?: number | null,
+  ): Promise<void> {
     return new Promise(async (resolve, reject) => {
       const db = await this.getDatabase();
       const date = new Date().toISOString();
       db.transaction((tx: any) => {
         tx.executeSql(
-          "INSERT INTO cash_register (amount, type, reason, date) VALUES (?, 'adjustment', ?, ?)",
-          [amount, reason, date],
+          "INSERT INTO cash_register (amount, type, reason, date, user_id) VALUES (?, 'adjustment', ?, ?, ?)",
+          [amount, reason, date, userId ?? null],
           () => resolve(),
           (_: any, error: any) => reject(error),
         );

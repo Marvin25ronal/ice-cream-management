@@ -12,4 +12,6 @@ export class CashRegister {
   type!: 'opening' | 'adjustment';
   reason!: string;
   date!: Date;
+  /** Usuario que hizo la apertura/rectificación (agregado en migración 010). */
+  user_id?: number | null;
 }
