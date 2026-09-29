@@ -13,12 +13,19 @@ import CustomHeader from '../components/UI/CustomHeader';
 import EditListProducts from '../pages/EditListProducts';
 import EditProduct from '../pages/EditProduct';
 import AddProduct from '../pages/AddProduct';
+import ProductRecipesListPage from '../pages/ProductRecipesListPage';
+import ProductRecipeDetailPage from '../pages/ProductRecipeDetailPage';
 import ToastComponent from '../components/UI/ToastComponent';
 
 export type EditProductParamList = {
   [Utils.screens.EDIT_LIST_PRODUCT]: undefined;
   [Utils.screens.EDIT_PRODUCT]: { productId: number } | undefined;
   [Utils.screens.ADD_PRODUCT]: undefined;
+  [Utils.screens.PRODUCT_RECIPES_LIST]: undefined;
+  [Utils.screens.PRODUCT_RECIPE_DETAIL]: {
+    productId: number;
+    productName: string;
+  };
 };
 const Stack = createStackNavigator<EditProductParamList>();
 const EditProductNavigator = () => {
@@ -57,6 +64,16 @@ const EditProductNavigator = () => {
         <Stack.Screen
           name={Utils.screens.ADD_PRODUCT}
           component={AddProduct}
+          options={options}
+        />
+        <Stack.Screen
+          name={Utils.screens.PRODUCT_RECIPES_LIST}
+          component={ProductRecipesListPage}
+          options={options}
+        />
+        <Stack.Screen
+          name={Utils.screens.PRODUCT_RECIPE_DETAIL}
+          component={ProductRecipeDetailPage}
           options={options}
         />
       </Stack.Navigator>

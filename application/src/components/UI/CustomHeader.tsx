@@ -7,10 +7,10 @@ import {
 } from 'react-native';
 import React from 'react';
 import { themeInterface } from '../../interface/themeInterface';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Fonts, FontsSize } from '../../constants/Fonts';
 import IconSelector, { type_class_icon } from './IconSelector';
-import { DrawerActions } from '@react-navigation/native';
+import { openMenu } from '../../store/redux/menuReducer';
 
 const CustomHeader = ({
   title,
@@ -22,6 +22,7 @@ const CustomHeader = ({
   navigation: any;
 }) => {
   const theme: themeInterface = useSelector((state: any) => state.theme.value);
+  const dispatch = useDispatch();
   const styles = StyleSheet.create({
     container: {
       backgroundColor: theme.HEADER_COLOR,
@@ -42,7 +43,7 @@ const CustomHeader = ({
     <View style={styles.container}>
       {!backOption && (
         <TouchableOpacity
-          onPress={() => navigation.dispatch(DrawerActions.toggleDrawer())}
+          onPress={() => dispatch(openMenu())}
           style={{ padding: 5 }}>
           <IconSelector
             icon_class={type_class_icon.AntDesign}

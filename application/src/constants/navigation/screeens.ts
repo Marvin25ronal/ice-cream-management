@@ -16,6 +16,8 @@ export enum SCREENS {
   EDIT_LIST_PRODUCT = 'Lista de productos',
   EDIT_PRODUCT = 'Editar producto',
   ADD_PRODUCT = 'Agregar producto',
+  PRODUCT_RECIPES_LIST = 'Recetas de Productos',
+  PRODUCT_RECIPE_DETAIL = 'Configurar Receta',
   // Gastos
   GASTOS_STACK = 'Gastos',
   GASTOS = 'Registro de Gastos',
@@ -37,4 +39,8 @@ export enum SCREENS {
   USER_MAINTENANCE = 'Usuarios',
   // Visor de reportes (PDF)
   REPORTE_VISOR = 'Ver Reporte',
+  // Materia Prima
+  MATERIA_PRIMA_STACK = 'Materia Prima',
+  MATERIA_PRIMA = 'Mantenimiento de Materia Prima',
+  MATERIA_PRIMA_HISTORIAL = 'Historial de Materia Prima',
 }

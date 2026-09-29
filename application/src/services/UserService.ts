@@ -21,12 +21,12 @@ export class UserService {
   }
 
   private rowToUser(row: any): User {
-    const user = new User();
-    user.user_id = row.user_id;
-    user.name = row.name;
-    user.active = !!row.active;
-    user.order = row.order;
-    return user;
+    return {
+      user_id: row.user_id,
+      name: row.name,
+      active: !!row.active,
+      order: row.order,
+    };
   }
 
   /** Fecha local en formato YYYY-MM-DD, usada como "día" para asistencia. */

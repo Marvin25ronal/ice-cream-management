@@ -3,14 +3,73 @@ import { Order } from '../entity/Order.entity';
 import { connectToDatabase } from '../store/db/Database';
 import { OrderDetail } from '../entity/OrderDetail.entity';
 import { OrderPayment } from '../entity/OrderPayment';
+import { ProductRawMaterialService } from './ProductRawMaterialService';
+import { RawMaterialService } from './RawMaterialService';
 export enum PaymentMethod {
   CASH = 1,
   CARD = 2,
   MIX = 3,
 }
+export enum OrderStatus {
+  PENDING = 0,
+  COMPLETED = 1,
+  CANCELED = 2,
+}
 export class OrderService {
+  private productRawMaterialService = new ProductRawMaterialService();
+  private rawMaterialService = new RawMaterialService();
+
   private async getDatabase() {
     return await connectToDatabase();
+  }
+
+  /**
+   * Descuenta (signo -1) o revierte (signo +1) la materia prima que
+   * consumen los productos de una orden, según la receta configurada en
+   * cada producto (ver ProductRawMaterialService). "Best effort": los
+   * errores se loggean pero nunca rechazan la promesa, ya que se llama
+   * después de que la operación principal (pago/borrado) ya se guardó.
+   */
+  private async adjustRawMaterialForOrderDetails(
+    orderDetails: OrderDetail[] | undefined,
+    sign: 1 | -1,
+    orderId: number,
+    reasonPrefix: string,
+    userId?: number | null,
+  ): Promise<void> {
+    if (!orderDetails || orderDetails.length === 0) {
+      return;
+    }
+    for (const detail of orderDetails) {
+      try {
+        const recipe = await this.productRawMaterialService.getForProduct(
+          detail.product_id,
+        );
+        for (const ingredient of recipe) {
+          const quantity = sign * ingredient.quantity * detail.quantity;
+          try {
+            await this.rawMaterialService.registerMovement(
+              ingredient.raw_material_id,
+              quantity,
+              `${reasonPrefix} #${orderId}`,
+              userId ?? null,
+              null,
+              'sale',
+            );
+          } catch (error) {
+            console.error(
+              `Error ajustando materia prima ${ingredient.raw_material_id} para orden ${orderId}:`,
+              error,
+            );
+          }
+        }
+      } catch (error) {
+        console.error(
+          `Error obteniendo receta del producto ${detail.product_id} para orden ${orderId}:`,
+          error,
+        );
+      }
+    }
   }
   getOrder(order_id: number) {
     return new Promise<Order | null>(async (resolve, reject) => {
@@ -49,10 +108,13 @@ export class OrderService {
           where: {
             order_id: orderId,
           },
+          relations: {
+            orderDetails: true,
+          },
         })
         .then(order => {
           if (order) {
-            order.status = paymentMethod;
+            order.status = OrderStatus.COMPLETED;
             order.payment_date = new Date();
             order.payment_method = paymentMethod;
             if (userId != null) {
@@ -67,8 +129,15 @@ export class OrderService {
 
             db?.manager
               .save(order)
-              .then(order => {
-                resolve(order);
+              .then(async savedOrder => {
+                await this.adjustRawMaterialForOrderDetails(
+                  order.orderDetails,
+                  -1,
+                  orderId,
+                  'Venta - Orden',
+                  userId,
+                );
+                resolve(savedOrder);
               })
               .catch(error => {
                 reject(error);
@@ -128,17 +197,30 @@ export class OrderService {
           where: {
             order_id: orderId,
           },
+          relations: {
+            orderDetails: true,
+          },
         })
         .then(order => {
           if (order) {
+            const wasCompleted = order.payment_date != null;
             order.deleted = 1;
             order.deleted_at = new Date();
             order.deleted_by_user_id = deletedByUserId;
 
             db?.manager
               .save(order)
-              .then(order => {
-                resolve(order);
+              .then(async savedOrder => {
+                if (wasCompleted) {
+                  await this.adjustRawMaterialForOrderDetails(
+                    order.orderDetails,
+                    1,
+                    orderId,
+                    'Reversión - Orden eliminada',
+                    deletedByUserId,
+                  );
+                }
+                resolve(savedOrder);
               })
               .catch(error => {
                 reject(error);

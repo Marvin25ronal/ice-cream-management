@@ -54,10 +54,17 @@ export class ProductService {
           take: 1,
         });
 
-        const maxProductId = allProducts.length > 0 ? allProducts[0].product_id : 0;
+        const maxProductId =
+          allProducts.length > 0 ? allProducts[0].product_id : 0;
         const newProductId = maxProductId + 1;
 
-        console.log('🆔 Creating product with ID:', newProductId, '(max was:', maxProductId, ')');
+        console.log(
+          '🆔 Creating product with ID:',
+          newProductId,
+          '(max was:',
+          maxProductId,
+          ')',
+        );
 
         // Create new product
         const product = new Product(
@@ -75,14 +82,16 @@ export class ProductService {
           data.thursday ?? 1,
           data.friday ?? 1,
           data.saturday ?? 1,
-          data.sunday ?? 1
+          data.sunday ?? 1,
         );
 
         // Only set image_type if the column exists (migration has been run)
         try {
           product.image_type = data.image_type;
         } catch (error) {
-          console.warn('⚠️ image_type column not found, skipping. Please run migration.');
+          console.warn(
+            '⚠️ image_type column not found, skipping. Please run migration.',
+          );
         }
 
         const savedProduct = await db.manager.save(product);
@@ -140,7 +149,8 @@ export class ProductService {
             // Update day availability
             if (data.monday !== undefined) product.monday = data.monday;
             if (data.tuesday !== undefined) product.tuesday = data.tuesday;
-            if (data.wednesday !== undefined) product.wednesday = data.wednesday;
+            if (data.wednesday !== undefined)
+              product.wednesday = data.wednesday;
             if (data.thursday !== undefined) product.thursday = data.thursday;
             if (data.friday !== undefined) product.friday = data.friday;
             if (data.saturday !== undefined) product.saturday = data.saturday;

@@ -3,6 +3,7 @@ import themeReducer from './themeReducer';
 import shoppingCartReducer from './carReducer';
 import orderReducer from './orderReducer';
 import userReducer from './userReducer';
+import menuReducer from './menuReducer';
 
 export const store = configureStore({
   reducer: {
@@ -10,6 +11,7 @@ export const store = configureStore({
     shoppingCart: shoppingCartReducer,
     order: orderReducer,
     user: userReducer,
+    menu: menuReducer,
   },
 });
 

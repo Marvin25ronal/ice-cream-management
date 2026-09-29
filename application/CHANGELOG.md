@@ -5,6 +5,38 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.6.0] - 2026-09-28
+
+### Added
+- **Menú rediseñado**: la barra lateral se reemplazó por un modal inferior
+  (bottom sheet) con gradientes, secciones agrupadas (Tomadores, Productos,
+  Reportes, Administración) y gesto de arrastrar para cerrar
+- **Módulo de Materia Prima** (mantenimiento de insumos):
+  - Catálogo con foto, unidad de medida, descripción de uso y stock actual
+  - Registro de compras con costo total pagado y cálculo automático de costo
+    promedio ponderado por unidad; muestra valor total de inventario
+  - Cantidades típicas de compra configurables por insumo, para reabastecer
+    seleccionando en vez de escribir la cantidad cada vez
+  - Rectificación de stock (conteo físico real) con motivo y fecha, separado
+    de las compras, para casos de producto dañado o diferencias de conteo
+  - Historial de movimientos (compras, ventas y rectificaciones) filtrable
+    por tipo, con usuario y fecha de cada movimiento
+- **Recetas de Productos**: pantalla para configurar qué materia prima
+  consume cada producto por unidad vendida (ej. "Helado 1 bola" → 1 Cono),
+  con selección de producto por categoría igual que en Editar Productos
+- **Descuento automático de inventario**: al completar el cobro de una
+  orden, se descuenta la materia prima configurada de cada producto vendido;
+  si la orden se elimina después de haber sido cobrada, el descuento se
+  revierte automáticamente
+
+### Fixed
+- **Estado de órdenes**: las órdenes pagadas con tarjeta o mixto se
+  guardaban con el status incorrecto y se mostraban como "Cancelado" en vez
+  de "Completado" (el bug venía de `OrderService.payOrder`); se corrigió el
+  código y se agregó una migración que repara las órdenes ya afectadas
+- Advertencia de Redux por valor no serializable en `user.activeUser`
+  (el usuario se guardaba como instancia de clase en vez de objeto plano)
+
 ## [1.5.3] - 2026-09-14
 
 ### Fixed

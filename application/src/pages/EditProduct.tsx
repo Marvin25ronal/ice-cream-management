@@ -476,7 +476,7 @@ const EditProduct = ({ route }: { route: any }) => {
     return gradients[index % gradients.length];
   };
 
-  const renderDayButton = (day: typeof DAYS[0], index: number) => {
+  const renderDayButton = (day: (typeof DAYS)[0], index: number) => {
     const isActive = dayAvailability[day.key as keyof DayAvailability];
     const gradient = getDayGradient(isActive, index);
 
@@ -485,15 +485,13 @@ const EditProduct = ({ route }: { route: any }) => {
         key={day.key}
         style={styles.dayButton}
         onPress={() => toggleDay(day.key as keyof DayAvailability)}
-        activeOpacity={0.8}
-      >
+        activeOpacity={0.8}>
         {isActive ? (
           <LinearGradient
             colors={gradient}
             start={{ x: 0, y: 0 }}
             end={{ x: 1, y: 1 }}
-            style={styles.dayButtonInner}
-          >
+            style={styles.dayButtonInner}>
             <Text style={[styles.dayLabel, styles.dayLabelActive]}>
               {day.label}
             </Text>
@@ -531,21 +529,19 @@ const EditProduct = ({ route }: { route: any }) => {
     <KeyboardAvoidingView
       style={{ flex: 1 }}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      keyboardVerticalOffset={100}
-    >
+      keyboardVerticalOffset={100}>
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <ScrollView
           contentContainerStyle={styles.container}
           keyboardShouldPersistTaps="handled"
-          showsVerticalScrollIndicator={false}
-        >
+          showsVerticalScrollIndicator={false}>
           {/* Header */}
           <View style={styles.header}>
-            <Text style={styles.headerTitle}>
-              Editar Producto
-            </Text>
+            <Text style={styles.headerTitle}>Editar Producto</Text>
             <Text style={styles.headerSubtitle}>
-              {productId !== -1 ? `ID del producto: #${productId}` : 'Nuevo Producto'}
+              {productId !== -1
+                ? `ID del producto: #${productId}`
+                : 'Nuevo Producto'}
             </Text>
           </View>
 
@@ -593,16 +589,16 @@ const EditProduct = ({ route }: { route: any }) => {
                   required: 'El nombre es requerido',
                   maxLength: {
                     value: maxNameLength,
-                    message: `El nombre no puede exceder ${maxNameLength} caracteres`
-                  }
+                    message: `El nombre no puede exceder ${maxNameLength} caracteres`,
+                  },
                 }}
               />
               <Text
                 style={[
                   styles.characterCount,
-                  nameLength > maxNameLength * 0.9 && styles.characterCountWarning
-                ]}
-              >
+                  nameLength > maxNameLength * 0.9 &&
+                    styles.characterCountWarning,
+                ]}>
                 {nameLength} / {maxNameLength} caracteres
               </Text>
             </View>
@@ -622,8 +618,8 @@ const EditProduct = ({ route }: { route: any }) => {
                   required: 'El precio es requerido',
                   min: {
                     value: 0,
-                    message: 'El precio debe ser mayor a 0'
-                  }
+                    message: 'El precio debe ser mayor a 0',
+                  },
                 }}
               />
               <Text style={styles.priceHelper}>
@@ -644,19 +640,23 @@ const EditProduct = ({ route }: { route: any }) => {
             <View style={styles.daysGrid}>
               {/* First Row: Monday - Thursday */}
               <View style={styles.daysRow}>
-                {DAYS.slice(0, 4).map((day, index) => renderDayButton(day, index))}
+                {DAYS.slice(0, 4).map((day, index) =>
+                  renderDayButton(day, index),
+                )}
               </View>
 
               {/* Second Row: Friday - Sunday */}
               <View style={styles.daysRow}>
-                {DAYS.slice(4, 7).map((day, index) => renderDayButton(day, index + 4))}
+                {DAYS.slice(4, 7).map((day, index) =>
+                  renderDayButton(day, index + 4),
+                )}
               </View>
             </View>
 
             <View style={styles.availabilityHint}>
               <Text style={styles.availabilityHintText}>
-                Toca cada día para activar o desactivar la disponibilidad del producto.
-                Los días seleccionados están resaltados con color.
+                Toca cada día para activar o desactivar la disponibilidad del
+                producto. Los días seleccionados están resaltados con color.
               </Text>
             </View>
           </View>
@@ -666,14 +666,12 @@ const EditProduct = ({ route }: { route: any }) => {
             <TouchableOpacity
               style={styles.saveButton}
               onPress={handleSubmit(updateProduct)}
-              activeOpacity={0.9}
-            >
+              activeOpacity={0.9}>
               <LinearGradient
                 colors={['#FF006E', '#C44569', '#8E44AD']}
                 start={{ x: 0, y: 0 }}
                 end={{ x: 1, y: 0 }}
-                style={styles.saveButtonGradient}
-              >
+                style={styles.saveButtonGradient}>
                 <Icon
                   name="content-save"
                   size={24}
@@ -690,8 +688,7 @@ const EditProduct = ({ route }: { route: any }) => {
             <TouchableOpacity
               style={styles.deleteButton}
               onPress={handleDeletePress}
-              activeOpacity={0.8}
-            >
+              activeOpacity={0.8}>
               <View style={styles.deleteButtonInner}>
                 <Icon
                   name="delete-forever"
@@ -712,8 +709,7 @@ const EditProduct = ({ route }: { route: any }) => {
         setVisible={setDeleteModalVisible}
         progress={modalProgress}
         width="85%"
-        height="auto"
-      >
+        height="auto">
         <GenericModal
           text={`¿Estás seguro de que deseas eliminar "${product?.name}"? Esta acción no se puede deshacer.`}
           confirm={handleDeleteConfirm}

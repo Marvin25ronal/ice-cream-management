@@ -18,6 +18,7 @@ import { allMigrations } from './src/migrations';
 import { UserService } from './src/services/UserService';
 import { setActiveUser } from './src/store/redux/userReducer';
 import UserSelectPage from './src/pages/UserSelectPage';
+import { navigationRef } from './src/navigation/navigationRef';
 
 const logo = require('./assets/images/app/logo-sarita-1.png');
 const userService = new UserService();
@@ -81,7 +82,7 @@ const AppContent = () => {
   }
 
   return (
-    <NavigationContainer>
+    <NavigationContainer ref={navigationRef}>
       <DrawerNavigator />
     </NavigationContainer>
   );
